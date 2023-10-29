@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "naiveconsole.h": "c",
+        "video.h": "c",
+        "lib.h": "c",
+        "keyboard_driver.h": "c"
+    }
+}
