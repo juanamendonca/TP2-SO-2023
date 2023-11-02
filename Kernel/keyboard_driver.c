@@ -62,7 +62,7 @@ void keyHandler(uint64_t scancode)
             rear = 0;
         if (front == BUFF_SIZE)
             front = 0;
-        buff[rear++] = keyBoardTable[tecla];
+        buff[rear++] = keyBoardTable[(int)tecla];
         cantElems++;
     }
 
