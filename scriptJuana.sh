@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Nombre del contenedor Docker
-container_name="arqui"
+container_name="recursing_poitras"
 
 # Iniciar el contenedor Docker
 docker start $container_name

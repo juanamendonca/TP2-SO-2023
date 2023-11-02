@@ -80,7 +80,6 @@ void command(char * entry){
 
 
 int main() {
-	sys_beep(300,5);
 	sys_write("Welcome!", PURPLE);
 	enter();
 
