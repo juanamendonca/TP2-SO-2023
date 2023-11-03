@@ -96,7 +96,7 @@ int main()
 	// *(memory + 1) = 'b';
 	// *(memory + 2) = '\n';
 	// *(memory + 3) = '\0';
-	sys_write(memory, PURPLE);
+	//sys_write(memory, PURPLE);
 
 	help();
 	while (1)

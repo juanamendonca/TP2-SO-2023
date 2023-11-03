@@ -1,4 +1,3 @@
-
 #include <stdint.h>
 #define BLACK 0x000000
 #define GREEN 0x00FF00
@@ -17,9 +16,9 @@ void putLetterNext(int caracter, int color);
 void putArrayNext(char *array, int color);
 void putDecNext(int number, int color);
 void putLine();
-uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
-void fillHexa(int num, char* buf);
+uint32_t uintToBase(uint64_t value, char *buffer, uint32_t base);
+void fillHexa(int num, char *buf);
 void printHexa(uint64_t value);
 int getWidth();
-void printError(char * string);
+void printError(char *string);
 void clearScreen();
