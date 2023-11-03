@@ -9,10 +9,10 @@
 
 #define BUFFER_SIZE 100
 
-
 char buffer[BUFFER_SIZE];
 
-void help(){
+void help()
+{
 
 	print("The available commands are:");
 	enter();
@@ -42,49 +42,65 @@ void help(){
 	enter();
 }
 
-
-void command(char * entry){
+void command(char *entry)
+{
 	deleteExtraSpaces(buffer);
-	if(strcmp(buffer, "TIME")==0){
-			getTime(WHITE);
-			enter();
-		}
-	else if(strcmp(buffer, "CLEAR")==0){
+	if (strcmp(buffer, "TIME") == 0)
+	{
+		getTime(WHITE);
+		enter();
+	}
+	else if (strcmp(buffer, "CLEAR") == 0)
+	{
 		sys_clear_screen();
 	}
-	else if(strcmp(buffer, "HELP")==0){
+	else if (strcmp(buffer, "HELP") == 0)
+	{
 		help();
 	}
-	else if(strcmp(buffer, "PONG")==0){
+	else if (strcmp(buffer, "PONG") == 0)
+	{
 		pong();
 	}
-	else if(strcmp(buffer, "REGISTERS")==0){
+	else if (strcmp(buffer, "REGISTERS") == 0)
+	{
 		getRegInfo();
 	}
-	else if(strcmp(buffer, "REGISTERS TEST")==0){
+	else if (strcmp(buffer, "REGISTERS TEST") == 0)
+	{
 		regsTester();
 	}
-	else if(strcmp(buffer, "DIVIDE BY ZERO")==0){
+	else if (strcmp(buffer, "DIVIDE BY ZERO") == 0)
+	{
 		divisionTester();
 	}
-	else if(strcmp(buffer, "INVALID OPERATION")==0){
+	else if (strcmp(buffer, "INVALID OPERATION") == 0)
+	{
 		invalidOpTester();
-	
 	}
-	else{
+	else
+	{
 		print("Invalid command");
 		enter();
 		help();
 	}
 }
 
-
-int main() {
+int main()
+{
 	sys_write("Welcome!", PURPLE);
 	enter();
+	// char *memory;
+	// sys_alloc(&memory, 10);
+	// *memory = 'a';
+	// *(memory + 1) = 'b';
+	// *(memory + 2) = '\n';
+	// *(memory + 3) = '\0';
+	sys_write(memory, PURPLE);
 
 	help();
-	while(1){
+	while (1)
+	{
 		sys_write(">", BLUE);
 		scanf(buffer, BUFFER_SIZE);
 		command(buffer);

@@ -1,4 +1,4 @@
- #include <stdint.h>
+#include <stdint.h>
 #include <string.h>
 #include <lib.h>
 #include <moduleLoader.h>
@@ -8,6 +8,7 @@
 #include <time.h>
 #include <idtLoader.h>
 #include <sound.h>
+#include <memoryManager.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -15,13 +16,13 @@ extern uint8_t data;
 extern uint8_t bss;
 extern uint8_t endOfKernelBinary;
 extern uint8_t endOfKernel;
-uint64_t * registers;
-
+uint64_t *registers;
 
 static const uint64_t PageSize = 0x1000;
 
 static void *const sampleCodeModuleAddress = (void *)0x400000;
 static void *const sampleDataModuleAddress = (void *)0x500000;
+static void *const memoryManagerModuleAddress = (void *)0x600000;
 
 typedef int (*EntryPoint)();
 
@@ -37,7 +38,6 @@ void *getStackBase()
 	);
 }
 
-
 void *initializeKernelBinary()
 {
 	void *moduleAddresses[] = {
@@ -50,9 +50,9 @@ void *initializeKernelBinary()
 
 int main()
 {
-	load_idt(); //sets the IDT before the terminal launches
-	((EntryPoint)sampleCodeModuleAddress)(); //calls sampleCodeModule main address
+	load_idt(); // sets the IDT before the terminal launches
+	createMemoryManager(memoryManagerModuleAddress);
+	((EntryPoint)sampleCodeModuleAddress)(); // calls sampleCodeModule main address
+
 	return 0;
-
-
 }
