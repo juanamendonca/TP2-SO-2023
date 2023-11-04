@@ -233,7 +233,11 @@ void putArrayNext(char *array, int color)
 	int i = 0;
 	while (array[i] != '\0')
 	{
-		putLetterNext(array[i], color);
+        if (array[i] != '\n') {
+            putLetterNext(array[i], color);
+        } else {
+            putLine();
+        }
 		i++;
 	}
 }

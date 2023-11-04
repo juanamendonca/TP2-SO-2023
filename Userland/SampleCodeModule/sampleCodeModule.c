@@ -39,6 +39,9 @@ void help()
 	enter();
 	sys_write("INVALID OPERATION", GREEN);
 	print(": to trigger invalid operation exception ");
+    enter();
+    sys_write("ALLOC", GREEN);
+    print(": to allocate 0x1000 memory ");
 	enter();
 }
 
@@ -78,6 +81,10 @@ void command(char *entry)
 	{
 		invalidOpTester();
 	}
+    else if (strcmp(buffer, "ALLOC") == 0)
+    {
+        //por ahora nada
+    }
 	else
 	{
 		print("Invalid command");
@@ -90,13 +97,29 @@ int main()
 {
 	sys_write("Welcome!", PURPLE);
 	enter();
-	// char *memory;
-	// sys_alloc(&memory, 10);
-	// *memory = 'a';
-	// *(memory + 1) = 'b';
-	// *(memory + 2) = '\n';
-	// *(memory + 3) = '\0';
-	//sys_write(memory, PURPLE);
+
+    //MALLOC testing
+	 char *memory;
+     char *memory2;
+	 sys_alloc(&memory, 10);
+	 *memory       = 'b';
+	 *(memory + 1) = 'o';
+     *(memory + 2) = 'c';
+	 *(memory + 3) = '\n';
+	 *(memory + 4) = 'a';
+     *(memory + 5) = 'a';
+     *(memory + 6) = '\0';
+	sys_write(memory, PURPLE);
+    enter();
+
+    sys_alloc(&memory2, 10);
+    *memory2       = 'a';
+    *(memory2 + 1) = 's';
+    *(memory2 + 2) = 'd';
+    *(memory2 + 3) = 'f';
+    *(memory2 + 4) = '\0';
+    sys_write(memory2, PURPLE);
+    enter();
 
 	help();
 	while (1)

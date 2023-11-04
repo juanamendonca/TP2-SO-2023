@@ -1,17 +1,30 @@
 #include <memoryManager.h>
 
-char *nextAddress;
+void * nextAddress = (void *) 0x0000000000050000;
+void * memStart = (void *) 0x0000000000050000;
+void * memEnd   = (void *) 0x000000000009FFFF;
+
+
 
 void createMemoryManager(void *const restrict managedMemory) {
-  nextAddress = managedMemory;
+    nextAddress = managedMemory;
 }
 
-void *malloc(const size_t memoryToAllocate) {
-  char *allocation = nextAddress;
+void * malloc(const size_t memoryToAllocate) {
+    void * allocation;
 
-  nextAddress += memoryToAllocate;
+    if (nextAddress + 0x1000 < memEnd){
+        allocation = nextAddress;
+        nextAddress += 0x1000;
+        return allocation;
+    } else {
+        return NULL;
+    }
 
-  return (void *)allocation;
+
 }
 
-void free(void *memory) { return; }
+void free(void *memory){
+    nextAddress = memStart;
+    return;
+}

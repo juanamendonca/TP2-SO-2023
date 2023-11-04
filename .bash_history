@@ -18,3 +18,4 @@ chmod -R 777 root
 exit
 chmod -R 777 root
 exit
+exit
