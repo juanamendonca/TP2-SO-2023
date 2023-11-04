@@ -2,16 +2,16 @@
 
 char *nextAddress;
 
-void createMemoryManager(void *const restrict managedMemory)
-{
-    nextAddress = managedMemory;
+void createMemoryManager(void *const restrict managedMemory) {
+  nextAddress = managedMemory;
 }
 
-void *allocMemory(const size_t memoryToAllocate)
-{
-    char *allocation = nextAddress;
+void *malloc(const size_t memoryToAllocate) {
+  char *allocation = nextAddress;
 
-    nextAddress += memoryToAllocate;
+  nextAddress += memoryToAllocate;
 
-    return (void *)allocation;
+  return (void *)allocation;
 }
+
+void free(void *memory) { return; }

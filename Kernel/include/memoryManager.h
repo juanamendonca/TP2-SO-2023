@@ -5,6 +5,8 @@
 
 void createMemoryManager(void *const restrict managedMemory);
 
-void *allocMemory(const size_t memoryToAllocate);
+void *malloc(const size_t memoryToAllocate);
+
+void free(void *memory);
 
 #endif
