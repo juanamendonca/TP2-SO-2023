@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 
-void createMemoryManager(void *const restrict managedMemory);
+void createMemoryManager(void *const restrict managedMemory, int heapSize);
 
 void *malloc(const size_t memoryToAllocate);
 

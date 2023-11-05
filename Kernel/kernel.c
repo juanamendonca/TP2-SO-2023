@@ -1,14 +1,17 @@
+#include "idtLoader.h"
+#include "keyboard_driver.h"
+#include "lib.h"
+#include "memoryManager.h"
+#include "moduleLoader.h"
+#include "naiveConsole.h"
+#include "scheduler.h"
+#include "sound.h"
+#include "time.h"
+#include "video.h"
+#include <stdbool.h>
 #include <stdint.h>
-#include <string.h>
-#include <lib.h>
-#include <moduleLoader.h>
-#include <naiveConsole.h>
-#include <video.h>
-#include <keyboard_driver.h>
-#include <time.h>
-#include <idtLoader.h>
-#include <sound.h>
-#include <memoryManager.h>
+
+#define HEAP_SIZE 0x100000
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -26,33 +29,30 @@ static void *const memoryManagerModuleAddress = (void *)0x600000;
 
 typedef int (*EntryPoint)();
 
-void clearBSS(void *bssAddress, uint64_t bssSize)
-{
-	memset(bssAddress, 0, bssSize);
+void clearBSS(void *bssAddress, uint64_t bssSize) {
+  memset(bssAddress, 0, bssSize);
 }
 
-void *getStackBase()
-{
-	return (void *)((uint64_t)&endOfKernel + PageSize * 8 // Size of the stack (32KiB)
-					- sizeof(uint64_t)					  // Starts at the top of the stack
-	);
+void *getStackBase() {
+  return (void *)((uint64_t)&endOfKernel +
+                  PageSize * 8       // Size of the stack (32KiB)
+                  - sizeof(uint64_t) // Starts at the top of the stack
+  );
 }
 
-void *initializeKernelBinary()
-{
-	void *moduleAddresses[] = {
-		sampleCodeModuleAddress,
-		sampleDataModuleAddress};
-	loadModules(&endOfKernelBinary, moduleAddresses);
-	clearBSS(&bss, &endOfKernel - &bss);
-	return getStackBase();
+void *initializeKernelBinary() {
+  void *moduleAddresses[] = {sampleCodeModuleAddress, sampleDataModuleAddress};
+  loadModules(&endOfKernelBinary, moduleAddresses);
+  clearBSS(&bss, &endOfKernel - &bss);
+  return getStackBase();
 }
 
-int main()
-{
-	load_idt(); // sets the IDT before the terminal launches
-	createMemoryManager(memoryManagerModuleAddress);
-	((EntryPoint)sampleCodeModuleAddress)(); // calls sampleCodeModule main address
+int main() {
+  load_idt(); // sets the IDT before the terminal launches
+  createMemoryManager(memoryManagerModuleAddress, HEAP_SIZE);
+  initalizeScheduler();
+  ((EntryPoint)
+       sampleCodeModuleAddress)(); // calls sampleCodeModule main address
 
-	return 0;
+  return 0;
 }

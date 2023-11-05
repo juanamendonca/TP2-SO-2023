@@ -11,6 +11,7 @@
 int pid = 0;
 Queue *queue = NULL;
 pcb *dummyPcb = NULL;
+pcb *currentPcb = NULL;
 
 void dummy(int argc, char **argv);
 void initalizeScheduler();
@@ -37,6 +38,26 @@ void initalizeScheduler() {
   char *argv[] = {"dummy"};
   initalizeProcess((void *)&dummy, 1, argv, true, NULL);
   dummyPcb = dequeue(queue);
+}
+
+void *scheduler(void *rsp) {
+  if (currentPcb == NULL) {
+    if (isEmpty(queue)) {
+      currentPcb = dummyPcb;
+    } else {
+      currentPcb = dequeue(queue);
+      enqueue(queue, currentPcb);
+    }
+  } else {
+    currentPcb->rsp = rsp;
+    if (isEmpty(queue)) {
+      currentPcb = dummyPcb;
+    } else {
+      currentPcb = dequeue(queue);
+      enqueue(queue, currentPcb);
+    }
+  }
+  return currentPcb->rsp;
 }
 
 int getNewPid() {

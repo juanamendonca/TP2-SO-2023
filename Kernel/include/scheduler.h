@@ -48,5 +48,8 @@ typedef struct stackFrame {
 } stackFrame;
 
 void initalizeScheduler();
+void *scheduler(void *rsp);
+int initalizeProcess(void (*process)(int argc, char **argv), int argc,
+                     char **argv, bool foreground, int *fd);
 
 #endif
