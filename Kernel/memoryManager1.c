@@ -13,9 +13,9 @@ void createMemoryManager(void *const restrict managedMemory, int heapSize) {
 void *malloc(const size_t memoryToAllocate) {
   void *allocation;
 
-  if (nextAddress + 0x1000 < memEnd) {
+  if (nextAddress + memoryToAllocate < memEnd) {
     allocation = nextAddress;
-    nextAddress += 0x1000;
+    nextAddress += memoryToAllocate;
     return allocation;
   } else {
     return NULL;
@@ -23,6 +23,6 @@ void *malloc(const size_t memoryToAllocate) {
 }
 
 void free(void *memory) {
-  nextAddress = memStart;
+  // nextAddress = memStart;
   return;
 }

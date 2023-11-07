@@ -13,7 +13,7 @@ typedef enum {
 typedef struct pcb {
   int pid;
   int ppid;
-  bool foreground;
+  int foreground;
   state state;
   char name[30];
   int fd[2];
@@ -50,6 +50,6 @@ typedef struct stackFrame {
 void initalizeScheduler();
 void *scheduler(void *rsp);
 int initalizeProcess(void (*process)(int argc, char **argv), int argc,
-                     char **argv, bool foreground, int *fd);
+                     char **argv, int foreground, int *fd);
 
 #endif

@@ -202,9 +202,9 @@ _irq00Handler:
 	mov rdi, 0 ; passes parameter
 	call irqDispatcher
 
-	; mov rdi, rsp
-	; call scheduler
-	; mov rsp, rax
+	mov rdi, rsp
+	call scheduler
+	mov rsp, rax
 
 	; signal pic EOI (End of Interrupt)
 	mov al, 20h

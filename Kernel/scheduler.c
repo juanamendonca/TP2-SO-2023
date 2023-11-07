@@ -2,6 +2,7 @@
 #include "interrupts.h"
 #include "queue.h"
 #include "strings.h"
+#include "video.h"
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -16,18 +17,36 @@ pcb *currentPcb = NULL;
 void dummy(int argc, char **argv);
 void initalizeScheduler();
 int getNewPid();
-int initalizePcb(pcb *newProcess, int argc, char **argv, bool foreground,
+int initalizePcb(pcb *newProcess, int argc, char **argv, int foreground,
                  int *fd, void *stack);
-static void processStart(void (*process)(int, char **), int argc, char **argv);
+static void processStart(int argc, char *argv[], void *function(int, char **));
 void initalizeStackFrame(void (*fn)(int, char **), int argc, char **argv,
                          void *rbp);
 int initalizeProcess(void (*process)(int argc, char **argv), int argc,
-                     char **argv, bool foreground, int *fd);
+                     char **argv, int foreground, int *fd);
 
 void dummy(int argc, char **argv) {
-  while (1)
+  putArrayNext("en dummy", WHITE);
+  while (1) {
     _hlt();
+  }
 }
+
+// void hola(int argc, char **argv) {
+//   int i = 0;
+//   while (1) {
+//     putDecNext(i, WHITE);
+//     putLine();
+//     i++;
+//   }
+// }
+
+// void chau(int argc, char **argv) {
+//   putArrayNext("chau", WHITE);
+//   while (1) {
+//     _hlt();
+//   }
+// }
 
 void initalizeScheduler() {
   queue = createQueue();
@@ -36,11 +55,22 @@ void initalizeScheduler() {
   }
 
   char *argv[] = {"dummy"};
-  initalizeProcess((void *)&dummy, 1, argv, true, NULL);
+  int fd[] = {0, 0};
+  initalizeProcess((void *)&dummy, 1, argv, 1, fd);
   dummyPcb = dequeue(queue);
+
+  //   char *argv2[] = {"hola"};
+  //   initalizeProcess((void *)&hola, 1, argv2, 1, fd);
+
+  //   char *argv3[] = {"chau"};
+  //   initalizeProcess((void *)&chau, 1, argv3, 1, fd);
 }
 
 void *scheduler(void *rsp) {
+  if (queue == NULL) {
+    putArrayNext("queue is null", WHITE);
+    return rsp;
+  }
   if (currentPcb == NULL) {
     if (isEmpty(queue)) {
       currentPcb = dummyPcb;
@@ -66,7 +96,7 @@ int getNewPid() {
   return toReturn;
 }
 
-int initializePcb(pcb *newProcess, int argc, char **argv, bool foreground,
+int initializePcb(pcb *newProcess, int argc, char **argv, int foreground,
                   int *fd, void *stack) {
   newProcess->pid = getNewPid();
   newProcess->ppid = 0;
@@ -100,7 +130,7 @@ int initializePcb(pcb *newProcess, int argc, char **argv, bool foreground,
   return 0;
 }
 
-static void processStart(void (*process)(int, char **), int argc, char **argv) {
+static void processStart(int argc, char *argv[], void *process(int, char **)) {
   process(argc, argv);
 }
 
@@ -115,8 +145,8 @@ void initalizeStackFrame(void (*fn)(int, char **), int argc, char **argv,
   sf->r10 = 0x006;
   sf->r9 = 0x007;
   sf->r8 = 0x008;
-  sf->rsi = (uint64_t)argc;
-  sf->rdi = (uint64_t)argv;
+  sf->rsi = (uint64_t)argv;
+  sf->rdi = (uint64_t)argc;
   sf->rbp = 0x00B;
   sf->rdx = (uint64_t)fn;
   sf->rcx = 0x00C;
@@ -131,7 +161,7 @@ void initalizeStackFrame(void (*fn)(int, char **), int argc, char **argv,
 }
 
 int initalizeProcess(void (*process)(int argc, char **argv), int argc,
-                     char **argv, bool foreground, int *fd) {
+                     char **argv, int foreground, int *fd) {
   if (process == NULL) {
     return -1;
   }
