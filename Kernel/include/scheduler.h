@@ -7,7 +7,7 @@
 typedef enum {
   READY,
   BLOCKED,
-  TERMINATED,
+  KILLED,
 } state;
 
 typedef struct pcb {

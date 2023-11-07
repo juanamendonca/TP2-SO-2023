@@ -11,7 +11,6 @@
 #include <idtLoader.h>
 #include <stdint.h>
 
-
 void _irq00Handler(void);
 void _irq01Handler(void);
 void _irq02Handler(void);
@@ -36,5 +35,7 @@ void picSlaveMask(uint8_t mask);
 
 // Termina la ejecución de la cpu.
 void haltcpu(void);
+
+void callTimer(void);
 
 #endif /* INTERRUPS_H_ */

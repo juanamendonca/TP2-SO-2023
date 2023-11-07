@@ -20,6 +20,9 @@ int getNewPid();
 int initalizePcb(pcb *newProcess, int argc, char **argv, int foreground,
                  int *fd, void *stack);
 static void processStart(int argc, char *argv[], void *function(int, char **));
+static void finishProcess();
+int changeState(int pid, state state);
+int killProcess(int pid);
 void initalizeStackFrame(void (*fn)(int, char **), int argc, char **argv,
                          void *rbp);
 int initalizeProcess(void (*process)(int argc, char **argv), int argc,
@@ -34,18 +37,25 @@ void dummy(int argc, char **argv) {
 
 // void hola(int argc, char **argv) {
 //   int i = 0;
-//   while (1) {
+//   while (i < 20) {
 //     putDecNext(i, WHITE);
 //     putLine();
 //     i++;
 //   }
 // }
 
-// void chau(int argc, char **argv) {
-//   putArrayNext("chau", WHITE);
-//   while (1) {
-//     _hlt();
-//   }
+// void chau(int argc, char **argv) { putArrayNext("chau", WHITE); }
+
+// void process1(int argc, char **argv) {
+//   putLine();
+//   putArrayNext("proceso 1", WHITE);
+//   putLine();
+// }
+
+// void process2(int argc, char **argv) {
+//   putLine();
+//   putArrayNext("proceso 2", WHITE);
+//   putLine();
 // }
 
 void initalizeScheduler() {
@@ -64,6 +74,12 @@ void initalizeScheduler() {
 
   //   char *argv3[] = {"chau"};
   //   initalizeProcess((void *)&chau, 1, argv3, 1, fd);
+
+  //   char *argv4[] = {"process1"};
+  //   initalizeProcess((void *)&process1, 1, argv4, 1, fd);
+
+  //   char *argv5[] = {"process2"};
+  //   initalizeProcess((void *)&process2, 1, argv5, 1, fd);
 }
 
 void *scheduler(void *rsp) {
@@ -72,19 +88,18 @@ void *scheduler(void *rsp) {
     return rsp;
   }
   if (currentPcb == NULL) {
-    if (isEmpty(queue)) {
+    if (isEmptyReady(queue)) {
       currentPcb = dummyPcb;
     } else {
-      currentPcb = dequeue(queue);
-      enqueue(queue, currentPcb);
+      currentPcb = dequeueReady(queue);
     }
   } else {
     currentPcb->rsp = rsp;
-    if (isEmpty(queue)) {
+    enqueue(queue, currentPcb);
+    if (isEmptyReady(queue)) {
       currentPcb = dummyPcb;
     } else {
-      currentPcb = dequeue(queue);
-      enqueue(queue, currentPcb);
+      currentPcb = dequeueReady(queue);
     }
   }
   return currentPcb->rsp;
@@ -132,6 +147,33 @@ int initializePcb(pcb *newProcess, int argc, char **argv, int foreground,
 
 static void processStart(int argc, char *argv[], void *process(int, char **)) {
   process(argc, argv);
+  finishProcess();
+}
+
+static void finishProcess() { killProcess(currentPcb->pid); }
+
+int killProcess(int pid) {
+  if (changeState(pid, KILLED) < 0) {
+    return -1;
+  }
+  if (pid == currentPcb->pid) {
+    callTimer();
+  }
+  return pid;
+}
+
+int changeState(int pid, state state) {
+  if (pid == currentPcb->pid) {
+    currentPcb->state = state;
+    return pid;
+  } else {
+    pcb *processPcb = getProcess(queue, pid);
+    if (processPcb == NULL) {
+      return -1;
+    }
+    processPcb->state = state;
+    return pid;
+  }
 }
 
 void initalizeStackFrame(void (*fn)(int, char **), int argc, char **argv,

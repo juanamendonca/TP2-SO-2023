@@ -21,6 +21,8 @@ GLOBAL _exception0Handler
 GLOBAL regs
 GLOBAL restore_stack
 
+GLOBAL callTimer
+
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
 EXTERN sysDispatcher
@@ -291,6 +293,9 @@ haltcpu:
 	hlt
 	ret
 
+callTimer:
+    int 20h
+    ret
 
 SECTION .bss
 	aux resq 1

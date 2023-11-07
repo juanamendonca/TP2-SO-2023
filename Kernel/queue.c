@@ -9,11 +9,24 @@ Queue *createQueue() {
   if (!queue) {
     return NULL;
   }
-  queue->front = queue->rear = queue->iterator = NULL; // Inicializa el iterador
+  queue->front = queue->rear = NULL; // Inicializa el iterador
   return queue;
 }
 
 int isEmpty(Queue *queue) { return queue->front == NULL; }
+
+int isEmptyReady(Queue *queue) {
+  Node *current = queue->front;
+
+  while (current != NULL) {
+    if (current->data->state == READY) {
+      return 0; // Se encontró al menos un proceso en estado READY
+    }
+    current = current->next;
+  }
+
+  return 1; // No se encontraron procesos en estado READY
+}
 
 void enqueue(Queue *queue, pcb *data) {
   Node *newNode = (Node *)malloc(sizeof(Node));
@@ -25,7 +38,6 @@ void enqueue(Queue *queue, pcb *data) {
 
   if (isEmpty(queue)) {
     queue->front = queue->rear = newNode;
-    queue->iterator = newNode; // Inicializa el iterador si la cola está vacía
     return;
   }
 
@@ -43,15 +55,49 @@ pcb *dequeue(Queue *queue) {
 
   queue->front = queue->front->next;
 
-  // Actualiza el iterador
   if (queue->front == NULL) {
     queue->rear = NULL;
-    queue->iterator = NULL;
-  } else {
-    queue->iterator = queue->front;
   }
 
   free(temp);
+
+  return data;
+}
+
+pcb *dequeueReady(Queue *queue) {
+  if (isEmpty(queue)) {
+    return NULL;
+  }
+
+  Node *current = queue->front;
+  Node *prev = NULL;
+
+  while (current != NULL && current->data->state != READY) {
+    prev = current;
+    current = current->next;
+  }
+
+  if (current == NULL) {
+    return NULL; // No se encontró un PCB en estado READY
+  }
+
+  // El PCB en estado READY se encuentra en 'current'
+  if (prev == NULL) {
+    // Si el primer elemento de la cola está en estado READY
+    queue->front = current->next;
+    if (queue->front == NULL) {
+      queue->rear = NULL;
+    }
+  } else {
+    // Si el PCB en estado READY está en una posición distinta al principio
+    prev->next = current->next;
+    if (prev->next == NULL) {
+      queue->rear = prev;
+    }
+  }
+
+  pcb *data = current->data;
+  free(current);
 
   return data;
 }
@@ -63,21 +109,20 @@ pcb *front(Queue *queue) {
   return queue->front->data;
 }
 
-pcb *iterate(Queue *queue) {
-  if (queue->iterator == NULL) {
-    return NULL;
-  }
-  pcb *data = queue->iterator->data;
-  queue->iterator = queue->iterator->next;
-  if (queue->iterator == NULL) {
-    queue->iterator = queue->front; // Vuelve al principio al alcanzar el final
-  }
-  return data;
-}
-
 void destroyQueue(Queue *queue) {
   while (!isEmpty(queue)) {
     dequeue(queue);
   }
   free(queue);
+}
+
+pcb *getProcess(Queue *queue, int pid) {
+  Node *current = queue->front;
+  while (current != NULL) {
+    if (current->data->pid == pid) {
+      return current->data;
+    }
+    current = current->next;
+  }
+  return NULL;
 }
