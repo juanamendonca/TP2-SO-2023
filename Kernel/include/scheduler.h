@@ -15,12 +15,15 @@ typedef struct pcb {
   int ppid;
   int foreground;
   state state;
+  int priority;
+  int quantum;
   char name[30];
   int fd[2];
   void *rsp;
   void *rbp;
   int argc;
   char **argv;
+
 } pcb;
 
 typedef struct stackFrame {

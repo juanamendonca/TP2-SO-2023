@@ -1,6 +1,6 @@
 #include "scheduler.h"
 #include "interrupts.h"
-#include "queue.h"
+#include "priorityQueue.h"
 #include "strings.h"
 #include "video.h"
 #include <stdbool.h>
@@ -8,9 +8,10 @@
 #include <stdlib.h>
 
 #define STACK_SIZE (1024 * 4)
+#define QUANTUM 1
 
 int pid = 0;
-Queue *queue = NULL;
+PriorityQueue *queue = NULL;
 pcb *dummyPcb = NULL;
 pcb *currentPcb = NULL;
 
@@ -35,31 +36,31 @@ void dummy(int argc, char **argv) {
   }
 }
 
-// void hola(int argc, char **argv) {
-//   int i = 0;
-//   while (i < 20) {
-//     putDecNext(i, WHITE);
-//     putLine();
-//     i++;
-//   }
-// }
+void hola(int argc, char **argv) {
+  int i = 0;
+  while (i < 200) {
+    putDecNext(i, WHITE);
+    putLine();
+    i++;
+  }
+}
 
-// void chau(int argc, char **argv) { putArrayNext("chau", WHITE); }
+void chau(int argc, char **argv) { putArrayNext("chau", WHITE); }
 
-// void process1(int argc, char **argv) {
-//   putLine();
-//   putArrayNext("proceso 1", WHITE);
-//   putLine();
-// }
+void process1(int argc, char **argv) {
+  putLine();
+  putArrayNext("proceso 1", WHITE);
+  putLine();
+}
 
-// void process2(int argc, char **argv) {
-//   putLine();
-//   putArrayNext("proceso 2", WHITE);
-//   putLine();
-// }
+void process2(int argc, char **argv) {
+  putLine();
+  putArrayNext("proceso 2", WHITE);
+  putLine();
+}
 
 void initalizeScheduler() {
-  queue = createQueue();
+  queue = createPriorityQueue();
   if (queue == NULL) {
     return;
   }
@@ -67,19 +68,19 @@ void initalizeScheduler() {
   char *argv[] = {"dummy"};
   int fd[] = {0, 0};
   initalizeProcess((void *)&dummy, 1, argv, 1, fd);
-  dummyPcb = dequeue(queue);
+  dummyPcb = dequeueP(queue);
 
-  //   char *argv2[] = {"hola"};
-  //   initalizeProcess((void *)&hola, 1, argv2, 1, fd);
+  char *argv2[] = {"hola"};
+  initalizeProcess((void *)&hola, 1, argv2, 1, fd);
 
-  //   char *argv3[] = {"chau"};
-  //   initalizeProcess((void *)&chau, 1, argv3, 1, fd);
+  char *argv3[] = {"chau"};
+  initalizeProcess((void *)&chau, 1, argv3, 1, fd);
 
-  //   char *argv4[] = {"process1"};
-  //   initalizeProcess((void *)&process1, 1, argv4, 1, fd);
+  char *argv4[] = {"process1"};
+  initalizeProcess((void *)&process1, 1, argv4, 1, fd);
 
-  //   char *argv5[] = {"process2"};
-  //   initalizeProcess((void *)&process2, 1, argv5, 1, fd);
+  char *argv5[] = {"process2"};
+  initalizeProcess((void *)&process2, 1, argv5, 1, fd);
 }
 
 void *scheduler(void *rsp) {
@@ -88,18 +89,26 @@ void *scheduler(void *rsp) {
     return rsp;
   }
   if (currentPcb == NULL) {
-    if (isEmptyReady(queue)) {
+    if (isEmptyPReady(queue)) {
       currentPcb = dummyPcb;
     } else {
-      currentPcb = dequeueReady(queue);
+      currentPcb = dequeuePReady(queue);
     }
   } else {
+    if (currentPcb->quantum > 0 && currentPcb->state == READY) {
+      currentPcb->quantum--;
+      return rsp;
+    }
+    if (currentPcb->priority < 4) {
+      currentPcb->priority++;
+    }
     currentPcb->rsp = rsp;
-    enqueue(queue, currentPcb);
-    if (isEmptyReady(queue)) {
+    currentPcb->quantum = currentPcb->priority * QUANTUM;
+    enqueueP(queue, currentPcb, currentPcb->priority);
+    if (isEmptyPReady(queue)) {
       currentPcb = dummyPcb;
     } else {
-      currentPcb = dequeueReady(queue);
+      currentPcb = dequeuePReady(queue);
     }
   }
   return currentPcb->rsp;
@@ -117,6 +126,8 @@ int initializePcb(pcb *newProcess, int argc, char **argv, int foreground,
   newProcess->ppid = 0;
   newProcess->foreground = foreground;
   newProcess->state = READY;
+  newProcess->priority = 1;
+  newProcess->quantum = 1 * QUANTUM;
   strcpy(newProcess->name, argv[0]);
   newProcess->fd[0] = fd[0];
   newProcess->fd[1] = fd[1];
@@ -167,7 +178,7 @@ int changeState(int pid, state state) {
     currentPcb->state = state;
     return pid;
   } else {
-    pcb *processPcb = getProcess(queue, pid);
+    pcb *processPcb = getProcessP(queue, pid);
     if (processPcb == NULL) {
       return -1;
     }
@@ -227,7 +238,7 @@ int initalizeProcess(void (*process)(int argc, char **argv), int argc,
 
   initalizeStackFrame(process, argc, newProcess->argv, newProcess->rbp);
 
-  enqueue(queue, newProcess);
+  enqueueP(queue, newProcess, newProcess->priority);
 
   return 0;
 }

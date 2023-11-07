@@ -1,5 +1,5 @@
-#include <memoryManager.h>
-#include <queue.h>
+#include "queue.h"
+#include "memoryManager.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
