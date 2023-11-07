@@ -28,6 +28,9 @@ void initalizeStackFrame(void (*fn)(int, char **), int argc, char **argv,
                          void *rbp);
 int initalizeProcess(void (*process)(int argc, char **argv), int argc,
                      char **argv, int foreground, int *fd);
+int block(int pid);
+int unblock(int pid);
+void freePcb(pcb *process);
 
 void dummy(int argc, char **argv) {
   putArrayNext("en dummy", WHITE);
@@ -241,4 +244,30 @@ int initalizeProcess(void (*process)(int argc, char **argv), int argc,
   enqueueP(queue, newProcess, newProcess->priority);
 
   return 0;
+}
+
+int block(int pid) {
+  int toReturn = changeState(pid, BLOCKED);
+  if (currentPcb != NULL && currentPcb->pid == pid) {
+    callTimer();
+  }
+  return toReturn;
+}
+
+int unblock(int pid) { return changeState(pid, READY); }
+
+void freePcb(pcb *process) {
+  if (process == NULL) {
+    return;
+  }
+
+  // Libera la memoria asignada para los argumentos del proceso
+  if (process->argv != NULL) {
+    for (int i = 0; i < process->argc; i++) {
+      free(process->argv[i]);
+    }
+    free(process->argv);
+  }
+  free((void *)((char *)process->rbp - STACK_SIZE + 1));
+  free(process);
 }

@@ -72,34 +72,51 @@ pcb *dequeueReady(Queue *queue) {
   Node *current = queue->front;
   Node *prev = NULL;
 
-  while (current != NULL && current->data->state != READY) {
-    prev = current;
+  while (current != NULL) {
+    if (current->data->state == READY) {
+      // Se encontró un PCB en estado READY, devolverlo y eliminarlo
+      if (prev == NULL) {
+        // Si el primer elemento de la cola está en estado READY
+        queue->front = current->next;
+        if (queue->front == NULL) {
+          queue->rear = NULL;
+        }
+      } else {
+        // Si el PCB en estado READY está en una posición distinta al principio
+        prev->next = current->next;
+        if (prev->next == NULL) {
+          queue->rear = prev;
+        }
+      }
+
+      pcb *data = current->data;
+      free(current);
+      return data;
+    } else if (current->data->state == KILLED) {
+      // Se encontró un PCB en estado KILLED, eliminarlo
+      if (prev == NULL) {
+        // Si el primer elemento de la cola está en estado KILLED
+        queue->front = current->next;
+        if (queue->front == NULL) {
+          queue->rear = NULL;
+        }
+      } else {
+        // Si el PCB en estado KILLED está en una posición distinta al principio
+        prev->next = current->next;
+        if (prev->next == NULL) {
+          queue->rear = prev;
+        }
+      }
+      freePcb(current->data);
+      free(current);
+    } else {
+      prev = current;
+    }
+
     current = current->next;
   }
 
-  if (current == NULL) {
-    return NULL; // No se encontró un PCB en estado READY
-  }
-
-  // El PCB en estado READY se encuentra en 'current'
-  if (prev == NULL) {
-    // Si el primer elemento de la cola está en estado READY
-    queue->front = current->next;
-    if (queue->front == NULL) {
-      queue->rear = NULL;
-    }
-  } else {
-    // Si el PCB en estado READY está en una posición distinta al principio
-    prev->next = current->next;
-    if (prev->next == NULL) {
-      queue->rear = prev;
-    }
-  }
-
-  pcb *data = current->data;
-  free(current);
-
-  return data;
+  return NULL; // No se encontró un PCB en estado READY
 }
 
 pcb *front(Queue *queue) {

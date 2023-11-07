@@ -54,5 +54,6 @@ void initalizeScheduler();
 void *scheduler(void *rsp);
 int initalizeProcess(void (*process)(int argc, char **argv), int argc,
                      char **argv, int foreground, int *fd);
+void freePcb(pcb *process);
 
 #endif
