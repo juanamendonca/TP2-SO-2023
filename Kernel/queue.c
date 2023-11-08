@@ -9,7 +9,7 @@ Queue *createQueue() {
   if (!queue) {
     return NULL;
   }
-  queue->front = queue->rear = NULL; // Inicializa el iterador
+  queue->front = queue->rear = queue->iterator = NULL; // Inicializa el iterador
   return queue;
 }
 
@@ -142,4 +142,47 @@ pcb *getProcess(Queue *queue, int pid) {
     current = current->next;
   }
   return NULL;
+}
+
+void startIterator(Queue *queue) { queue->iterator = queue->front; }
+
+int hasNext(Queue *queue) { return queue->iterator != NULL; }
+
+pcb *next(Queue *queue) {
+  pcb *toReturn = queue->iterator->data;
+  queue->iterator = queue->iterator->next;
+  return toReturn;
+}
+
+pcb *getAndDeleteProcess(Queue *queue, int pid) {
+  Node *current = queue->front;
+  Node *prev = NULL;
+
+  while (current != NULL) {
+    if (current->data->pid == pid) {
+      if (prev == NULL) {
+        // Si el proceso a eliminar es el primer elemento de la cola
+        queue->front = current->next;
+        if (queue->front == NULL) {
+          queue->rear = NULL;
+        }
+      } else {
+        // Si el proceso a eliminar está en una posición distinta al principio
+        prev->next = current->next;
+        if (prev->next == NULL) {
+          queue->rear = prev;
+        }
+      }
+
+      pcb *data = current->data;
+      free(current);
+      return data;
+    } else {
+      prev = current;
+    }
+
+    current = current->next;
+  }
+
+  return NULL; // No se encontró un proceso con el PID especificado
 }

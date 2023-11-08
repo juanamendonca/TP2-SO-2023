@@ -125,3 +125,52 @@ pcb *getProcessP(PriorityQueue *queue, int pid) {
   return process; // Si se encuentra el proceso en q4 o no se encuentra en
                   // ninguna cola, se devuelve
 }
+
+void startIteratorP(PriorityQueue *queue) {
+  startIterator(queue->q1);
+  startIterator(queue->q2);
+  startIterator(queue->q3);
+  startIterator(queue->q4);
+}
+
+int hasNextP(PriorityQueue *queue) {
+  return hasNext(queue->q1) || hasNext(queue->q2) || hasNext(queue->q3) ||
+         hasNext(queue->q4);
+}
+
+pcb *nextP(PriorityQueue *queue) {
+  if (hasNext(queue->q1)) {
+    return next(queue->q1);
+  }
+  if (hasNext(queue->q2)) {
+    return next(queue->q2);
+  }
+  if (hasNext(queue->q3)) {
+    return next(queue->q3);
+  }
+  if (hasNext(queue->q4)) {
+    return next(queue->q4);
+  }
+  return NULL;
+}
+
+pcb *getAndDeleteProcessP(PriorityQueue *queue, int pid) {
+  pcb *process = getAndDeleteProcess(queue->q1, pid);
+  if (process != NULL) {
+    return process; // Si se encuentra el proceso en q1, se devuelve
+  }
+
+  process = getAndDeleteProcess(queue->q2, pid);
+  if (process != NULL) {
+    return process; // Si se encuentra el proceso en q2, se devuelve
+  }
+
+  process = getAndDeleteProcess(queue->q3, pid);
+  if (process != NULL) {
+    return process; // Si se encuentra el proceso en q3, se devuelve
+  }
+
+  process = getAndDeleteProcess(queue->q4, pid);
+  return process; // Si se encuentra el proceso en q4 o no se encuentra en
+                  // ninguna cola, se devuelve
+}

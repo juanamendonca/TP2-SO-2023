@@ -22,3 +22,4 @@ void printHexa(uint64_t value);
 int getWidth();
 void printError(char *string);
 void clearScreen();
+void intToString(int number, char str[]);

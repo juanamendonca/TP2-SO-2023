@@ -3,14 +3,18 @@
 #include "priorityQueue.h"
 #include "strings.h"
 #include "video.h"
+#include <stdarg.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #define STACK_SIZE (1024 * 4)
-#define QUANTUM 1
+#define QUANTUM 2
+#define BUFFER_SIZE_PROCESS 100
 
-int pid = 0;
+int pid = 1;
 PriorityQueue *queue = NULL;
 pcb *dummyPcb = NULL;
 pcb *currentPcb = NULL;
@@ -21,7 +25,7 @@ int getNewPid();
 int initalizePcb(pcb *newProcess, int argc, char **argv, int foreground,
                  int *fd, void *stack);
 static void processStart(int argc, char *argv[], void *function(int, char **));
-static void finishProcess();
+void killCurrent();
 int changeState(int pid, state state);
 int killProcess(int pid);
 void initalizeStackFrame(void (*fn)(int, char **), int argc, char **argv,
@@ -31,6 +35,11 @@ int initalizeProcess(void (*process)(int argc, char **argv), int argc,
 int block(int pid);
 int unblock(int pid);
 void freePcb(pcb *process);
+int processInfo(pcb *pcb, char *buffer);
+int processesInfo(char *buffer);
+int getPid();
+int nice(int pid, int priority);
+void giveUpCPU();
 
 void dummy(int argc, char **argv) {
   putArrayNext("en dummy", WHITE);
@@ -41,9 +50,8 @@ void dummy(int argc, char **argv) {
 
 void hola(int argc, char **argv) {
   int i = 0;
-  while (i < 200) {
-    putDecNext(i, WHITE);
-    putLine();
+  while (1) {
+    putArrayNext(" ", WHITE);
     i++;
   }
 }
@@ -54,12 +62,22 @@ void process1(int argc, char **argv) {
   putLine();
   putArrayNext("proceso 1", WHITE);
   putLine();
+  while (1) {
+    putArrayNext(".", WHITE);
+  }
 }
 
 void process2(int argc, char **argv) {
   putLine();
   putArrayNext("proceso 2", WHITE);
   putLine();
+  char *buffer = malloc(500);
+  processesInfo(buffer);
+  putArrayNext("info ya se hizo", WHITE);
+  if (*buffer == '\0') {
+    putArrayNext("buffer esta vacio", WHITE);
+  }
+  putArrayNext(buffer, WHITE);
 }
 
 void initalizeScheduler() {
@@ -126,7 +144,11 @@ int getNewPid() {
 int initializePcb(pcb *newProcess, int argc, char **argv, int foreground,
                   int *fd, void *stack) {
   newProcess->pid = getNewPid();
-  newProcess->ppid = 0;
+  if (currentPcb == NULL) {
+    newProcess->ppid = 0;
+  } else {
+    newProcess->ppid = currentPcb->pid;
+  }
   newProcess->foreground = foreground;
   newProcess->state = READY;
   newProcess->priority = 1;
@@ -161,10 +183,10 @@ int initializePcb(pcb *newProcess, int argc, char **argv, int foreground,
 
 static void processStart(int argc, char *argv[], void *process(int, char **)) {
   process(argc, argv);
-  finishProcess();
+  killCurrent();
 }
 
-static void finishProcess() { killProcess(currentPcb->pid); }
+void killCurrent() { killProcess(currentPcb->pid); }
 
 int killProcess(int pid) {
   if (changeState(pid, KILLED) < 0) {
@@ -219,12 +241,14 @@ void initalizeStackFrame(void (*fn)(int, char **), int argc, char **argv,
 int initalizeProcess(void (*process)(int argc, char **argv), int argc,
                      char **argv, int foreground, int *fd) {
   if (process == NULL) {
+    putArrayNext(" process is null ", WHITE);
     return -1;
   }
 
   pcb *newProcess = malloc(sizeof(pcb));
 
   if (newProcess == NULL) {
+    putArrayNext(" pcb is null ", WHITE);
     return -1;
   }
 
@@ -232,10 +256,12 @@ int initalizeProcess(void (*process)(int argc, char **argv), int argc,
 
   if (stack == NULL) {
     free(newProcess);
+    putArrayNext(" stack is null ", WHITE);
     return -1;
   }
 
   if (initializePcb(newProcess, argc, argv, foreground, fd, stack) == -1) {
+    putArrayNext(" initialize pcb is null ", WHITE);
     return -1;
   }
 
@@ -243,12 +269,19 @@ int initalizeProcess(void (*process)(int argc, char **argv), int argc,
 
   enqueueP(queue, newProcess, newProcess->priority);
 
-  return 0;
+  return newProcess->pid;
 }
 
 int block(int pid) {
   int toReturn = changeState(pid, BLOCKED);
   if (currentPcb != NULL && currentPcb->pid == pid) {
+    if (currentPcb->priority > 1 &&
+        (currentPcb->priority * QUANTUM - currentPcb->quantum) <
+            ((currentPcb->priority - 1) * QUANTUM)) {
+      currentPcb->priority--;
+    }
+    currentPcb->quantum = QUANTUM * currentPcb->priority;
+    enqueueP(queue, currentPcb, currentPcb->priority);
     callTimer();
   }
   return toReturn;
@@ -270,4 +303,88 @@ void freePcb(pcb *process) {
   }
   free((void *)((char *)process->rbp - STACK_SIZE + 1));
   free(process);
+}
+
+int processInfo(pcb *pcb, char *buffer) {
+  if (pcb == NULL || buffer == NULL) {
+    return -1;
+  }
+  intToString(pcb->pid, buffer);
+  buffer += strlen(buffer);
+  *(buffer) = '\t';
+  buffer++;
+  int digits = uintToBase((uint64_t)pcb->rsp, buffer, 16);
+  fillHexa(16 - digits, buffer);
+  buffer += strlen(buffer);
+  *(buffer) = '\t';
+  buffer++;
+  digits = uintToBase((uint64_t)pcb->rbp, buffer, 16);
+  fillHexa(16 - digits, buffer);
+  buffer += strlen(buffer);
+  *(buffer) = '\t';
+  buffer++;
+  strcpy(buffer, pcb->name);
+  buffer += strlen(buffer);
+  *(buffer) = '\t';
+  buffer++;
+  if (pcb->foreground == 1) {
+    strcpy(buffer, "foreground");
+  } else {
+    strcpy(buffer, "background");
+  }
+  buffer += strlen(buffer);
+  *(buffer) = '\t';
+  buffer++;
+  if (pcb->state == READY) {
+    strcpy(buffer, "ready");
+  } else if (pcb->state == BLOCKED) {
+    strcpy(buffer, "blocked");
+  } else {
+    strcpy(buffer, "killed");
+  }
+
+  return 0;
+}
+
+int processesInfo(char *buffer) {
+  *buffer = '\0';
+  startIteratorP(queue);
+  while (hasNextP(queue)) {
+    processInfo(nextP(queue), buffer);
+    buffer += strlen(buffer);
+    *(buffer) = '\n';
+    buffer++;
+  }
+  *(buffer) = '\0';
+  return 0;
+}
+
+int getPid() {
+  if (currentPcb == NULL) {
+    return -1;
+  }
+  return currentPcb->pid;
+}
+
+int nice(int pid, int priority) {
+  if (priority < 1 || priority > 4) {
+    return -1;
+  }
+  pcb *pcb = getAndDeleteProcessP(queue, pid);
+  if (pcb == NULL) {
+    return -1;
+  }
+  pcb->priority = priority;
+  pcb->quantum = QUANTUM * pcb->quantum;
+  enqueueP(queue, pcb, pcb->priority);
+  return 0;
+}
+
+void giveUpCPU() {
+  if (currentPcb == NULL) {
+    return;
+  }
+  currentPcb->quantum = QUANTUM * currentPcb->quantum;
+  enqueueP(queue, currentPcb, currentPcb->priority);
+  callTimer();
 }

@@ -1,13 +1,13 @@
-#include <keyboard_driver.h>
-#include <lib.h>
-#include <memoryManager.h>
-#include <sound.h>
+#include "sys_calls.h"
+#include "keyboard_driver.h"
+#include "lib.h"
+#include "memoryManager.h"
+#include "scheduler.h"
+#include "sound.h"
+#include "time.h"
+#include "video.h"
 #include <stdbool.h>
 #include <stdint.h>
-#include <sys_calls.h>
-#include <time.h>
-#include <video.h>
-
 
 extern const uint64_t regs[18];
 
@@ -97,15 +97,70 @@ void _14_alloc(uint64_t memory, uint64_t size, uint64_t r3, uint64_t r4,
   (*(void **)memory) = malloc(size);
 }
 
-static syscall syscalls[] = {
-    (syscall)_0_empty,         (syscall)_1_write,
-    (syscall)_2_read,          (syscall)_3_getHours,
-    (syscall)_4_getMinutes,    (syscall)_5_getSeconds,
-    (syscall)_6_newLine,       (syscall)_7_write_dec,
-    (syscall)_8_beep,          (syscall)_9_get_ticks,
-    (syscall)_10_put_pixel,    (syscall)_11_get_screen_width,
-    (syscall)_12_clean_buffer, (syscall)_13_save_registers,
-    (syscall)_14_alloc};
+int _15_create_process(uint64_t process, uint64_t argc, uint64_t argv,
+                       uint64_t foreground, uint64_t fd) {
+  return initalizeProcess((void (*)(int argc, char **argv))process, (int)argc,
+                          (char **)argv, (int)foreground, (int *)fd);
+}
+
+void _16_kill_process(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,
+                      uint64_t r5) {
+  killProcess((int)pid);
+}
+
+int _17_get_pid(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
+                uint64_t r5) {
+  return getPid();
+}
+
+void _18_get_info_processes(uint64_t buffer, uint64_t r2, uint64_t r3,
+                            uint64_t r4, uint64_t r5) {
+  processesInfo((char *)buffer);
+}
+
+void _19_nice(uint64_t pid, uint64_t priority, uint64_t r3, uint64_t r4,
+              uint64_t r5) {
+  nice((int)pid, (int)priority);
+}
+
+void _20_block_process(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,
+                       uint64_t r5) {
+  block((int)pid);
+}
+
+void _21_unblock_process(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,
+                         uint64_t r5) {
+  unblock((int)pid);
+}
+
+void _22_giveup_cpu(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
+                    uint64_t r5) {
+  giveUpCPU();
+}
+
+static syscall syscalls[] = {(syscall)_0_empty,
+                             (syscall)_1_write,
+                             (syscall)_2_read,
+                             (syscall)_3_getHours,
+                             (syscall)_4_getMinutes,
+                             (syscall)_5_getSeconds,
+                             (syscall)_6_newLine,
+                             (syscall)_7_write_dec,
+                             (syscall)_8_beep,
+                             (syscall)_9_get_ticks,
+                             (syscall)_10_put_pixel,
+                             (syscall)_11_get_screen_width,
+                             (syscall)_12_clean_buffer,
+                             (syscall)_13_save_registers,
+                             (syscall)_14_alloc,
+                             (syscall)_15_create_process,
+                             (syscall)_16_kill_process,
+                             (syscall)_17_get_pid,
+                             (syscall)_18_get_info_processes,
+                             (syscall)_19_nice,
+                             (syscall)_20_block_process,
+                             (syscall)_21_unblock_process,
+                             (syscall)_22_giveup_cpu};
 
 int64_t sysDispatcher(uint64_t syscallNumber, uint64_t r1, uint64_t r2,
                       uint64_t r3, uint64_t r4, uint64_t r5) {

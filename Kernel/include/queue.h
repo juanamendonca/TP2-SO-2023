@@ -10,6 +10,7 @@ typedef struct Node {
 typedef struct Queue {
   Node *front;
   Node *rear;
+  Node *iterator;
 } Queue;
 
 Queue *createQueue();
@@ -22,5 +23,9 @@ pcb *dequeueReady(Queue *queue);
 pcb *front(Queue *queue);
 void destroyQueue(Queue *queue);
 pcb *getProcess(Queue *queue, int pid);
+void startIterator(Queue *queue);
+int hasNext(Queue *queue);
+pcb *next(Queue *queue);
+pcb *getAndDeleteProcess(Queue *queue, int pid);
 
 #endif

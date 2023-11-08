@@ -55,5 +55,13 @@ void *scheduler(void *rsp);
 int initalizeProcess(void (*process)(int argc, char **argv), int argc,
                      char **argv, int foreground, int *fd);
 void freePcb(pcb *process);
+int killProcess(int pid);
+void killCurrent();
+int block(int pid);
+int unblock(int pid);
+int getPid();
+int processesInfo(char *buffer);
+int nice(int pid, int priority);
+void giveUpCPU();
 
 #endif
