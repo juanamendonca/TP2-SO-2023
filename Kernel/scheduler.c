@@ -14,7 +14,7 @@
 #define QUANTUM 2
 #define BUFFER_SIZE_PROCESS 100
 
-int pid = 1;
+int pid = 0;
 PriorityQueue *queue = NULL;
 pcb *dummyPcb = NULL;
 pcb *currentPcb = NULL;
@@ -91,17 +91,17 @@ void initalizeScheduler() {
   initalizeProcess((void *)&dummy, 1, argv, 1, fd);
   dummyPcb = dequeueP(queue);
 
-  char *argv2[] = {"hola"};
-  initalizeProcess((void *)&hola, 1, argv2, 1, fd);
+  // char *argv2[] = {"hola"};
+  // initalizeProcess((void *)&hola, 1, argv2, 1, fd);
 
-  char *argv3[] = {"chau"};
-  initalizeProcess((void *)&chau, 1, argv3, 1, fd);
+  // char *argv3[] = {"chau"};
+  // initalizeProcess((void *)&chau, 1, argv3, 1, fd);
 
-  char *argv4[] = {"process1"};
-  initalizeProcess((void *)&process1, 1, argv4, 1, fd);
+  // char *argv4[] = {"process1"};
+  // initalizeProcess((void *)&process1, 1, argv4, 1, fd);
 
-  char *argv5[] = {"process2"};
-  initalizeProcess((void *)&process2, 1, argv5, 1, fd);
+  // char *argv5[] = {"process2"};
+  // initalizeProcess((void *)&process2, 1, argv5, 1, fd);
 }
 
 void *scheduler(void *rsp) {

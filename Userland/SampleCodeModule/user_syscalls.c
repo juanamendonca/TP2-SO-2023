@@ -3,7 +3,6 @@
 #include <user_lib.h>
 #include <user_syscalls.h>
 
-
 void sys_clear_screen() { sys_int_80((uint64_t)0, 0, 0, 0, 0, 0); }
 
 void sys_write(char *c, int color) {
@@ -69,7 +68,7 @@ void sys_kill_process(int pid) {
 void sys_get_pid() { sys_int_80((uint64_t)17, 0, 0, 0, 0, 0); }
 
 void sys_get_info_processes(char *buffer) {
-  sys_int_80((uint64_t)18, buffer, 0, 0, 0, 0);
+  sys_int_80((uint64_t)18, (uint64_t)buffer, 0, 0, 0, 0);
 }
 
 void sys_nice(int pid, int priority) {

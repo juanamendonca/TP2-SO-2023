@@ -48,11 +48,14 @@ void *initializeKernelBinary() {
 }
 
 int main() {
-  load_idt(); // sets the IDT before the terminal launches
   createMemoryManager(memoryManagerModuleAddress, HEAP_SIZE);
   initalizeScheduler();
-  ((EntryPoint)sampleCodeModuleAddress)(); // calls sampleCodeModule main
+  char *args[] = {"userland"};
+  int userlandFd[2] = {0, 1};
+  initalizeProcess(sampleCodeModuleAddress, 1, args, 1, userlandFd);
+  // setUserland(userlandPid);
+  load_idt(); // sets the IDT before the terminal launches
+  //((EntryPoint)sampleCodeModuleAddress)(); // calls sampleCodeModule main
   // address
-
   return 0;
 }

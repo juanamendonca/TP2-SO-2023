@@ -1,5 +1,5 @@
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 void sys_clear_screen();
 
@@ -30,3 +30,20 @@ void sys_get_clean_buffer();
 void sys_registers(uint64_t *registers, bool *isSaved);
 
 void sys_alloc(uint64_t **memory, int size);
+
+void sys_create_process(void (*process)(unsigned int argc, char **argv),
+                        int argc, char **argv, int foreground, int *fd);
+
+void sys_kill_process(int pid);
+
+void sys_get_pid();
+
+void sys_get_info_processes(char *buffer);
+
+void sys_nice(int pid, int priority);
+
+void sys_block_process(int pid);
+
+void sys_unblock_process(int pid);
+
+void sys_giveup_cpu();
