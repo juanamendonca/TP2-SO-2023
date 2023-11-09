@@ -286,3 +286,26 @@ void printHexa(uint64_t value) {
     i++;
   }
 }
+
+
+uint64_t sWrite(char *buffer, int size, int color)
+{
+    while (size-- && *buffer != 0)
+    {
+        putArrayNext(*buffer,color);
+        buffer++;
+    }
+    return size == 0;
+}
+
+void print(char *string)
+{
+    sWrite(string, strlen(string), WHITE);
+}
+
+void printInt(int num)
+{
+    char buffer[40];
+    uintToBase(num, buffer, 10);
+    print(buffer);
+}

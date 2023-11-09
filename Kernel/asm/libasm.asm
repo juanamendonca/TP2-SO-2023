@@ -6,7 +6,7 @@ GLOBAL getMinutes
 GLOBAL getSeconds
 GLOBAL outb
 GLOBAL inb
-
+GLOBAL _xchg
 section .text
 
 cpuVendor:
@@ -82,4 +82,9 @@ outb:
 	out dx, al
 	mov rsp, rbp
 	pop rbp
+	ret
+
+_xchg:
+	mov rax, rsi
+	xchg [rdi], eax
 	ret

@@ -8,6 +8,7 @@
 #include "video.h"
 #include <stdbool.h>
 #include <stdint.h>
+#include "semaphores.h"
 
 extern const uint64_t regs[18];
 
@@ -138,6 +139,27 @@ void _22_giveup_cpu(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
   giveUpCPU();
 }
 
+void _23_sem_wait(uint64_t rsi, uint64_t r2, uint64_t r3, uint64_t r4,
+                    uint64_t r5) {
+  sem_wait(rsi);
+}
+
+void _24_sem_post(uint64_t rsi, uint64_t r2, uint64_t r3, uint64_t r4,
+                    uint64_t r5) {
+  sem_post(rsi);
+}
+
+void _25_sem_open(uint64_t rsi, uint64_t rdx, uint64_t r3, uint64_t r4,
+                    uint64_t r5) {
+  sem_open((char *)rsi, (uint64_t)rdx);
+}
+
+void _26_sem_close(uint64_t rsi, uint64_t r2, uint64_t r3, uint64_t r4,
+                    uint64_t r5) {
+  sem_close((char *)rsi);
+}
+
+
 static syscall syscalls[] = {(syscall)_0_empty,
                              (syscall)_1_write,
                              (syscall)_2_read,
@@ -160,7 +182,12 @@ static syscall syscalls[] = {(syscall)_0_empty,
                              (syscall)_19_nice,
                              (syscall)_20_block_process,
                              (syscall)_21_unblock_process,
-                             (syscall)_22_giveup_cpu};
+                             (syscall)_22_giveup_cpu,
+                             (syscall)_23_sem_wait,
+                             (syscall)_24_sem_post,
+                             (syscall)_25_sem_open,
+                             (syscall)_26_sem_close,
+};
 
 int64_t sysDispatcher(uint64_t syscallNumber, uint64_t r1, uint64_t r2,
                       uint64_t r3, uint64_t r4, uint64_t r5) {
