@@ -1,5 +1,6 @@
 #include <font.h>
 #include <video.h>
+#include "strings.h"
 
 
 #define CHAR_WIDTH 8
@@ -292,7 +293,7 @@ uint64_t sWrite(char *buffer, int size, int color)
 {
     while (size-- && *buffer != 0)
     {
-        putArrayNext(*buffer,color);
+        putLetterNext(*buffer,color);
         buffer++;
     }
     return size == 0;
@@ -309,3 +310,4 @@ void printInt(int num)
     uintToBase(num, buffer, 10);
     print(buffer);
 }
+

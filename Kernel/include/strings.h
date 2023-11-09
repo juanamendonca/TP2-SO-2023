@@ -7,4 +7,7 @@ void strcpy(char *dest, const char *src);
 // Función para calcular la longitud de una cadena
 int strlen(const char *str);
 
+int strcmp(char *s1, char *s2);
+
+
 #endif

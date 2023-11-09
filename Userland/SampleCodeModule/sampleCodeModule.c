@@ -1,7 +1,7 @@
 /* sampleCodeModule.c */
 #include "exceptionTester.h"
 #include "functions.h"
-#include "getInfoRegs.h"
+#include "getInforegs.h"
 #include "pong.h"
 #include "time.h"
 #include "user_syscalls.h"

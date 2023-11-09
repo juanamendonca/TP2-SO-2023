@@ -1,5 +1,6 @@
 #include "semaphores.h"
 #include "video.h"
+#include "string.h"
 
 typedef struct
 {
@@ -26,6 +27,7 @@ void print_semaphore(semaphore sem);
 void print_procceses_blocked(process *process);
 
 
+
 void start_semaphores()
 {
     for (int i = 0; i < SEM_LIMIT; i++)
@@ -35,7 +37,7 @@ void start_semaphores()
 }
 
 
-static uint64_t findAvailableSpace()
+static uint64_t find_space_availability()
 {
     for (int i = 0; i < SEM_LIMIT; i++)
     {
@@ -52,7 +54,7 @@ static uint64_t findAvailableSpace()
 static int creates_semaphore(char *name, uint64_t initValue)
 {
     int pos;
-    if ((pos = findAvailableSpace()) != -1)
+    if ((pos = find_space_availability()) != -1)
     {
         //We iniliatize the structure
         memcpy(semSpaces[pos].sem.name, name, strlen(name));
@@ -67,7 +69,7 @@ static int creates_semaphore(char *name, uint64_t initValue)
 }
 
 
-uint64_t semOpen(char *name, uint64_t initValue)
+uint64_t sem_open(char *name, uint64_t initValue)
 {
     while (_xchg(&lock_semaphore, 1) != 0); // Waiting for lock to be available
     int semIndex = find_semaphore(name);
@@ -100,10 +102,10 @@ static uint64_t find_semaphore(char *name)
 }
 
 // Returns -1 if an error happens
-uint64_t semClose(char *name)
+uint64_t sem_close(char *name)
 {
     while (_xchg(&lock_semaphore, 1) != 0);
-    int semIndex = findSem(name);
+    int semIndex = find_semaphore(name);
     if (semIndex == -1)
     {
         return -1; // Semaphore was not found
@@ -116,7 +118,7 @@ uint64_t semClose(char *name)
 
 
 // Add a proccess tho the process list, if fails returns -1
-uint64_t enqeueProcess(uint64_t pid, semaphore *sem)
+uint64_t enqeue_process(uint64_t pid, semaphore *sem)
 {
     process * process = malloc(sizeof(process));
     if (process == NULL)
@@ -141,7 +143,7 @@ uint64_t enqeueProcess(uint64_t pid, semaphore *sem)
 }
 
 
-uint64_t dequeueProcess(semaphore *sem)
+uint64_t dequeue_process(semaphore *sem)
 {
     if (sem == NULL || sem->firstProcess == NULL)
         return -1;
@@ -158,7 +160,7 @@ uint64_t dequeueProcess(semaphore *sem)
 }
 
 // Returns 0 in case of exit, and -1 if fails. Blcked.
-uint64_t semWait(uint64_t semIndex)
+uint64_t sem_wait(uint64_t semIndex)
 {
     if (semIndex >= SEM_LIMIT)
         return -1;
@@ -175,7 +177,7 @@ uint64_t semWait(uint64_t semIndex)
     {
         //If the value is 0, put the process to sleep.
         uint64_t pid = getPid();
-        if (enqeueProcess(pid, sem) == -1)
+        if (enqeue_process(pid, sem) == -1)
         {
             _xchg(&sem->lock, 0);
             return -1;
@@ -191,7 +193,7 @@ uint64_t semWait(uint64_t semIndex)
     return 0;
 }
 
-uint64_t semPost(uint64_t semIndex)
+uint64_t sem_post(uint64_t semIndex)
 {
     if (semIndex >= SEM_LIMIT)
     {
@@ -205,7 +207,7 @@ uint64_t semPost(uint64_t semIndex)
     int pid = 0;
     if (sem->sizeList > 0)
     {
-        if ((pid = dequeueProcess(sem)) == -1)
+        if ((pid = dequeue_process(sem)) == -1)
         {
             _xchg(&sem->lock, 0);
             return -1;
@@ -239,7 +241,7 @@ void printSem(semaphore sem)
         print("\t\t\t\t");
     printInt(sem.value);
     print("\t\t\t");
-    printProcessesBlocked(sem.firstProcess);
+    print_procceses_blocked(sem.firstProcess);
     print("\n");
 }
 

@@ -4,6 +4,8 @@
 #include "stdio.h"
 #include "defs.h"
 #include "scheduler.h"
+#include "lib.h"
+#include "memoryManager.h"
 
 #define NAME_LIMIT 15
 #define SEM_LIMIT 30
@@ -46,6 +48,9 @@ void sem();
 char *getSemName(uint64_t semIndex);
 
 void printProcessesSem(uint64_t semIndex);
+
+void printSem(semaphore sem);
+
 
 
 #endif

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Nombre del contenedor Docker
-container_name="tparqui"
+container_name=SISOP
 
 # Iniciar el contenedor Docker
 docker start $container_name

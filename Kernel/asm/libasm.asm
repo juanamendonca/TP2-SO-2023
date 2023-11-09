@@ -7,6 +7,8 @@ GLOBAL getSeconds
 GLOBAL outb
 GLOBAL inb
 GLOBAL _xchg
+GLOBAL forceTimer
+
 section .text
 
 cpuVendor:
@@ -87,4 +89,8 @@ outb:
 _xchg:
 	mov rax, rsi
 	xchg [rdi], eax
+	ret
+
+forceTimer:
+	int 20h
 	ret

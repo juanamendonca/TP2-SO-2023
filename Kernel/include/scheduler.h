@@ -64,5 +64,6 @@ int processesInfo(char *buffer);
 int nice(int pid, int priority);
 void giveUpCPU();
 // void setUserland(int pid);
+extern void forceTimer();
 
 #endif
