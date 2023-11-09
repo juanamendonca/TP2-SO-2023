@@ -65,7 +65,10 @@ void command(char *entry) {
     invalidOpTester();
   } else if (strcmp(buffer, "ALLOC") == 0) {
     // por ahora nada
-  } else {
+  } else if (strcmp(buffer, "ALLOC") == 0) {
+    // por ahora nada
+  } 
+    else {
     print("Invalid command");
     enter();
     help();

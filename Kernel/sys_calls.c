@@ -139,24 +139,24 @@ void _22_giveup_cpu(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
   giveUpCPU();
 }
 
-void _23_sem_wait(uint64_t rsi, uint64_t r2, uint64_t r3, uint64_t r4,
+void _23_sem_wait(uint64_t semIndex, uint64_t r2, uint64_t r3, uint64_t r4,
                     uint64_t r5) {
-  sem_wait(rsi);
+  sem_wait(semIndex);
 }
 
-void _24_sem_post(uint64_t rsi, uint64_t r2, uint64_t r3, uint64_t r4,
+void _24_sem_post(uint64_t semIndex, uint64_t r2, uint64_t r3, uint64_t r4,
                     uint64_t r5) {
-  sem_post(rsi);
+  sem_post(semIndex);
 }
 
-void _25_sem_open(uint64_t rsi, uint64_t rdx, uint64_t r3, uint64_t r4,
+void _25_sem_open(uint64_t name, uint64_t initValue, uint64_t r3, uint64_t r4,
                     uint64_t r5) {
-  sem_open((char *)rsi, (uint64_t)rdx);
+  sem_open((char *)name, (uint64_t)initValue);
 }
 
-void _26_sem_close(uint64_t rsi, uint64_t r2, uint64_t r3, uint64_t r4,
+void _26_sem_close(uint64_t name, uint64_t r2, uint64_t r3, uint64_t r4,
                     uint64_t r5) {
-  sem_close((char *)rsi);
+  sem_close((char *)name);
 }
 
 

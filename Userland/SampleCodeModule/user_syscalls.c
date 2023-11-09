@@ -83,4 +83,8 @@ void sys_unblock_process(int pid) {
   sys_int_80((uint64_t)21, (uint64_t)pid, 0, 0, 0, 0);
 }
 
-void sys_giveup_cpu() { sys_int_80((uint64_t)22, 0, 0, 0, 0, 0); }
+void sys_giveup_cpu() { sys_int_80((uint64_t)22, 0, 0, 0, 0, 0); 
+
+
+
+}
