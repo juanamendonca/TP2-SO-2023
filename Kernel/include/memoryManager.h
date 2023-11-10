@@ -3,9 +3,9 @@
 
 #include <stdlib.h>
 
-void createMemoryManager(void *const restrict managedMemory, int heapSize);
+void createMemoryManager();
 
-void *malloc(const size_t memoryToAllocate);
+void *malloc(const size_t size);
 
 void free(void *memory);
 
