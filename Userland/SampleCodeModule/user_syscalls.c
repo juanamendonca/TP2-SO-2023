@@ -61,8 +61,8 @@ int sys_create_process(void (*process)(unsigned int argc, char **argv),
                     (uint64_t)argv, (uint64_t)foreground, (uint64_t)fd);
 }
 
-void sys_kill_process(int pid) {
-  sys_int_80((uint64_t)16, (uint64_t)pid, 0, 0, 0, 0);
+int sys_kill_process(int pid) {
+  return sys_int_80((uint64_t)16, (uint64_t)pid, 0, 0, 0, 0);
 }
 
 int sys_get_pid() { return sys_int_80((uint64_t)17, 0, 0, 0, 0, 0); }
@@ -75,12 +75,12 @@ void sys_nice(int pid, int priority) {
   sys_int_80((uint64_t)19, (uint64_t)pid, (uint64_t)priority, 0, 0, 0);
 }
 
-void sys_block_process(int pid) {
-  sys_int_80((uint64_t)20, (uint64_t)pid, 0, 0, 0, 0);
+int sys_block_process(int pid) {
+  return sys_int_80((uint64_t)20, (uint64_t)pid, 0, 0, 0, 0);
 }
 
-void sys_unblock_process(int pid) {
-  sys_int_80((uint64_t)21, (uint64_t)pid, 0, 0, 0, 0);
+int sys_unblock_process(int pid) {
+  return sys_int_80((uint64_t)21, (uint64_t)pid, 0, 0, 0, 0);
 }
 
 void sys_giveup_cpu() { sys_int_80((uint64_t)22, 0, 0, 0, 0, 0); }

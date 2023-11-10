@@ -104,9 +104,9 @@ int _15_create_process(uint64_t process, uint64_t argc, uint64_t argv,
                           (char **)argv, (int)foreground, (int *)fd);
 }
 
-void _16_kill_process(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,
-                      uint64_t r5) {
-  killProcess((int)pid);
+int _16_kill_process(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,
+                     uint64_t r5) {
+  return killProcess((int)pid);
 }
 
 int _17_get_pid(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
@@ -124,14 +124,14 @@ void _19_nice(uint64_t pid, uint64_t priority, uint64_t r3, uint64_t r4,
   nice((int)pid, (int)priority);
 }
 
-void _20_block_process(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,
-                       uint64_t r5) {
-  block((int)pid);
+int _20_block_process(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,
+                      uint64_t r5) {
+  return block((int)pid);
 }
 
-void _21_unblock_process(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,
-                         uint64_t r5) {
-  unblock((int)pid);
+int _21_unblock_process(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,
+                        uint64_t r5) {
+  return unblock((int)pid);
 }
 
 void _22_giveup_cpu(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,

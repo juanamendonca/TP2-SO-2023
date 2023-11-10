@@ -11,7 +11,7 @@
 #include <stdlib.h>
 
 #define STACK_SIZE (1024 * 4)
-#define QUANTUM 2
+#define QUANTUM 1
 #define BUFFER_SIZE_PROCESS 100
 
 int pid = 0;
@@ -355,6 +355,10 @@ int processInfo(pcb *pcb, char *buffer) {
   } else {
     strcpy(buffer, "killed");
   }
+  buffer += strlen(buffer);
+  *(buffer) = '\t';
+  buffer++;
+  intToString(pcb->priority, buffer);
 
   return 0;
 }
