@@ -67,8 +67,7 @@ void command(char *entry) {
     // por ahora nada
   } else if (strcmp(buffer, "ALLOC") == 0) {
     // por ahora nada
-  } 
-    else {
+  } else {
     print("Invalid command");
     enter();
     help();
@@ -76,6 +75,9 @@ void command(char *entry) {
 }
 
 void shell(unsigned int argc, char *argv[]) {
+  char buffer[400];
+  sys_get_info_processes(buffer);
+  print(buffer);
   sys_write("Welcome!", PURPLE);
   enter();
   help();
@@ -112,6 +114,7 @@ int main() {
   // enter();
   char *argv[] = {"shell"};
   int fd[] = {0, 0};
-  sys_create_process(&shell, 1, argv, 1, fd);
+  int shellPid = sys_create_process(&shell, 1, argv, 1, fd);
+  sys_waitpid(shellPid);
   return 0;
 }

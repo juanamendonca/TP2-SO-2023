@@ -31,12 +31,12 @@ void sys_registers(uint64_t *registers, bool *isSaved);
 
 void sys_alloc(uint64_t **memory, int size);
 
-void sys_create_process(void (*process)(unsigned int argc, char **argv),
-                        int argc, char **argv, int foreground, int *fd);
+int sys_create_process(void (*process)(unsigned int argc, char **argv),
+                       int argc, char **argv, int foreground, int *fd);
 
 void sys_kill_process(int pid);
 
-void sys_get_pid();
+int sys_get_pid();
 
 void sys_get_info_processes(char *buffer);
 
@@ -47,3 +47,5 @@ void sys_block_process(int pid);
 void sys_unblock_process(int pid);
 
 void sys_giveup_cpu();
+
+void sys_waitpid(int pid);

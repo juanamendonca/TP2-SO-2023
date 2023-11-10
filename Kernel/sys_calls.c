@@ -3,12 +3,12 @@
 #include "lib.h"
 #include "memoryManager.h"
 #include "scheduler.h"
+#include "semaphores.h"
 #include "sound.h"
 #include "time.h"
 #include "video.h"
 #include <stdbool.h>
 #include <stdint.h>
-#include "semaphores.h"
 
 extern const uint64_t regs[18];
 
@@ -140,53 +140,59 @@ void _22_giveup_cpu(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
 }
 
 void _23_sem_wait(uint64_t semIndex, uint64_t r2, uint64_t r3, uint64_t r4,
-                    uint64_t r5) {
+                  uint64_t r5) {
   sem_wait(semIndex);
 }
 
 void _24_sem_post(uint64_t semIndex, uint64_t r2, uint64_t r3, uint64_t r4,
-                    uint64_t r5) {
+                  uint64_t r5) {
   sem_post(semIndex);
 }
 
 void _25_sem_open(uint64_t name, uint64_t initValue, uint64_t r3, uint64_t r4,
-                    uint64_t r5) {
+                  uint64_t r5) {
   sem_open((char *)name, (uint64_t)initValue);
 }
 
 void _26_sem_close(uint64_t name, uint64_t r2, uint64_t r3, uint64_t r4,
-                    uint64_t r5) {
+                   uint64_t r5) {
   sem_close((char *)name);
 }
 
+void _27_waitpid(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,
+                 uint64_t r5) {
+  waitpid((int)pid);
+}
 
-static syscall syscalls[] = {(syscall)_0_empty,
-                             (syscall)_1_write,
-                             (syscall)_2_read,
-                             (syscall)_3_getHours,
-                             (syscall)_4_getMinutes,
-                             (syscall)_5_getSeconds,
-                             (syscall)_6_newLine,
-                             (syscall)_7_write_dec,
-                             (syscall)_8_beep,
-                             (syscall)_9_get_ticks,
-                             (syscall)_10_put_pixel,
-                             (syscall)_11_get_screen_width,
-                             (syscall)_12_clean_buffer,
-                             (syscall)_13_save_registers,
-                             (syscall)_14_alloc,
-                             (syscall)_15_create_process,
-                             (syscall)_16_kill_process,
-                             (syscall)_17_get_pid,
-                             (syscall)_18_get_info_processes,
-                             (syscall)_19_nice,
-                             (syscall)_20_block_process,
-                             (syscall)_21_unblock_process,
-                             (syscall)_22_giveup_cpu,
-                             (syscall)_23_sem_wait,
-                             (syscall)_24_sem_post,
-                             (syscall)_25_sem_open,
-                             (syscall)_26_sem_close,
+static syscall syscalls[] = {
+    (syscall)_0_empty,
+    (syscall)_1_write,
+    (syscall)_2_read,
+    (syscall)_3_getHours,
+    (syscall)_4_getMinutes,
+    (syscall)_5_getSeconds,
+    (syscall)_6_newLine,
+    (syscall)_7_write_dec,
+    (syscall)_8_beep,
+    (syscall)_9_get_ticks,
+    (syscall)_10_put_pixel,
+    (syscall)_11_get_screen_width,
+    (syscall)_12_clean_buffer,
+    (syscall)_13_save_registers,
+    (syscall)_14_alloc,
+    (syscall)_15_create_process,
+    (syscall)_16_kill_process,
+    (syscall)_17_get_pid,
+    (syscall)_18_get_info_processes,
+    (syscall)_19_nice,
+    (syscall)_20_block_process,
+    (syscall)_21_unblock_process,
+    (syscall)_22_giveup_cpu,
+    (syscall)_23_sem_wait,
+    (syscall)_24_sem_post,
+    (syscall)_25_sem_open,
+    (syscall)_26_sem_close,
+    (syscall)_27_waitpid,
 };
 
 int64_t sysDispatcher(uint64_t syscallNumber, uint64_t r1, uint64_t r2,

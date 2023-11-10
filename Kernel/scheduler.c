@@ -40,6 +40,7 @@ int processesInfo(char *buffer);
 int getPid();
 int nice(int pid, int priority);
 void giveUpCPU();
+void waitpid(int pid);
 
 void dummy(int argc, char **argv) {
   putArrayNext("en dummy", WHITE);
@@ -120,7 +121,7 @@ void *scheduler(void *rsp) {
       currentPcb->quantum--;
       return rsp;
     }
-    if (currentPcb->priority < 4) {
+    if (currentPcb->priority < 4 && currentPcb->state == READY) {
       currentPcb->priority++;
     }
     currentPcb->rsp = rsp;
@@ -159,6 +160,7 @@ int initializePcb(pcb *newProcess, int argc, char **argv, int foreground,
   newProcess->rbp = (void *)((char *)stack + STACK_SIZE - 1);
   newProcess->rsp = (void *)(newProcess->rbp - sizeof(stackFrame));
   newProcess->argc = argc;
+  newProcess->waitingPid = 0;
   char **arguments = malloc(sizeof(char *) * argc);
   if (arguments == NULL) {
     return -1;
@@ -189,9 +191,19 @@ static void processStart(int argc, char *argv[], void *process(int, char **)) {
 void killCurrent() { killProcess(currentPcb->pid); }
 
 int killProcess(int pid) {
-  if (changeState(pid, KILLED) < 0) {
+  pcb *process = NULL;
+  if (pid == currentPcb->pid) {
+    process = currentPcb;
+  } else {
+    process = getProcessP(queue, pid);
+  }
+  if (process == NULL) {
     return -1;
   }
+  if (process->waitingPid > 0) {
+    unblock(process->ppid);
+  }
+  changeState(pid, KILLED);
   if (pid == currentPcb->pid) {
     callTimer();
   }
@@ -273,7 +285,6 @@ int initalizeProcess(void (*process)(int argc, char **argv), int argc,
 }
 
 int block(int pid) {
-  int toReturn = changeState(pid, BLOCKED);
   if (currentPcb != NULL && currentPcb->pid == pid) {
     if (currentPcb->priority > 1 &&
         (currentPcb->priority * QUANTUM - currentPcb->quantum) <
@@ -281,7 +292,9 @@ int block(int pid) {
       currentPcb->priority--;
     }
     currentPcb->quantum = QUANTUM * currentPcb->priority;
-    enqueueP(queue, currentPcb, currentPcb->priority);
+  }
+  int toReturn = changeState(pid, BLOCKED);
+  if (currentPcb != NULL && currentPcb->pid == pid) {
     callTimer();
   }
   return toReturn;
@@ -355,6 +368,10 @@ int processesInfo(char *buffer) {
     *(buffer) = '\n';
     buffer++;
   }
+  processInfo(currentPcb, buffer);
+  buffer += strlen(buffer);
+  *(buffer) = '\n';
+  buffer++;
   *(buffer) = '\0';
   return 0;
 }
@@ -387,4 +404,13 @@ void giveUpCPU() {
   currentPcb->quantum = QUANTUM * currentPcb->quantum;
   enqueueP(queue, currentPcb, currentPcb->priority);
   callTimer();
+}
+
+void waitpid(int pid) {
+  pcb *process = getProcessP(queue, pid);
+  if (process == NULL) {
+    return;
+  }
+  process->waitingPid = 1;
+  block(process->ppid);
 }
