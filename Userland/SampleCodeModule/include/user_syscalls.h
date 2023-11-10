@@ -47,3 +47,13 @@ void sys_block_process(int pid);
 void sys_unblock_process(int pid);
 
 void sys_giveup_cpu();
+
+void sys_semPost(int id);
+
+void sys_semWait(int id);
+
+void sys_semClose(int id);
+
+void sys_semOpen(char *id, int initialValue);
+
+void sys_semInit(int initialValue);

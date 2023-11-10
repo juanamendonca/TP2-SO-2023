@@ -42,6 +42,12 @@ void help() {
   sys_write("ALLOC", GREEN);
   print(": to allocate 0x1000 memory ");
   enter();
+  sys_write("SEM", GREEN);
+  print(": To print current sempahore information");
+  enter();
+  sys_write("test_synch", GREEN);
+  print(": to test sempahores");
+  enter();
 }
 
 void command(char *entry) {
@@ -65,8 +71,10 @@ void command(char *entry) {
     invalidOpTester();
   } else if (strcmp(buffer, "ALLOC") == 0) {
     // por ahora nada
-  } else if (strcmp(buffer, "ALLOC") == 0) {
+  } else if (strcmp(buffer, "test_synch") == 0) {
     // por ahora nada
+  } else if (strcmp(buffer, "SEM") == 0) {
+    // 
   } 
     else {
     print("Invalid command");

@@ -159,6 +159,10 @@ void _26_sem_close(uint64_t name, uint64_t r2, uint64_t r3, uint64_t r4,
   sem_close((char *)name);
 }
 
+void _27_sem_(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
+                    uint64_t r5) {
+  sem();
+}
 
 static syscall syscalls[] = {(syscall)_0_empty,
                              (syscall)_1_write,
@@ -187,6 +191,7 @@ static syscall syscalls[] = {(syscall)_0_empty,
                              (syscall)_24_sem_post,
                              (syscall)_25_sem_open,
                              (syscall)_26_sem_close,
+                             (syscall)_27_sem_,
 };
 
 int64_t sysDispatcher(uint64_t syscallNumber, uint64_t r1, uint64_t r2,
