@@ -55,17 +55,17 @@ void sys_alloc(uint64_t **memory, int size) {
   sys_int_80((uint64_t)14, (uint64_t)memory, (uint64_t)size, 0, 0, 0);
 }
 
-void sys_create_process(void (*process)(unsigned int argc, char **argv),
-                        int argc, char **argv, int foreground, int *fd) {
-  sys_int_80((uint64_t)15, (uint64_t)process, (uint64_t)argc, (uint64_t)argv,
-             (uint64_t)foreground, (uint64_t)fd);
+int sys_create_process(void (*process)(unsigned int argc, char **argv),
+                       int argc, char **argv, int foreground, int *fd) {
+  return sys_int_80((uint64_t)15, (uint64_t)process, (uint64_t)argc,
+                    (uint64_t)argv, (uint64_t)foreground, (uint64_t)fd);
 }
 
-void sys_kill_process(int pid) {
-  sys_int_80((uint64_t)16, (uint64_t)pid, 0, 0, 0, 0);
+int sys_kill_process(int pid) {
+  return sys_int_80((uint64_t)16, (uint64_t)pid, 0, 0, 0, 0);
 }
 
-void sys_get_pid() { sys_int_80((uint64_t)17, 0, 0, 0, 0, 0); }
+int sys_get_pid() { return sys_int_80((uint64_t)17, 0, 0, 0, 0, 0); }
 
 void sys_get_info_processes(char *buffer) {
   sys_int_80((uint64_t)18, (uint64_t)buffer, 0, 0, 0, 0);
@@ -75,35 +75,16 @@ void sys_nice(int pid, int priority) {
   sys_int_80((uint64_t)19, (uint64_t)pid, (uint64_t)priority, 0, 0, 0);
 }
 
-void sys_block_process(int pid) {
-  sys_int_80((uint64_t)20, (uint64_t)pid, 0, 0, 0, 0);
+int sys_block_process(int pid) {
+  return sys_int_80((uint64_t)20, (uint64_t)pid, 0, 0, 0, 0);
 }
 
-void sys_unblock_process(int pid) {
-  sys_int_80((uint64_t)21, (uint64_t)pid, 0, 0, 0, 0);
+int sys_unblock_process(int pid) {
+  return sys_int_80((uint64_t)21, (uint64_t)pid, 0, 0, 0, 0);
 }
 
-void sys_giveup_cpu() { sys_int_80((uint64_t)22, 0, 0, 0, 0, 0); 
+void sys_giveup_cpu() { sys_int_80((uint64_t)22, 0, 0, 0, 0, 0); }
 
+void sys_waitpid(int pid) {
+  sys_int_80((uint64_t)27, (uint64_t)pid, 0, 0, 0, 0);
 }
-
-void sys_semWait(int id){
-    sys_int_80((uint64_t)23, (uint64_t)id, 0, 0, 0, 0);
-}
-
-void sys_semPost(int id){
-    sys_int_80((uint64_t)24, (uint64_t)id, 0, 0, 0, 0);
-}
-
-void sys_semClose(int id){
-    sys_int_80((uint64_t)26, (uint64_t)id, 0, 0, 0, 0);
-}
-
-void sys_semOpen(char *id, int initialValue){
-    sys_int_80((uint64_t)25, (uint64_t)id, (uint64_t)initialValue, 0, 0, 0);
-}
-
-void sys_sem(char *id, int initialValue){
-    sys_int_80((uint64_t)27,0,0, 0, 0, 0);
-}
-

@@ -25,7 +25,7 @@ static const uint64_t PageSize = 0x1000;
 
 static void *const sampleCodeModuleAddress = (void *)0x400000;
 static void *const sampleDataModuleAddress = (void *)0x500000;
-static void *const memoryManagerModuleAddress = (void *)0x600000;
+static void *const memoryManagerModuleAddress = (void *)0x0000000000050000;
 
 typedef int (*EntryPoint)();
 
@@ -48,7 +48,7 @@ void *initializeKernelBinary() {
 }
 
 int main() {
-  createMemoryManager(memoryManagerModuleAddress, HEAP_SIZE);
+  createMemoryManager();
   initalizeScheduler();
   char *args[] = {"userland"};
   int userlandFd[2] = {0, 1};

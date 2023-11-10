@@ -23,7 +23,7 @@ typedef struct pcb {
   void *rbp;
   int argc;
   char **argv;
-
+  int waitingPid;
 } pcb;
 
 typedef struct stackFrame {
@@ -65,5 +65,6 @@ int nice(int pid, int priority);
 void giveUpCPU();
 // void setUserland(int pid);
 extern void forceTimer();
+void waitpid(int pid);
 
 #endif

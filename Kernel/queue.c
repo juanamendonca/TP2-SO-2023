@@ -1,5 +1,6 @@
 #include "queue.h"
 #include "memoryManager.h"
+#include "video.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -74,6 +75,7 @@ pcb *dequeueReady(Queue *queue) {
 
   while (current != NULL) {
     if (current->data->state == READY) {
+
       // Se encontró un PCB en estado READY, devolverlo y eliminarlo
       if (prev == NULL) {
         // Si el primer elemento de la cola está en estado READY

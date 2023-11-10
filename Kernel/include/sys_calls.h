@@ -30,20 +30,30 @@ void _14_alloc(uint64_t memory, uint64_t size, uint64_t r3, uint64_t r4,
                uint64_t r5);
 int _15_create_process(uint64_t process, uint64_t argc, uint64_t argv,
                        uint64_t foreground, uint64_t fd);
-void _16_kill_process(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,
-                      uint64_t r5);
+int _16_kill_process(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,
+                     uint64_t r5);
 int _17_get_pid(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
                 uint64_t r5);
 void _18_get_info_processes(uint64_t buffer, uint64_t r2, uint64_t r3,
                             uint64_t r4, uint64_t r5);
 void _19_nice(uint64_t pid, uint64_t priority, uint64_t r3, uint64_t r4,
               uint64_t r5);
-void _20_block_process(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,
-                       uint64_t r5);
-void _21_unblock_process(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,
-                         uint64_t r5);
+int _20_block_process(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,
+                      uint64_t r5);
+int _21_unblock_process(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,
+                        uint64_t r5);
 void _22_giveup_cpu(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
                     uint64_t r5);
+void _23_sem_wait(uint64_t semIndex, uint64_t r2, uint64_t r3, uint64_t r4,
+                  uint64_t r5);
+void _24_sem_post(uint64_t semIndex, uint64_t r2, uint64_t r3, uint64_t r4,
+                  uint64_t r5);
+void _25_sem_open(uint64_t name, uint64_t initValue, uint64_t r3, uint64_t r4,
+                  uint64_t r5);
+void _26_sem_close(uint64_t name, uint64_t r2, uint64_t r3, uint64_t r4,
+                   uint64_t r5);
+void _27_waitpid(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,
+                 uint64_t r5);
 
 int64_t sysDispatcher(uint64_t syscallNumber, uint64_t r1, uint64_t r2,
                       uint64_t r3, uint64_t r4, uint64_t r5);

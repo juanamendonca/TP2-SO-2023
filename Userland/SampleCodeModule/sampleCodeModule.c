@@ -3,6 +3,7 @@
 #include "functions.h"
 #include "getInforegs.h"
 #include "pong.h"
+#include "test_util.h"
 #include "time.h"
 #include "user_syscalls.h"
 #include <stdint.h>
@@ -42,11 +43,11 @@ void help() {
   sys_write("ALLOC", GREEN);
   print(": to allocate 0x1000 memory ");
   enter();
-  sys_write("SEM", GREEN);
-  print(": To print current sempahore information");
+  sys_write("INFO PROCESSES", GREEN);
+  print(": to get all the processes info");
   enter();
-  sys_write("test_synch", GREEN);
-  print(": to test sempahores");
+  sys_write("TEST PROCESSES", GREEN);
+  print(": to test the scheduler");
   enter();
 }
 
@@ -73,10 +74,16 @@ void command(char *entry) {
     // por ahora nada
   } else if (strcmp(buffer, "test_synch") == 0) {
     // por ahora nada
-  } else if (strcmp(buffer, "SEM") == 0) {
-    // 
-  } 
-    else {
+  } else if (strcmp(buffer, "INFO PROCESSES") == 0) {
+    char buffer[400];
+    sys_get_info_processes(buffer);
+    print(buffer);
+  } else if (strcmp(buffer, "TEST PROCESSES") == 0) {
+    // por ahora falla por que como el free no hace nada en algun momento el
+    // malloc ya me da null;
+    char *argv2[] = {"5"};
+    test_processes(1, argv2);
+  } else {
     print("Invalid command");
     enter();
     help();
@@ -120,6 +127,7 @@ int main() {
   // enter();
   char *argv[] = {"shell"};
   int fd[] = {0, 0};
-  sys_create_process(&shell, 1, argv, 1, fd);
+  int shellPid = sys_create_process(&shell, 1, argv, 1, fd);
+  sys_waitpid(shellPid);
   return 0;
 }
