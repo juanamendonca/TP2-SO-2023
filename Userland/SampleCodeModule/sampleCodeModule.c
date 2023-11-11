@@ -41,21 +41,24 @@ void help() {
   sys_write("INVALID OPERATION", GREEN);
   print(": to trigger invalid operation exception ");
   enter();
-  sys_write("ALLOC", GREEN);
-  print(": to allocate 0x1000 memory ");
-  enter();
   sys_write("INFO PROCESSES", GREEN);
   print(": to get all the processes info");
   enter();
   sys_write("TEST PROCESSES", GREEN);
   print(": to test the scheduler");
   enter();
-  sys_write("INFO SEMAPHORES", GREEN);
-  print(": to get all the sempahores actives info");
+  sys_write("TEST PRIO", GREEN);
+  print(": to test the scheduler priorities");
   enter();
-  sys_write("TEST SEMPAHORES", GREEN);
-  print(": to test the sempahores");
+  sys_write("TEST MM", GREEN);
+  print(": to test the memory manager");
   enter();
+  sys_write("MEMORY STATE", GREEN);
+  print(": to print the current usage of memory");
+  enter();
+    sys_write("TEST MM", GREEN);
+    print(": to test memory");
+    enter();
 }
 
 void command(char *entry) {
@@ -79,6 +82,8 @@ void command(char *entry) {
     invalidOpTester();
   } else if (strcmp(buffer, "ALLOC") == 0) {
     // por ahora nada
+  } else if (strcmp(buffer, "test_synch") == 0) {
+    // por ahora nada
   } else if (strcmp(buffer, "INFO PROCESSES") == 0) {
     char buffer[400];
     sys_get_info_processes(buffer);
@@ -88,16 +93,17 @@ void command(char *entry) {
     // malloc ya me da null;
     char *argv2[] = {"5"};
     test_processes(1, argv2);
-  } else if (strcmp(buffer, "INFO SEMAPHORES") == 0) {
-
-  
-  } else if (strcmp(buffer, "TEST SEMAPHORES") == 0) {
-    test_sync();
+  } else if (strcmp(buffer, "TEST PRIO") == 0) {
+    test_prio();
+  } else if (strcmp(buffer, "MEMORY STATE") == 0) {
+    sys_printBitmap();
+  } else if (strcmp(buffer, "TEST MM") == 0) {
+      char *argv[] = {"310000"}; //faltaria pedirle este valor a traves de una syscall
+      test_mm(1, argv);
   }
    else {
-    print("Invalid command");
+    print("Invalid command, write HELP for more available commands");
     enter();
-    help();
   }
 }
 
@@ -105,6 +111,7 @@ void shell(unsigned int argc, char *argv[]) {
   sys_write("Welcome!", PURPLE);
   enter();
   help();
+
   while (1) {
     sys_write(">", BLUE);
     scanf(buffer, BUFFER_SIZE);
@@ -113,29 +120,6 @@ void shell(unsigned int argc, char *argv[]) {
 }
 
 int main() {
-
-  // MALLOC testing
-  // char *memory;
-  // char *memory2;
-  // sys_alloc(&memory, 10);
-  // *memory = 'b';
-  // *(memory + 1) = 'o';
-  // *(memory + 2) = 'c';
-  // *(memory + 3) = '\n';
-  // *(memory + 4) = 'a';
-  // *(memory + 5) = 'a';
-  // *(memory + 6) = '\0';
-  // sys_write(memory, PURPLE);
-  // enter();
-
-  // sys_alloc(&memory2, 10);
-  // *memory2 = 'a';
-  // *(memory2 + 1) = 's';
-  // *(memory2 + 2) = 'd';
-  // *(memory2 + 3) = 'f';
-  // *(memory2 + 4) = '\0';
-  // sys_write(memory2, PURPLE);
-  // enter();
   char *argv[] = {"shell"};
   int fd[] = {0, 0};
   int shellPid = sys_create_process(&shell, 1, argv, 1, fd);

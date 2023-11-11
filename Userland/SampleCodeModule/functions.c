@@ -17,6 +17,15 @@ int strcmp(char * x, char * y){
     return x[i]-y[i];
 }
 
+void strcpy(char * dest, const char * src){
+    int i=0,j=0;
+    while (src[j] != 0){
+        dest[i++] = src[j++];
+    }
+    dest[i] = 0;
+}
+
+
 void scanf(char * buffer, int bufferSize){
     char letter[2];
 	letter[1]='\0';

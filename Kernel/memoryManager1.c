@@ -7,7 +7,7 @@ void *nextAddress;
 void *memStart;
 void *memEnd;
 
-#define HEAP_SIZE 320 * 1024 // 320 KiB
+#define HEAP_SIZE 320 * 1024 // 320 KiB  320 * 1024
 #define BLOCK_SIZE 4
 
 // Calculate the number of bytes needed for the bitmap.
@@ -62,14 +62,13 @@ void *malloc(const size_t size) {
                     return (void*)((uint64_t)heap + (firstBlockIndex * BLOCK_SIZE));
                 }
             } else {
-                // If the block is not FREE, reset the counters.
+                // Si no alcanzan los bloques libres resetear
                 contiguousFreeBlocks = 0;
                 firstBlockIndex = -1;
             }
         }
     }
 
-    // Not enough contiguous free blocks were found.
     return NULL;
 }
 
@@ -93,4 +92,80 @@ void free(void *memory) {
         bitmap[byteIndex] &= ~(0x03 << bitOffset); // seteo en 00 los bits a medida q hago el ciclo
     }
   return;
+}
+
+//void printBitmap(){
+//    putArrayNext("Bitmap:\n", WHITE);
+//    for (int it_block = 0; it_block <  BITMAP_SIZE ; it_block++) {
+//        putArrayNext("BYTE ", WHITE);
+//        putDecNext(it_block, WHITE);
+//        putArrayNext(": ", WHITE);
+//
+//        for (int it_bit = 0; it_bit < BLOCK_PER_BYTE * 2; it_bit += 2) {
+//            int state = (bitmap[it_block] >> it_bit) & 0x03;
+//            switch (state) {
+//                case 0:
+//                    putArrayNext("FREE ", WHITE);
+//                    break;
+//                case 1:
+//                    putArrayNext("USED ", WHITE);
+//                    break;
+//                case 2:
+//                    putArrayNext("FIRST ", GREEN);
+//                    break;
+//                default:
+//                    putArrayNext("UNKNOWN ", WHITE);
+//            }
+//        }
+//        putArrayNext("\n", WHITE);
+//    }
+//}
+
+void printBitmap() {
+    int freeBlocks = 0;
+    int usedBlocks = 0;
+    int largestFreeBlock = 0;
+
+    int contiguousFreeBlocks = 0;
+
+    for (int it_block = 0; it_block < BITMAP_SIZE; it_block++) {
+        for (int it_bit = 0; it_bit < BLOCK_PER_BYTE * 2; it_bit += 2) {
+            int state = (bitmap[it_block] >> it_bit) & 0x03;
+            switch (state) {
+                case 0:  // FREE
+                    contiguousFreeBlocks++;
+                    largestFreeBlock++;
+                    break;
+                case 1:  // USED
+                    usedBlocks++;
+                    contiguousFreeBlocks = 0;
+                    break;
+                case 2:  // FIRST
+                    freeBlocks += contiguousFreeBlocks;
+                    usedBlocks++;
+                    contiguousFreeBlocks = 0;
+
+                    if (contiguousFreeBlocks > largestFreeBlock){
+                        largestFreeBlock = contiguousFreeBlocks;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    if (contiguousFreeBlocks > 0) {
+        freeBlocks += contiguousFreeBlocks * BLOCK_SIZE;
+    }
+
+    // Print the results (replace with your own print function)
+    putArrayNext("Block size: 4 bytes\nFree blocks: ", WHITE);
+    putDecNext(freeBlocks, WHITE);
+    putArrayNext("\nUsed blocks: ", WHITE);
+    putDecNext(usedBlocks, WHITE);
+    putArrayNext("\nLargest Free block: ", WHITE);
+    putDecNext(largestFreeBlock, WHITE);
+    putArrayNext("\n", WHITE);
+
 }

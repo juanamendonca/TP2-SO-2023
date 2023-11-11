@@ -26,7 +26,7 @@ void _12_clean_buffer(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
                       uint64_t r5);
 void _13_save_registers(uint64_t registers, uint64_t isSaved, uint64_t r3,
                         uint64_t r4, uint64_t r5);
-void _14_alloc(uint64_t memory, uint64_t size, uint64_t r3, uint64_t r4,
+void* _14_alloc(uint64_t size, uint64_t r2, uint64_t r3, uint64_t r4,
                uint64_t r5);
 int _15_create_process(uint64_t process, uint64_t argc, uint64_t argv,
                        uint64_t foreground, uint64_t fd);
@@ -54,6 +54,10 @@ int _26_sem_close(uint64_t name, uint64_t r2, uint64_t r3, uint64_t r4,
                    uint64_t r5);
 void _27_waitpid(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,
                  uint64_t r5);
+void _28_free(uint64_t memory, uint64_t r2, uint64_t r3, uint64_t r4,
+              uint64_t r5);
+void _29_printBitmap(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
+                     uint64_t r5);
 
 int64_t sysDispatcher(uint64_t syscallNumber, uint64_t r1, uint64_t r2,
                       uint64_t r3, uint64_t r4, uint64_t r5);

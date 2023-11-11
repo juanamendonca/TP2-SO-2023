@@ -29,7 +29,7 @@ void sys_get_clean_buffer();
 
 void sys_registers(uint64_t *registers, bool *isSaved);
 
-void sys_alloc(uint64_t **memory, int size);
+void* sys_alloc(int size);
 
 int sys_create_process(void (*process)(unsigned int argc, char **argv),
                        int argc, char **argv, int foreground, int *fd);
@@ -59,3 +59,7 @@ int sys_semOpen(char *id, int initialValue);
 void sys_semInit(int initialValue);
 
 void sys_waitpid(int pid);
+
+void sys_free(void* memory);
+
+void sys_printBitmap();

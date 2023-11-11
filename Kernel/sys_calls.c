@@ -93,9 +93,9 @@ void _13_save_registers(uint64_t registers, uint64_t isSaved, uint64_t r3,
   }
 }
 
-void _14_alloc(uint64_t memory, uint64_t size, uint64_t r3, uint64_t r4,
+void* _14_alloc(uint64_t size, uint64_t r2, uint64_t r3, uint64_t r4,
                uint64_t r5) {
-  (*(void **)memory) = malloc(size);
+  return malloc(size);
 }
 
 int _15_create_process(uint64_t process, uint64_t argc, uint64_t argv,
@@ -164,9 +164,20 @@ void _27_waitpid(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,
   waitpid((int)pid);
 }
 
+void _29_free(uint64_t memory, uint64_t r2, uint64_t r3, uint64_t r4,
+              uint64_t r5) {
+    void *ptr = (void *)(uintptr_t)memory;
+    free(ptr);
+}
+
 void _28_sem_(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
                     uint64_t r5) {
   sem();
+}
+
+void _30_printBitmap(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
+              uint64_t r5) {
+    printBitmap();
 }
 
 static syscall syscalls[] = {
@@ -199,7 +210,8 @@ static syscall syscalls[] = {
     (syscall)_26_sem_close,
     (syscall)_27_waitpid,
     (syscall)_28_sem_,
-
+    (syscall) _29_free,
+    (syscall) _30_printBitmap
 };
 
 int64_t sysDispatcher(uint64_t syscallNumber, uint64_t r1, uint64_t r2,
