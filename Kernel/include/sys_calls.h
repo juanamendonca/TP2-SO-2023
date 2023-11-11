@@ -44,13 +44,13 @@ int _21_unblock_process(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,
                         uint64_t r5);
 void _22_giveup_cpu(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
                     uint64_t r5);
-void _23_sem_wait(uint64_t semIndex, uint64_t r2, uint64_t r3, uint64_t r4,
+int _23_sem_wait(uint64_t semIndex, uint64_t r2, uint64_t r3, uint64_t r4,
                   uint64_t r5);
-void _24_sem_post(uint64_t semIndex, uint64_t r2, uint64_t r3, uint64_t r4,
+int _24_sem_post(uint64_t semIndex, uint64_t r2, uint64_t r3, uint64_t r4,
                   uint64_t r5);
-void _25_sem_open(uint64_t name, uint64_t initValue, uint64_t r3, uint64_t r4,
+int _25_sem_open(uint64_t name, uint64_t initValue, uint64_t r3, uint64_t r4,
                   uint64_t r5);
-void _26_sem_close(uint64_t name, uint64_t r2, uint64_t r3, uint64_t r4,
+int _26_sem_close(uint64_t name, uint64_t r2, uint64_t r3, uint64_t r4,
                    uint64_t r5);
 void _27_waitpid(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,
                  uint64_t r5);

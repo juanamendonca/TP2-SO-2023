@@ -18,13 +18,6 @@ int my_block(uint64_t pid) { return sys_block_process((int)pid); }
 
 int my_unblock(uint64_t pid) { return sys_unblock_process((int)pid); }
 
-int my_sem_open(char *sem_id, uint64_t initialValue) { return 0; }
-
-int my_sem_wait(char *sem_id) { return 0; }
-
-int my_sem_post(char *sem_id) { return 0; }
-
-int my_sem_close(char *sem_id) { return 0; }
 
 int my_yield() {
   sys_giveup_cpu();

@@ -23,3 +23,5 @@ void printHexa(uint64_t value);
 uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 void fillHexa(int num, char* buf);
 void enter();
+int atoi2(char *str);
+void printInt(int num);

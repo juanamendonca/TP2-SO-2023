@@ -85,6 +85,28 @@ int sys_unblock_process(int pid) {
 
 void sys_giveup_cpu() { sys_int_80((uint64_t)22, 0, 0, 0, 0, 0); }
 
+
+int sys_semWait(int id){
+    return sys_int_80((uint64_t)23, (uint64_t)id, 0, 0, 0, 0);
+}
+
+int sys_semPost(int id){
+   return sys_int_80((uint64_t)24, (uint64_t)id, 0, 0, 0, 0);
+}
+
+int sys_semClose(int id){
+    return sys_int_80((uint64_t)26, (uint64_t)id, 0, 0, 0, 0);
+}
+
+int sys_semOpen(char *id, int initialValue){
+    return sys_int_80((uint64_t)25, (uint64_t)id, (uint64_t)initialValue, 0, 0, 0);
+}
+
+void sys_sem(){
+    sys_int_80((uint64_t)28,0,0, 0, 0, 0);
+}
+
 void sys_waitpid(int pid) {
   sys_int_80((uint64_t)27, (uint64_t)pid, 0, 0, 0, 0);
 }
+

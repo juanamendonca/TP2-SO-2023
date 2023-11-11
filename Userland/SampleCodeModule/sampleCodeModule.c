@@ -7,6 +7,7 @@
 #include "time.h"
 #include "user_syscalls.h"
 #include <stdint.h>
+#include "test_sync.h"
 
 #define BUFFER_SIZE 100
 
@@ -49,6 +50,12 @@ void help() {
   sys_write("TEST PROCESSES", GREEN);
   print(": to test the scheduler");
   enter();
+  sys_write("INFO SEMAPHORES", GREEN);
+  print(": to get all the sempahores actives info");
+  enter();
+  sys_write("TEST SEMPAHORES", GREEN);
+  print(": to test the sempahores");
+  enter();
 }
 
 void command(char *entry) {
@@ -72,8 +79,6 @@ void command(char *entry) {
     invalidOpTester();
   } else if (strcmp(buffer, "ALLOC") == 0) {
     // por ahora nada
-  } else if (strcmp(buffer, "test_synch") == 0) {
-    // por ahora nada
   } else if (strcmp(buffer, "INFO PROCESSES") == 0) {
     char buffer[400];
     sys_get_info_processes(buffer);
@@ -83,7 +88,13 @@ void command(char *entry) {
     // malloc ya me da null;
     char *argv2[] = {"5"};
     test_processes(1, argv2);
-  } else {
+  } else if (strcmp(buffer, "INFO SEMAPHORES") == 0) {
+
+  
+  } else if (strcmp(buffer, "TEST SEMAPHORES") == 0) {
+    test_sync();
+  }
+   else {
     print("Invalid command");
     enter();
     help();

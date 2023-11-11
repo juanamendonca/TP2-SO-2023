@@ -201,3 +201,33 @@ void fillHexa(int num, char* buf){ //to fill with 0 the hexa
 void enter(){
     sys_new_line();
 }
+
+int atoi2(char *str)
+{
+	// Initialize result
+	int res = 0;
+
+	// Iterate through all characters
+	// of input string and update result
+	// take ASCII character of corosponding digit and
+	// subtract the code from '0' to get numerical
+	// value and multiply res by 10 to shuffle
+	// digits left to update running total
+	int flag = (str[0] == '-' ? -1 : 1);
+	if (flag == -1)
+	{
+		str++;
+	}
+	for (int i = 0; str[i] != '\0'; ++i)
+		res = res * 10 + str[i] - '0';
+
+	// return result.
+	return res * flag;
+}
+
+void printInt(int num)
+{
+    char buffer[40];
+    uintToBase(num, buffer, 10);
+    print(buffer);
+}
