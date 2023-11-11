@@ -56,7 +56,8 @@ void _27_waitpid(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,
                  uint64_t r5);
 void _28_free(uint64_t memory, uint64_t r2, uint64_t r3, uint64_t r4,
               uint64_t r5);
-
+void _29_printBitmap(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
+                     uint64_t r5);
 
 int64_t sysDispatcher(uint64_t syscallNumber, uint64_t r1, uint64_t r2,
                       uint64_t r3, uint64_t r4, uint64_t r5);

@@ -170,6 +170,10 @@ void _28_free(uint64_t memory, uint64_t r2, uint64_t r3, uint64_t r4,
     free(ptr);
 }
 
+void _29_printBitmap(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
+              uint64_t r5) {
+    printBitmap();
+}
 
 static syscall syscalls[] = {
     (syscall)_0_empty,
@@ -201,6 +205,7 @@ static syscall syscalls[] = {
     (syscall)_26_sem_close,
     (syscall)_27_waitpid,
     (syscall) _28_free,
+    (syscall) _29_printBitmap
 };
 
 int64_t sysDispatcher(uint64_t syscallNumber, uint64_t r1, uint64_t r2,

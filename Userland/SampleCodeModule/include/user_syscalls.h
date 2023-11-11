@@ -51,3 +51,5 @@ void sys_giveup_cpu();
 void sys_waitpid(int pid);
 
 void sys_free(void* memory);
+
+void sys_printBitmap();

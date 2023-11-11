@@ -92,3 +92,7 @@ void sys_waitpid(int pid) {
 void sys_free (void* memory){
     sys_int_80((uint64_t)28, (uint64_t)memory, 0, 0, 0, 0);
 }
+
+void sys_printBitmap(){
+    sys_int_80((uint64_t)29, 0, 0, 0, 0, 0);
+}

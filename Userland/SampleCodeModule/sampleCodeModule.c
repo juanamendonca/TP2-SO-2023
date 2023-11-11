@@ -49,6 +49,15 @@ void help() {
   sys_write("TEST PRIO", GREEN);
   print(": to test the scheduler priorities");
   enter();
+  sys_write("TEST MM", GREEN);
+  print(": to test the memory manager");
+  enter();
+  sys_write("MEMORY STATE", GREEN);
+  print(": to print the current usage of memory");
+  enter();
+    sys_write("TEST MM", GREEN);
+    print(": to test memory");
+    enter();
 }
 
 void command(char *entry) {
@@ -83,10 +92,14 @@ void command(char *entry) {
     test_processes(1, argv2);
   } else if (strcmp(buffer, "TEST PRIO") == 0) {
     test_prio();
+  } else if (strcmp(buffer, "MEMORY STATE") == 0) {
+    sys_printBitmap();
+  } else if (strcmp(buffer, "TEST MM") == 0) {
+      char *argv[] = {"32000"};
+      test_mm(1, argv);
   } else {
-    print("Invalid command");
+    print("Invalid command, write HELP for more available commands");
     enter();
-    help();
   }
 }
 
@@ -94,14 +107,6 @@ void shell(unsigned int argc, char *argv[]) {
   sys_write("Welcome!", PURPLE);
   enter();
   help();
-  char * str1 = sys_alloc(17);
-  strcpy(str1, "hola mundo\n");
-  sys_write(str1,WHITE);
-  sys_free(str1);
-
-  char * str2 = sys_alloc(17);
-  strcpy(str2, "aguante boca\n");
-  sys_write(str1,WHITE);
 
   while (1) {
     sys_write(">", BLUE);
