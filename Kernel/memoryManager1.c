@@ -62,14 +62,13 @@ void *malloc(const size_t size) {
                     return (void*)((uint64_t)heap + (firstBlockIndex * BLOCK_SIZE));
                 }
             } else {
-                // If the block is not FREE, reset the counters.
+                // Si no alcanzan los bloques libres resetear
                 contiguousFreeBlocks = 0;
                 firstBlockIndex = -1;
             }
         }
     }
 
-    // Not enough contiguous free blocks were found.
     return NULL;
 }
 
@@ -93,4 +92,31 @@ void free(void *memory) {
         bitmap[byteIndex] &= ~(0x03 << bitOffset); // seteo en 00 los bits a medida q hago el ciclo
     }
   return;
+}
+
+void printBitmap(){
+    putArrayNext("Bitmap:\n", WHITE);
+    for (int it_block = 0; it_block <  2 ; it_block++) {
+        putArrayNext("BYTE ", WHITE);
+        putDecNext(it_block, WHITE);
+        putArrayNext(": ", WHITE);
+
+        for (int it_bit = 0; it_bit < BLOCK_PER_BYTE * 2; it_bit += 2) {
+            int state = (bitmap[it_block] >> it_bit) & 0x03;
+            switch (state) {
+                case 0:
+                    putArrayNext("FREE ", WHITE);
+                    break;
+                case 1:
+                    putArrayNext("USED ", WHITE);
+                    break;
+                case 2:
+                    putArrayNext("FIRST ", GREEN);
+                    break;
+                default:
+                    putArrayNext("UNKNOWN ", WHITE);
+            }
+        }
+        putArrayNext("\n", WHITE);
+    }
 }

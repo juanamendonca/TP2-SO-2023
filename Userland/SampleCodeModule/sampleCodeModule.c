@@ -40,9 +40,6 @@ void help() {
   sys_write("INVALID OPERATION", GREEN);
   print(": to trigger invalid operation exception ");
   enter();
-  sys_write("ALLOC", GREEN);
-  print(": to allocate 0x1000 memory ");
-  enter();
   sys_write("INFO PROCESSES", GREEN);
   print(": to get all the processes info");
   enter();
@@ -73,8 +70,6 @@ void command(char *entry) {
     divisionTester();
   } else if (strcmp(buffer, "INVALID OPERATION") == 0) {
     invalidOpTester();
-  } else if (strcmp(buffer, "ALLOC") == 0) {
-    // por ahora nada
   } else if (strcmp(buffer, "test_synch") == 0) {
     // por ahora nada
   } else if (strcmp(buffer, "INFO PROCESSES") == 0) {
@@ -99,6 +94,15 @@ void shell(unsigned int argc, char *argv[]) {
   sys_write("Welcome!", PURPLE);
   enter();
   help();
+  char * str1 = sys_alloc(17);
+  strcpy(str1, "hola mundo\n");
+  sys_write(str1,WHITE);
+  sys_free(str1);
+
+  char * str2 = sys_alloc(17);
+  strcpy(str2, "aguante boca\n");
+  sys_write(str1,WHITE);
+
   while (1) {
     sys_write(">", BLUE);
     scanf(buffer, BUFFER_SIZE);
@@ -107,29 +111,6 @@ void shell(unsigned int argc, char *argv[]) {
 }
 
 int main() {
-
-  // MALLOC testing
-  // char *memory;
-  // char *memory2;
-  // sys_alloc(&memory, 10);
-  // *memory = 'b';
-  // *(memory + 1) = 'o';
-  // *(memory + 2) = 'c';
-  // *(memory + 3) = '\n';
-  // *(memory + 4) = 'a';
-  // *(memory + 5) = 'a';
-  // *(memory + 6) = '\0';
-  // sys_write(memory, PURPLE);
-  // enter();
-
-  // sys_alloc(&memory2, 10);
-  // *memory2 = 'a';
-  // *(memory2 + 1) = 's';
-  // *(memory2 + 2) = 'd';
-  // *(memory2 + 3) = 'f';
-  // *(memory2 + 4) = '\0';
-  // sys_write(memory2, PURPLE);
-  // enter();
   char *argv[] = {"shell"};
   int fd[] = {0, 0};
   int shellPid = sys_create_process(&shell, 1, argv, 1, fd);

@@ -10,6 +10,7 @@
 #include <stdint.h>
 
 int strcmp(char *X, char *Y);
+void strcpy(char * dest, const char * src);
 void scanf(char * buffer, int bufferSize);
 void deleteExtraSpaces(char * string);
 void deleteInitialFinalSpace(char * string);

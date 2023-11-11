@@ -51,8 +51,8 @@ void sys_registers(uint64_t *registers, bool *isSaved) {
   sys_int_80((uint64_t)13, (uint64_t)registers, (uint64_t)isSaved, 0, 0, 0);
 }
 
-void sys_alloc(uint64_t **memory, int size) {
-  sys_int_80((uint64_t)14, (uint64_t)memory, (uint64_t)size, 0, 0, 0);
+void* sys_alloc(int size) {
+  return (void*) (uintptr_t) sys_int_80((uint64_t)14, (uint64_t)size, 0, 0, 0, 0);
 }
 
 int sys_create_process(void (*process)(unsigned int argc, char **argv),
@@ -87,4 +87,8 @@ void sys_giveup_cpu() { sys_int_80((uint64_t)22, 0, 0, 0, 0, 0); }
 
 void sys_waitpid(int pid) {
   sys_int_80((uint64_t)27, (uint64_t)pid, 0, 0, 0, 0);
+}
+
+void sys_free (void* memory){
+    sys_int_80((uint64_t)28, (uint64_t)memory, 0, 0, 0, 0);
 }
