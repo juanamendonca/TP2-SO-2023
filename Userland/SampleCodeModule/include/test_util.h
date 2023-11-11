@@ -1,5 +1,5 @@
 #include <stdint.h>
-
+void test_prio();
 void test_processes(unsigned int argc, char *argv[]);
 uint32_t GetUint();
 uint32_t GetUniform(uint32_t max);

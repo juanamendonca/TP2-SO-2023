@@ -49,6 +49,9 @@ void help() {
   sys_write("TEST PROCESSES", GREEN);
   print(": to test the scheduler");
   enter();
+  sys_write("TEST PRIO", GREEN);
+  print(": to test the scheduler priorities");
+  enter();
 }
 
 void command(char *entry) {
@@ -83,6 +86,8 @@ void command(char *entry) {
     // malloc ya me da null;
     char *argv2[] = {"5"};
     test_processes(1, argv2);
+  } else if (strcmp(buffer, "TEST PRIO") == 0) {
+    test_prio();
   } else {
     print("Invalid command");
     enter();

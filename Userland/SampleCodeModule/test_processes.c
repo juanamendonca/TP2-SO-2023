@@ -36,7 +36,7 @@ void test_processes(unsigned int argc, char *argv[]) {
         print("test_processes: ERROR creating process\n");
         return;
       } else {
-        sys_write_dec(p_rqs[rq].pid, WHITE);
+        // sys_write_dec(p_rqs[rq].pid, WHITE);
         p_rqs[rq].state = RUNNING;
         alive++;
       }
@@ -56,8 +56,8 @@ void test_processes(unsigned int argc, char *argv[]) {
               print("test_processes: ERROR killing process\n");
               return;
             }
-            sys_write_dec(p_rqs[rq].pid, WHITE);
-            print(" killed\n");
+            // sys_write_dec(p_rqs[rq].pid, WHITE);
+            // print(" killed\n");
             p_rqs[rq].state = KILLED;
             alive--;
           }
