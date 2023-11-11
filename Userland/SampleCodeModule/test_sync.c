@@ -4,9 +4,11 @@
 #include "user_syscalls.h"
 #include "functions.h"
 #include "syscall.h"
+#include "test_sync.h"
+
 
 #define SEM_ID "test_sync_sem"
-#define TOTAL_PAIR_PROCESSES 4
+#define TOTAL_PAIR_PROCESSES 2
 #define NULL (void *) 0
 
 

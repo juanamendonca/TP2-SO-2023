@@ -93,7 +93,7 @@ static uint64_t find_semaphore(char *name)
 {
     for (int i = 0; i < SEM_LIMIT; i++)
     {
-        if (semSpaces[i].is_available == FALSE && strcmp(name, semSpaces[i].sem.name))
+        if (semSpaces[i].is_available == FALSE && strcmp(name, semSpaces[i].sem.name) == 0)
         {
             return i;
         }

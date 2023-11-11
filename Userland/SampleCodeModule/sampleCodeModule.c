@@ -86,9 +86,9 @@ void command(char *entry) {
   } else if (strcmp(buffer, "ALLOC") == 0) {
     // por ahora nada
     enter();
-    
+
   } else if (strcmp(buffer, "TESTSYNCH") == 0) {
-    char *argv[] = {"test_sync", "3", "1"};
+    char *argv[] = {"test_sync_sem", "3", "1"};
     test_sync(3,argv);
     enter();
 
