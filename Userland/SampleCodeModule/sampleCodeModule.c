@@ -56,9 +56,12 @@ void help() {
   sys_write("MEMORY STATE", GREEN);
   print(": to print the current usage of memory");
   enter();
-    sys_write("TEST MM", GREEN);
-    print(": to test memory");
-    enter();
+  sys_write("TESTSYNCH", GREEN);
+  print(": to test semaphores and synchronization");
+  enter();
+  sys_write("TESTSEM", GREEN);
+  print(": to test the memory manager");
+  enter();
 }
 
 void command(char *entry) {
@@ -82,24 +85,39 @@ void command(char *entry) {
     invalidOpTester();
   } else if (strcmp(buffer, "ALLOC") == 0) {
     // por ahora nada
-  } else if (strcmp(buffer, "test_synch") == 0) {
-    // por ahora nada
+    enter();
+    
+  } else if (strcmp(buffer, "TESTSYNCH") == 0) {
+    char *argv[] = {"test_sync", "3", "1"};
+    test_sync(3,argv);
+    enter();
+
   } else if (strcmp(buffer, "INFO PROCESSES") == 0) {
     char buffer[400];
     sys_get_info_processes(buffer);
     print(buffer);
+    enter();
+
   } else if (strcmp(buffer, "TEST PROCESSES") == 0) {
     // por ahora falla por que como el free no hace nada en algun momento el
     // malloc ya me da null;
     char *argv2[] = {"5"};
     test_processes(1, argv2);
+    enter();
+
   } else if (strcmp(buffer, "TEST PRIO") == 0) {
     test_prio();
+    enter();
+
   } else if (strcmp(buffer, "MEMORY STATE") == 0) {
     sys_printBitmap();
+    enter();
+
   } else if (strcmp(buffer, "TEST MM") == 0) {
       char *argv[] = {"310000"}; //faltaria pedirle este valor a traves de una syscall
       test_mm(1, argv);
+      enter();
+
   }
    else {
     print("Invalid command, write HELP for more available commands");
