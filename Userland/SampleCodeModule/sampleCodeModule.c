@@ -95,7 +95,7 @@ void command(char *entry) {
   } else if (strcmp(buffer, "MEMORY STATE") == 0) {
     sys_printBitmap();
   } else if (strcmp(buffer, "TEST MM") == 0) {
-      char *argv[] = {"32000"};
+      char *argv[] = {"310000"}; //faltaria pedirle este valor a traves de una syscall
       test_mm(1, argv);
   } else {
     print("Invalid command, write HELP for more available commands");

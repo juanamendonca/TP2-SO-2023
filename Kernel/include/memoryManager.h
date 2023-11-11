@@ -9,7 +9,9 @@ void *malloc(const size_t size);
 
 void free(void *memory);
 
-//For testing porpouses
+/**
+ * Prints the values of free used and largest free block of memory
+ */
 void printBitmap();
 
 #endif
