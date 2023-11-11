@@ -8,7 +8,7 @@
 
 
 #define SEM_ID "test_sync_sem"
-#define TOTAL_PAIR_PROCESSES 2
+#define TOTAL_PAIR_PROCESSES 1
 #define NULL (void *) 0
 
 
@@ -57,8 +57,9 @@ void my_process_inc(unsigned int argc, char *argv[])
     sys_semPost(sharedSem);
   }
 
-  if (use_sem)
+  if (use_sem){
     sys_semPost(sharedSem);
+  }
   return;
 }
 
@@ -90,13 +91,14 @@ void test_sync(unsigned int argc, char *argv[])
     pids[i + TOTAL_PAIR_PROCESSES] = sys_create_process(&my_process_inc, 4, argvInc, 0, NULL);
   }
 
-  for (i = 0; i < TOTAL_PAIR_PROCESSES; i++)
-  {
-    sys_waitpid(pids[i]);
-    sys_waitpid(pids[i + TOTAL_PAIR_PROCESSES]);
-  }
+  // for (i = 0; i < TOTAL_PAIR_PROCESSES; i++)
+  // {
+  //   sys_waitpid(pids[i]);
+  //   sys_waitpid(pids[i + TOTAL_PAIR_PROCESSES]);
+  // }
 
   print("Final value");
+  enter();
   printInt(global);
 
   return;

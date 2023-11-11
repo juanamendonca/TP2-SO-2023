@@ -8,6 +8,7 @@
 #include "sound.h"
 #include "time.h"
 #include "video.h"
+#include "semaphores.h"
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -48,6 +49,7 @@ void *initializeKernelBinary() {
 }
 
 int main() {
+  start_semaphores();
   createMemoryManager();
   initalizeScheduler();
   char *args[] = {"userland"};
