@@ -43,8 +43,8 @@ void giveUpCPU();
 void waitpid(int pid);
 
 void dummy(int argc, char **argv) {
-  putArrayNext("en dummy", WHITE);
   while (1) {
+    // putArrayNext("dummy ", WHITE);
     _hlt();
   }
 }
@@ -113,6 +113,13 @@ void *scheduler(void *rsp) {
   if (currentPcb == NULL) {
     if (isEmptyPReady(queue)) {
       currentPcb = dummyPcb;
+    } else {
+      currentPcb = dequeuePReady(queue);
+    }
+  } else if (currentPcb->pid == dummyPcb->pid) {
+    if (isEmptyPReady(queue)) {
+      dummyPcb->rsp = rsp;
+      return rsp;
     } else {
       currentPcb = dequeuePReady(queue);
     }
