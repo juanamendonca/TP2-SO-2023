@@ -3,11 +3,13 @@
 #include "functions.h"
 #include "getInforegs.h"
 #include "pong.h"
-#include "test_sync.h"
 #include "test_util.h"
 #include "time.h"
 #include "user_syscalls.h"
 #include <stdint.h>
+#include "test_sync.h"
+#include "test_mm.h"
+
 
 #define BUFFER_SIZE 100
 
@@ -83,10 +85,6 @@ void command(char *entry) {
     divisionTester();
   } else if (strcmp(buffer, "INVALID OPERATION") == 0) {
     invalidOpTester();
-  } else if (strcmp(buffer, "ALLOC") == 0) {
-    // por ahora nada
-    enter();
-
   } else if (strcmp(buffer, "TESTSYNCH") == 0) {
     char *argv[] = {"test_sync", "10", "1"}; // Por ejemplo, 10 iteraciones
     test_sync(3, argv);

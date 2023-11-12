@@ -28,8 +28,8 @@ uint64_t test_mm(uint64_t argc, char *argv[]) {
         return -1;
     }
 
-    int it =100;
-    while (it) {
+
+    while (1) {
         rq = 0;
         total = 0;
 
@@ -63,7 +63,6 @@ uint64_t test_mm(uint64_t argc, char *argv[]) {
             if (mm_rqs[i].address)
                 sys_free(mm_rqs[i].address);
 
-        it--;
     }
     sys_write("Test_mm done!\n", 0xFFFFFF);
     return 0;

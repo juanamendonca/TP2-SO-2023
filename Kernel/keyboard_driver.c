@@ -11,6 +11,7 @@ static char buff[BUFF_SIZE] = {0}; // Circular vector. When buff reaches max cap
 static int front = 0;              // Position of the first element
 static int rear = 0;               // Position of last added element
 static int cantElems = 0;
+static int shift = 0;
 bool savedRegs = false; 
 
 char nextElement()// Circular vector. When buff reaches max capacity older elements are overwritten.
@@ -46,6 +47,7 @@ void keyHandler(uint64_t scancode)
 {
     char tecla = scancode;
 
+
     if (tecla <= TECLA_LIMITE_SUPERIOR)
     {
         if (cantElems == BUFF_SIZE)
@@ -56,14 +58,28 @@ void keyHandler(uint64_t scancode)
             savedRegs = true;
             return;
         }
+
+        //shift pressed
+        if (scancode == 0x2A || scancode == 0x36){
+            shift = 1;
+        }
+        //shift not pressed
+        if (scancode == 0xAA || scancode == 0xB6) {
+            shift = 0;
+        }
     
        // Both ifs are necessary to maintain buffer circularity
         if (rear == BUFF_SIZE)
             rear = 0;
         if (front == BUFF_SIZE)
             front = 0;
-        buff[rear++] = keyBoardTable[(int)tecla];
+
+        buff[rear++] = keyBoardTable[(int) tecla];
         cantElems++;
+
+        if (shift && scancode == 32){
+            clearScreen();
+        }
     }
 
 }

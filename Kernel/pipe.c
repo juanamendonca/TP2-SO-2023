@@ -1,4 +1,6 @@
 #include "pipe.h"
+#include "sys_calls.h"
+#include "video.h"
 
 typedef struct
 {
@@ -35,7 +37,7 @@ uint64_t initPipes()
 {
     if ((semPipeManager = sem_open("Pipe Manager", 1)) == -1)
     {
-        print("Error in initPipes");
+        putArrayNext("Error in initPipes",0xFFFFFF);
         return -1;
     }
     for (int i = 0; i < MAX_PIPES; i++)
