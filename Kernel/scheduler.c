@@ -412,9 +412,23 @@ void giveUpCPU() {
 
 void waitpid(int pid) {
   pcb *process = getProcessP(queue, pid);
+  
+  // Comprobación adicional para asegurarse de que el proceso existe
   if (process == NULL) {
+    print("Error: Proceso no encontrado.");
     return;
   }
+
+  // Comprobación para evitar el bloqueo del proceso si ya ha terminado
+  if (process->state == KILLED) {
+    print("Proceso ya terminado.");
+    return;
+  }
+
   process->waitingPid = 1;
-  block(process->ppid);
+
+  // Bloquea el proceso padre sólo si el hijo todavía está ejecutándose
+  if (process->state != KILLED) {
+    block(currentPcb->pid);
+  }
 }

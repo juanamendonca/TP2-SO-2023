@@ -311,3 +311,15 @@ void printInt(int num)
     print(buffer);
 }
 
+void putTab() {
+  // Definir el ancho deseado para el tabulador (en este caso, 4 espacios)
+  int tabWidth = 4;
+
+  // Calcular cuántos espacios faltan para llegar al próximo múltiplo de tabWidth
+  int spacesToNextTab = tabWidth - (pointer_x % tabWidth);
+
+  // Mover el cursor hacia adelante por la cantidad calculada de espacios
+  for (int i = 0; i < spacesToNextTab; i++) {
+    putLetterNext(' ', WHITE);
+  }
+}

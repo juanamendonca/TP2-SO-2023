@@ -26,8 +26,6 @@ void print_semaphore(semaphore sem);
 
 void print_procceses_blocked(process *process);
 
-
-
 void start_semaphores()
 {
     for (int i = 0; i < SEM_LIMIT; i++)
@@ -35,7 +33,6 @@ void start_semaphores()
         semSpaces[i].is_available = TRUE;
     }
 }
-
 
 static uint64_t find_space_availability()
 {
@@ -50,13 +47,12 @@ static uint64_t find_space_availability()
     return -1; // No more space, another semaphore can not be created
 }
 
-
 static int creates_semaphore(char *name, uint64_t initValue)
 {
     int pos;
     if ((pos = find_space_availability()) != -1)
     {
-        //We iniliatize the structure
+        //We initialize the structure
         memcpy(semSpaces[pos].sem.name, name, strlen(name));
         semSpaces[pos].sem.value = initValue;
         semSpaces[pos].sem.lock = 0; 
@@ -68,12 +64,11 @@ static int creates_semaphore(char *name, uint64_t initValue)
     return pos;
 }
 
-
 uint64_t sem_open(char *name, uint64_t initValue)
 {
     while (_xchg(&lock_semaphore, 1) != 0); // Waiting for lock to be available
     int semIndex = find_semaphore(name);
-    if (semIndex == -1) //  It the sempahore did not exist, we create it. 
+    if (semIndex == -1) //  If the semaphore did not exist, we create it. 
     {
         semIndex = creates_semaphore(name, initValue);
         if (semIndex == -1)
@@ -87,8 +82,6 @@ uint64_t sem_open(char *name, uint64_t initValue)
     return semIndex; // return the index of the sem
 }
 
-
-// Returns -1 if the sempahore was not found
 static uint64_t find_semaphore(char *name)
 {
     for (int i = 0; i < SEM_LIMIT; i++)
@@ -101,7 +94,6 @@ static uint64_t find_semaphore(char *name)
     return -1;
 }
 
-// Returns -1 if an error happens
 uint64_t sem_close(char *name)
 {
     while (_xchg(&lock_semaphore, 1) != 0);
@@ -116,8 +108,6 @@ uint64_t sem_close(char *name)
     return 1;
 }
 
-
-// Add a proccess tho the process list, if fails returns -1
 uint64_t enqeue_process(uint64_t pid, semaphore *sem)
 {
     process * process = malloc(sizeof(process));
@@ -142,7 +132,6 @@ uint64_t enqeue_process(uint64_t pid, semaphore *sem)
     return 0;
 }
 
-
 uint64_t dequeue_process(semaphore *sem)
 {
     if (sem == NULL || sem->firstProcess == NULL)
@@ -159,7 +148,6 @@ uint64_t dequeue_process(semaphore *sem)
     return pid;
 }
 
-// Returns 0 in case of exit, and -1 if fails. Blcked.
 uint64_t sem_wait(uint64_t semIndex)
 {
     if (semIndex >= SEM_LIMIT)
@@ -220,32 +208,41 @@ uint64_t sem_post(uint64_t semIndex)
 
 void sem()
 {
-    print("SEM'S NAME\t\tSTATE\t\tBLOCKED PROCESSES\n");
+    print("SEM'S NAME       STATE       BLOCKED PROCESSES\n");
     for (int i = 0; i < SEM_LIMIT; i++)
     {
         int toPrint = !(semSpaces[i].is_available);
+        printInt(toPrint);
         if (toPrint)
         {
             printSem(semSpaces[i].sem);
+            print("Entro aca el semaforo");
         }
     }
 }
 
-
 void printSem(semaphore sem)
 {
     print(sem.name);
-    if (strlen(sem.name) > 10)
-        print("\t\t");
-    else
-        print("\t\t\t\t");
+    if (strlen(sem.name) > 10) {
+        putTab();
+        putTab();
+    } else {
+        putTab();
+        putTab();
+        putTab();
+        putTab();
+    }
+
     printInt(sem.value);
-    print("\t\t\t");
+    putTab();
+    putTab();
+    putTab();
     print_procceses_blocked(sem.firstProcess);
-    print("\n");
+    putLine();
 }
 
-void print_procceses_blocked( process *process)
+void print_procceses_blocked(process *process)
 {
     while (process != NULL)
     {
@@ -276,4 +273,3 @@ void printProcessesSem(uint64_t semIndex)
     semaphore sem = semSpaces[semIndex].sem;
     print_procceses_blocked(sem.firstProcess);
 }
-

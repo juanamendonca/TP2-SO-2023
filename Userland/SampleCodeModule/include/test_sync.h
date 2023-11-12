@@ -1,5 +1,5 @@
 #include <stdint.h>
 
-void slowInc(int64_t *p, int64_t inc);
-void inc(int argc, char *argv[]);
-void test_sync();
+#define NULL (void *) 0
+
+void test_sync(unsigned int argc, char *argv[]);

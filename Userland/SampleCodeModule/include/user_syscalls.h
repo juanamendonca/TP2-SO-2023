@@ -52,14 +52,15 @@ int sys_semPost(int id);
 
 int sys_semWait(int id);
 
-int sys_semClose(int id);
+int sys_semClose(char * name);
 
 int sys_semOpen(char *id, int initialValue);
-
-void sys_semInit(int initialValue);
 
 void sys_waitpid(int pid);
 
 void sys_free(void* memory);
 
 void sys_printBitmap();
+
+void sys_sem();
+

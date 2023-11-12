@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include "test_sync.h"
 
+
 #define BUFFER_SIZE 100
 
 char buffer[BUFFER_SIZE];
@@ -59,8 +60,8 @@ void help() {
   sys_write("TESTSYNCH", GREEN);
   print(": to test semaphores and synchronization");
   enter();
-  sys_write("TESTSEM", GREEN);
-  print(": to test the memory manager");
+  sys_write("INFO SEM", GREEN);
+  print(": to get all sempahores info");
   enter();
 }
 
@@ -88,8 +89,8 @@ void command(char *entry) {
     enter();
 
   } else if (strcmp(buffer, "TESTSYNCH") == 0) {
-    char *argv[] = {"test_sync_sem", "3", "1"};
-    test_sync(3,argv);
+    char *argv[] = {"test_sync", "10","1"};  // Por ejemplo, 10 iteraciones
+    test_sync(3, argv);
     enter();
 
   } else if (strcmp(buffer, "INFO PROCESSES") == 0) {
@@ -116,6 +117,10 @@ void command(char *entry) {
   } else if (strcmp(buffer, "TEST MM") == 0) {
       char *argv[] = {"310000"}; //faltaria pedirle este valor a traves de una syscall
       test_mm(1, argv);
+      enter();
+
+  } else if (strcmp(buffer, "INFO SEM") == 0) {
+      sys_sem();
       enter();
 
   }

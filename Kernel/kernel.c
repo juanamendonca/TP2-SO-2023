@@ -49,9 +49,10 @@ void *initializeKernelBinary() {
 }
 
 int main() {
-  start_semaphores();
   createMemoryManager();
   initalizeScheduler();
+  start_semaphores();
+
   char *args[] = {"userland"};
   int userlandFd[2] = {0, 1};
   initalizeProcess(sampleCodeModuleAddress, 1, args, 1, userlandFd);
