@@ -1,10 +1,10 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-#include "test_util.h"
-#include "user_syscalls.h"
+#include "test_sync.h"
 #include "functions.h"
 #include "syscall.h"
-#include "test_sync.h"
+#include "test_util.h"
+#include "user_syscalls.h"
 
 #define SEM_ID "test_sync_sem"
 #define TOTAL_PAIR_PROCESSES 4
@@ -23,22 +23,20 @@ void my_process_inc(unsigned int argc, char *argv[]) {
   int inc;
   int use_sem;
 
-
   if (argc != 4)
     return;
-
   if ((n = satoi(argv[1])) <= 0)
     return;
   if ((inc = satoi(argv[2])) == 0)
-    return ;
+    return;
   if ((use_sem = satoi(argv[3])) < 0)
-    return ;
+    return;
 
   int semIndex;
   if (use_sem)
-    if ( (semIndex = sys_semOpen(SEM_ID, 1)) == -1) {
+    if ((semIndex = sys_semOpen(SEM_ID, 1)) == -1) {
       print("test_sync: ERROR opening semaphore\n");
-      return ;
+      return;
     }
 
   uint64_t i;
@@ -52,32 +50,41 @@ void my_process_inc(unsigned int argc, char *argv[]) {
 
   if (use_sem)
     sys_semClose(SEM_ID);
-  
+
+  return;
 }
 
-void test_sync(unsigned int argc, char *argv[])
-{ //{n, use_sem, 0}
+void test_sync(unsigned int argc, char *argv[]) { //{n, use_sem, 0}
   uint64_t pids[2 * TOTAL_PAIR_PROCESSES];
 
   if (argc != 3)
     return;
 
-  char *argvDec[] = {"dec_process",argv[1], "-1", argv[2]};
-  char *argvInc[] = {"inc_process",argv[1], "1", argv[2]};
+  char *argvDec[] = {"dec_process", argv[1], "-1", argv[2]};
+  char *argvInc[] = {"inc_process", argv[1], "2", argv[2]};
 
   global = 0;
 
   int i;
   for (i = 0; i < TOTAL_PAIR_PROCESSES; i++) {
-    pids[i] = sys_create_process(&my_process_inc, 4,argvDec, 0, NULL);
-    pids[i + TOTAL_PAIR_PROCESSES] = sys_create_process(&my_process_inc, 4,argvInc, 0, NULL);
+    pids[i] = sys_create_process(&my_process_inc, 4, argvDec, 0, NULL);
+    pids[i + TOTAL_PAIR_PROCESSES] =
+        sys_create_process(&my_process_inc, 4, argvInc, 0, NULL);
   }
 
-  // for (i = 0; i < TOTAL_PAIR_PROCESSES; i++) {
-  //   sys_waitpid(pids[i]);
-  //   sys_waitpid(pids[i + TOTAL_PAIR_PROCESSES]);
-  //  }
+  char buffer[400];
 
+  for (i = 0; i < TOTAL_PAIR_PROCESSES; i++) {
+    sys_waitpid(pids[i]);
+    print("1");
+    sys_get_info_processes(buffer);
+    print(buffer);
+    enter();
+    sys_waitpid(pids[i + TOTAL_PAIR_PROCESSES]);
+  }
+  print("2");
+  sys_get_info_processes(buffer);
+  print(buffer);
   print("Final Value Global: ");
   enter();
   printInt(global);

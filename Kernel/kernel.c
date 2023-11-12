@@ -5,10 +5,10 @@
 #include "moduleLoader.h"
 #include "naiveConsole.h"
 #include "scheduler.h"
+#include "semaphores.h"
 #include "sound.h"
 #include "time.h"
 #include "video.h"
-#include "semaphores.h"
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -56,7 +56,6 @@ int main() {
   char *args[] = {"userland"};
   int userlandFd[2] = {0, 1};
   initalizeProcess(sampleCodeModuleAddress, 1, args, 1, userlandFd);
-  // setUserland(userlandPid);
   load_idt(); // sets the IDT before the terminal launches
   //((EntryPoint)sampleCodeModuleAddress)(); // calls sampleCodeModule main
   // address

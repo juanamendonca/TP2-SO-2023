@@ -23,8 +23,7 @@ typedef struct pcb {
   void *rbp;
   int argc;
   char **argv;
-  int waitingPid; //semid?
-  
+  int waitingPid; // semid?
 } pcb;
 
 typedef struct stackFrame {
