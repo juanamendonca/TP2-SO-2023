@@ -8,6 +8,7 @@
 #include "user_syscalls.h"
 #include <stdint.h>
 #include "test_sync.h"
+#include "test_mm.h"
 
 
 #define BUFFER_SIZE 100
@@ -84,14 +85,14 @@ void command(char *entry) {
     divisionTester();
   } else if (strcmp(buffer, "INVALID OPERATION") == 0) {
     invalidOpTester();
-  } else if (strcmp(buffer, "ALLOC") == 0) {
-    // por ahora nada
-    enter();
-
   } else if (strcmp(buffer, "TESTSYNCH") == 0) {
-    char *argv[] = {"test_sync", "10","1"};  // Por ejemplo, 10 iteraciones
+    char *argv[] = {"test_sync", "10", "1"}; // Por ejemplo, 10 iteraciones
     test_sync(3, argv);
     enter();
+    print("3");
+    char buffer[400];
+    sys_get_info_processes(buffer);
+    print(buffer);
 
   } else if (strcmp(buffer, "INFO PROCESSES") == 0) {
     char buffer[400];
@@ -115,16 +116,18 @@ void command(char *entry) {
     enter();
 
   } else if (strcmp(buffer, "TEST MM") == 0) {
-      char *argv[] = {"310000"}; //faltaria pedirle este valor a traves de una syscall
-      test_mm(1, argv);
-      enter();
+    char *argv[] = {
+        "310000"}; // faltaria pedirle este valor a traves de una syscall
+    test_mm(1, argv);
+    enter();
 
   } else if (strcmp(buffer, "INFO SEM") == 0) {
-      sys_sem();
-      enter();
+    sys_sem();
+    enter();
 
-  }
-   else {
+  } else if (strcmp(buffer, "RETURN") == 0) {
+    return;
+  } else {
     print("Invalid command, write HELP for more available commands");
     enter();
   }
@@ -138,6 +141,9 @@ void shell(unsigned int argc, char *argv[]) {
   while (1) {
     sys_write(">", BLUE);
     scanf(buffer, BUFFER_SIZE);
+    if (strcmp(buffer, "RETURN") == 0) {
+      return;
+    }
     command(buffer);
   }
 }
@@ -147,5 +153,6 @@ int main() {
   int fd[] = {0, 0};
   int shellPid = sys_create_process(&shell, 1, argv, 1, fd);
   sys_waitpid(shellPid);
+  print("back in userland");
   return 0;
 }
