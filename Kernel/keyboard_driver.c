@@ -74,12 +74,14 @@ void keyHandler(uint64_t scancode)
         if (front == BUFF_SIZE)
             front = 0;
 
-        buff[rear++] = keyBoardTable[(int) tecla];
-        cantElems++;
-
         if (shift && scancode == 32){
             clearScreen();
+        } else {
+            buff[rear++] = keyBoardTable[(int) tecla];
+            cantElems++;
         }
+
+
     }
 
 }
