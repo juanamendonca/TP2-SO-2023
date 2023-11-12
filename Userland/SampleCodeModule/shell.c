@@ -3,12 +3,106 @@
 #include "functions.h"
 #include "getInforegs.h"
 #include "pong.h"
+#include "shellProcesses.h"
 #include "test_mm.h"
 #include "test_sync.h"
 #include "test_util.h"
 #include "time.h"
 #include "user_syscalls.h"
 #include <stdint.h>
+
+static command commandsInfo[] = {
+    {&helpP, "HELP", "to get the information on the available commands"},
+    {&getTimeP, "TIME", "to get the current time"},
+    {&clearP, "CLEAR", ": to clear the terminal"},
+    //{&pongP, "PONG", "to play game"},
+    {&getRegInfoP, "REGISTERS", "to print register status"},
+    {&regsTesterP, "REGISTER-TESTER",
+     "to check the correct loading of registers "},
+    {&divisionTesterP, "ZERO", ": to trigger divide by zero exception"},
+    {&invalidOpTesterP, "INVALIDOP", "to trigger invalid operation exception "},
+    {&infoProcessesP, "PS", ": to get all the processes info"},
+    {&testProcessesP, "TEST-PROCESSES", "to test the scheduler"},
+    {&testPrioP, "TEST-PRIO", "to test the scheduler priorities"},
+    {&loopP, "LOOP", "prints process pid every 2 seconds"},
+    {&killP, "KILL", "kills the process with given pid"},
+    {&niceP, "NICE", "changes the process given the pid and new priority"},
+    {&blockP, "BLOCK", "blocks the process"},
+    {&unblockP, "UNBLOCK", "unblocks the process"},
+    {&catP, "CAT", "prints stdin"},
+    {&wcP, "WC", "counts the lines o the input"},
+    {&filterP, "FILTER", "filters vowels of the input"},
+    {&phyloP, "PHYLO", "shows the philosopher problem"}};
+
+void entry(char *buffer, char **args);
+int parseArgs(char *argString, char **args);
+int findPipe(char **args, int argc);
+int getCommand(char *name);
+void runCommand(char **args, int argc, int fd[], int com);
+void help();
+
+void help() {
+  print("The available commands are:");
+  enter();
+  int numCommands = sizeof(commandsInfo) / sizeof(commandsInfo[0]);
+  for (int i = 0; i < numCommands; i++) {
+    sys_write(commandsInfo[i].name, GREEN);
+    print(": ");
+    print(commandsInfo[i].description);
+    enter();
+  }
+}
+
+void entry(char *buffer, char **args) {
+  scanf(buffer, BUFFER_SIZE);
+  deleteExtraSpaces(buffer);
+  int argc = parseArgs(buffer, args);
+  int pipe = findPipe(args, argc);
+  if (pipe == -2) {
+    print("Invalid command. Too many pipes");
+    enter();
+    return;
+  }
+  if (pipe == 0) {
+    print("Pipe does not have inicial function");
+    enter();
+    return;
+  }
+  sys_write_dec(pipe, WHITE);
+  sys_write_dec(argc, WHITE);
+  if (pipe == (argc - 1)) {
+    print("Pipe does not have destination function");
+    enter();
+    return;
+  }
+  int c1 = getCommand(args[0]);
+  if (c1 == -1) {
+    print("Invalid command");
+    enter();
+    return;
+  }
+  if (pipe > 0) {
+    int c2 = getCommand(args[pipe + 1]);
+    if (c2 == -1) {
+      print("Invalid second command");
+      enter();
+      return;
+    }
+  }
+  int fd[] = {0, 0};
+  runCommand(args, argc, fd, c1);
+  enter();
+}
+
+int getCommand(char *name) {
+  int numCommands = sizeof(commandsInfo) / sizeof(commandsInfo[0]);
+  for (int i = 0; i < numCommands; i++) {
+    if (strcmp(commandsInfo[i].name, name) == 0) {
+      return i;
+    }
+  }
+  return -1;
+}
 
 int parseArgs(char *argString, char **args) {
   int count = 0;
@@ -33,119 +127,24 @@ int parseArgs(char *argString, char **args) {
   return count;
 }
 
-void help() {
-
-  print("The available commands are:");
-  enter();
-  sys_write("HELP", GREEN);
-  print(": to get the information on the available commands");
-  enter();
-  sys_write("TIME", GREEN);
-  print(": to get the current time");
-  enter();
-  sys_write("CLEAR", GREEN);
-  print(": to clear the terminal");
-  enter();
-  sys_write("PONG", GREEN);
-  print(": to play game");
-  enter();
-  sys_write("REGISTERS TEST", GREEN);
-  print(": to check the correct loading of registers ");
-  enter();
-  sys_write("REGISTERS", GREEN);
-  print(": to print register status");
-  enter();
-  sys_write("DIVIDE BY ZERO", GREEN);
-  print(": to trigger divide by zero exception");
-  enter();
-  sys_write("INVALID OPERATION", GREEN);
-  print(": to trigger invalid operation exception ");
-  enter();
-  sys_write("INFO PROCESSES", GREEN);
-  print(": to get all the processes info");
-  enter();
-  sys_write("TEST PROCESSES", GREEN);
-  print(": to test the scheduler");
-  enter();
-  sys_write("TEST PRIO", GREEN);
-  print(": to test the scheduler priorities");
-  enter();
-  sys_write("TEST MM", GREEN);
-  print(": to test the memory manager");
-  enter();
-  sys_write("MEMORY STATE", GREEN);
-  print(": to print the current usage of memory");
-  enter();
-  sys_write("TESTSYNCH", GREEN);
-  print(": to test semaphores and synchronization");
-  enter();
-  sys_write("INFO SEM", GREEN);
-  print(": to get all sempahores info");
-  enter();
+// -1 if there are no pipes, -2 if there are more than 1, if not the position of
+// the pipe
+int findPipe(char **args, int argc) {
+  int pipe = -1;
+  int cant = 0;
+  for (int i = 0; i < argc; i++) {
+    if (strcmp(args[i], "/") == 0) {
+      pipe = i;
+      cant++;
+    }
+  }
+  if (cant > 1) {
+    return -2;
+  }
+  return pipe;
 }
 
-void runCommand(char *buffer) {
-  if (strcmp(buffer, "TIME") == 0) {
-    getTime(WHITE);
-    enter();
-  } else if (strcmp(buffer, "CLEAR") == 0) {
-    sys_clear_screen();
-  } else if (strcmp(buffer, "HELP") == 0) {
-    help();
-  } else if (strcmp(buffer, "PONG") == 0) {
-    pong();
-  } else if (strcmp(buffer, "REGISTERS") == 0) {
-    getRegInfo();
-  } else if (strcmp(buffer, "REGISTERS TEST") == 0) {
-    regsTester();
-  } else if (strcmp(buffer, "DIVIDE BY ZERO") == 0) {
-    divisionTester();
-  } else if (strcmp(buffer, "INVALID OPERATION") == 0) {
-    invalidOpTester();
-  } else if (strcmp(buffer, "TESTSYNCH") == 0) {
-    char *argv[] = {"test_sync", "10", "1"}; // Por ejemplo, 10 iteraciones
-    test_sync(3, argv);
-    enter();
-    print("3");
-    char buffer[400];
-    sys_get_info_processes(buffer);
-    print(buffer);
-
-  } else if (strcmp(buffer, "INFO PROCESSES") == 0) {
-    char buffer[400];
-    sys_get_info_processes(buffer);
-    print(buffer);
-    enter();
-
-  } else if (strcmp(buffer, "TEST PROCESSES") == 0) {
-    // por ahora falla por que como el free no hace nada en algun momento el
-    // malloc ya me da null;
-    char *argv2[] = {"5"};
-    test_processes(1, argv2);
-    enter();
-
-  } else if (strcmp(buffer, "TEST PRIO") == 0) {
-    test_prio();
-    enter();
-
-  } else if (strcmp(buffer, "MEMORY STATE") == 0) {
-    sys_printBitmap();
-    enter();
-
-  } else if (strcmp(buffer, "TEST MM") == 0) {
-    char *argv[] = {
-        "310000"}; // faltaria pedirle este valor a traves de una syscall
-    test_mm(1, argv);
-    enter();
-
-  } else if (strcmp(buffer, "INFO SEM") == 0) {
-    sys_sem();
-    enter();
-
-  } else if (strcmp(buffer, "RETURN") == 0) {
-    return;
-  } else {
-    print("Invalid command, write HELP for more available commands");
-    enter();
-  }
+void runCommand(char **args, int argc, int fd[], int com) {
+  int pid = sys_create_process(commandsInfo[com].process, argc, args, 1, fd);
+  sys_waitpid(pid);
 }
