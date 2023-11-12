@@ -7,7 +7,7 @@
 
 #include "lib.h"
 #include "defs.h"
-#include "semaphore.h"
+#include "semaphores.h"
 
 uint64_t initPipes();
 uint64_t pipeOpen(char *name);

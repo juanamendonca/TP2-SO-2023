@@ -37,7 +37,7 @@ uint64_t sem_open(char *name, uint64_t initValue);
 // Close a sempahore
 uint64_t sem_close(char *name);
 
-// Locks a semaphore. If successful (the lock was acquired), sem_wait() and sem_trywait() will return 0.  Otherwise, -1 is returned and errno is set, and the state of the semaphore is unchanged.
+// Locks a semaphore. If successful (the lock was acquired), sem_wait() and will return 0.  Otherwise, -1 is returned and errno is set, and the state of the semaphore is unchanged.
 uint64_t sem_wait(uint64_t semIndex);
 
 // the value of the semaphore is incremented, and all threads which are waiting on the semaphore are awakened. If successful, sem_post() will return 0.  Otherwise, -1 is returned.

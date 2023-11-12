@@ -1,4 +1,6 @@
 #include "pipe.h"
+#include "strings.h"
+#include "video.h"
 
 typedef struct
 {
@@ -17,9 +19,11 @@ typedef struct
     uint64_t available;
 } Space;
 
-int semPipeManager; // Semaphore ID for controlling access to the pipe array.
+uint64_t semPipeManager; // Semaphore ID for controlling access to the pipe array.
 
 static Space pipes[MAX_PIPES];
+
+char * pipeName = "Pipe Manager";
 
 static uint64_t indexValid(uint64_t pipeIndex);
 static uint64_t createPipe(char *name);
@@ -33,7 +37,7 @@ void printProcesses(PipeType pipe);
 // Returns -1 in case of error and 0 otherwise.
 uint64_t initPipes()
 {
-    if ((semPipeManager = sem_open("Pipe Manager", 1)) == -1)
+    if ((semPipeManager = sem_open(pipeName, 1)) == -1)
     {
         print("Error in initPipes");
         return -1;
