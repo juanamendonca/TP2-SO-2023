@@ -116,13 +116,13 @@ int parseArgs(char *argString, char **args) {
     if (argString[i] != ' ' && argStart == -1) {
       // Comienza un nuevo argumento
       argStart = i;
-    } else if ((argString[i] == ' ' || argString[i + 1] == '\0') &&
-               argStart != -1) {
+    }
+    if ((argString[i] == ' ' || argString[i + 1] == '\0') && argStart != -1) {
       // Termina el argumento actual
       if (argString[i] == ' ') {
         argString[i] = '\0';
       }
-      args[count] = (char *)&argString[argStart];
+      args[count] = &argString[argStart];
       count++;
       argStart = -1;
     }
