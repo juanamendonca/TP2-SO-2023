@@ -66,5 +66,6 @@ void giveUpCPU();
 // void setUserland(int pid);
 extern void forceTimer();
 void waitpid(int pid);
+pcb *getProcessWithId(int pid);
 
 #endif

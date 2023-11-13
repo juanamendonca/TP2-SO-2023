@@ -1,3 +1,4 @@
+#include "test_util.h"
 #include "functions.h"
 #include "syscall.h"
 #include "user_syscalls.h"
@@ -66,7 +67,7 @@ void endless_loop() {
 }
 
 void endless_loop_print(uint64_t wait) {
-  int64_t pid = my_getpid();
+  int64_t pid = sys_get_pid();
 
   while (1) {
     sys_write_dec(pid, WHITE);

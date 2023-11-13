@@ -15,6 +15,6 @@ int findPipe(char **args, int argc);
 
 void help();
 
-void runCommand(char **args, int argc, int fd[], int com);
+void runCommand(char **args, int argc, int fd[], int com, int cont);
 
 void help();

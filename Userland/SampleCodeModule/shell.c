@@ -42,7 +42,7 @@ void entry(char *buffer, char **args);
 int parseArgs(char *argString, char **args);
 int findPipe(char **args, int argc);
 int getCommand(char *name);
-void runCommand(char **args, int argc, int fd[], int com);
+void runCommand(char **args, int argc, int fd[], int com, int cont);
 void help();
 
 void help() {
@@ -72,8 +72,6 @@ void entry(char *buffer, char **args) {
     enter();
     return;
   }
-  // sys_write_dec(pipe, WHITE);
-  // sys_write_dec(argc, WHITE);
   if (pipe == (argc - 1)) {
     print("Pipe does not have destination function");
     enter();
@@ -92,9 +90,14 @@ void entry(char *buffer, char **args) {
       enter();
       return;
     }
+  } else {
+    int fore = 1;
+    if (strcmp(args[argc - 1], "B") == 0) {
+      argc--;
+      fore = 0;
+    }
+    runCommand(args, argc, NULL, c1, fore);
   }
-  int fd[] = {0, 0};
-  runCommand(args, argc, fd, c1);
   enter();
 }
 
@@ -148,7 +151,9 @@ int findPipe(char **args, int argc) {
   return pipe;
 }
 
-void runCommand(char **args, int argc, int fd[], int com) {
-  int pid = sys_create_process(commandsInfo[com].process, argc, args, 1, fd);
-  sys_waitpid(pid);
+void runCommand(char **args, int argc, int fd[], int com, int fore) {
+  int pid = sys_create_process(commandsInfo[com].process, argc, args, fore, fd);
+  if (fore) {
+    sys_waitpid(pid);
+  }
 }

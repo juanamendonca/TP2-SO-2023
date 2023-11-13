@@ -11,23 +11,69 @@
 #include <stdint.h>
 #define ESC 27
 
-void helpP(unsigned int argc, char *argv[]) { help(); }
+void helpP(unsigned int argc, char *argv[]) {
+  if (argc != 1) {
+    print("Wrong arguments");
+    return;
+  }
+  help();
+}
 
-void getTimeP(unsigned int argc, char *argv[]) { getTime(WHITE); }
+void getTimeP(unsigned int argc, char *argv[]) {
+  if (argc != 1) {
+    print("Wrong arguments");
+    return;
+  }
+  getTime(WHITE);
+}
 
-void clearP(unsigned int argc, char *argv[]) { sys_clear_screen(); }
+void clearP(unsigned int argc, char *argv[]) {
+  if (argc != 1) {
+    print("Wrong arguments");
+    return;
+  }
+  sys_clear_screen();
+}
 
 // void pongP(unsigned int argc, char *argv[]) { pong(); }
 
-void getRegInfoP(unsigned int argc, char *argv[]) { getRegInfo(); }
+void getRegInfoP(unsigned int argc, char *argv[]) {
+  if (argc != 1) {
+    print("Wrong arguments");
+    return;
+  }
+  getRegInfo();
+}
 
-void regsTesterP(unsigned int argc, char *argv[]) { regsTester(); }
+void regsTesterP(unsigned int argc, char *argv[]) {
+  if (argc != 1) {
+    print("Wrong arguments");
+    return;
+  }
+  regsTester();
+}
 
-void divisionTesterP(unsigned int argc, char *argv[]) { divisionTester(); }
+void divisionTesterP(unsigned int argc, char *argv[]) {
+  if (argc != 1) {
+    print("Wrong arguments");
+    return;
+  }
+  divisionTester();
+}
 
-void invalidOpTesterP(unsigned int argc, char *argv[]) { invalidOpTester(); }
+void invalidOpTesterP(unsigned int argc, char *argv[]) {
+  if (argc != 1) {
+    print("Wrong arguments");
+    return;
+  }
+  invalidOpTester();
+}
 
 void infoProcessesP(unsigned int argc, char *argv[]) {
+  if (argc != 1) {
+    print("Wrong arguments");
+    return;
+  }
   char buffer[400];
   sys_get_info_processes(buffer);
   print(buffer);
@@ -42,9 +88,21 @@ void testProcessesP(unsigned int argc, char *argv[]) {
   test_processes(1, argv2);
 }
 
-void testPrioP(unsigned int argc, char *argv[]) { test_prio(); }
+void testPrioP(unsigned int argc, char *argv[]) {
+  if (argc != 1) {
+    print("Wrong arguments");
+    return;
+  }
+  test_prio();
+}
 
-void memoryP(unsigned int argc, char *argv[]) { sys_printBitmap(); }
+void memoryP(unsigned int argc, char *argv[]) {
+  if (argc != 1) {
+    print("Wrong arguments");
+    return;
+  }
+  sys_printBitmap();
+}
 
 void memoryTestP(unsigned int argc, char *argv[]) {
   char *argv2[] = {
@@ -52,11 +110,27 @@ void memoryTestP(unsigned int argc, char *argv[]) {
   test_mm(1, argv2);
 }
 
-void semP(unsigned int argc, char *argv[]) { sys_sem(); }
+void semP(unsigned int argc, char *argv[]) {
+  if (argc != 1) {
+    print("Wrong arguments");
+    return;
+  }
+  sys_sem();
+}
 
-void testSyncP(unsigned int argc, char *argv[]) { test_sync(argc, argv); }
+void testSyncP(unsigned int argc, char *argv[]) {
+  if (argc != 3) {
+    print("Wrong arguments");
+    return;
+  }
+  test_sync(argc, argv);
+}
 
 void loopP(unsigned int argc, char *argv[]) {
+  if (argc != 1) {
+    print("Wrong arguments");
+    return;
+  }
   int pid = sys_get_pid();
   while (1) {
     sys_sleep(5);

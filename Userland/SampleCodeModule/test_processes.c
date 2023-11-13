@@ -2,6 +2,7 @@
 #include "syscall.h"
 #include "test_util.h"
 #include "user_syscalls.h"
+#include <stddef.h>
 
 enum State { RUNNING, BLOCKED, KILLED };
 
@@ -16,7 +17,7 @@ void test_processes(unsigned int argc, char *argv[]) {
   uint8_t action;
   uint64_t max_processes;
   char *argvAux[] = {"endless_loop"};
-  int fd[] = {0, 0};
+  // char *buffer[400];
 
   if (argc != 1)
     return;
@@ -26,8 +27,6 @@ void test_processes(unsigned int argc, char *argv[]) {
 
   p_rq p_rqs[max_processes];
 
-  char buffer[400];
-
   while (1) {
     // sys_printBitmap();
     // enter();
@@ -35,17 +34,17 @@ void test_processes(unsigned int argc, char *argv[]) {
     // print(buffer);
 
     // Create max_processes processes
-    // print(".");
     for (rq = 0; rq < max_processes; rq++) {
-      p_rqs[rq].pid = my_create_process(&endless_loop, 1, argvAux, 0, fd);
+      p_rqs[rq].pid = sys_create_process(&endless_loop, 1, argvAux, 1, NULL);
 
       if (p_rqs[rq].pid == -1) {
+        print("-");
         print("test_processes: ERROR creating process\n");
         return;
       } else {
-        // print("creating ");
-        // printInt(p_rqs[rq].pid);
-        // enter();
+        print("creating ");
+        printInt(p_rqs[rq].pid);
+        enter();
         p_rqs[rq].state = RUNNING;
         alive++;
       }
@@ -65,13 +64,13 @@ void test_processes(unsigned int argc, char *argv[]) {
         switch (action) {
         case 0:
           if (p_rqs[rq].state == RUNNING || p_rqs[rq].state == BLOCKED) {
-            if (my_kill(p_rqs[rq].pid) == -1) {
+            if (sys_kill_process(p_rqs[rq].pid) == -1) {
               print("test_processes: ERROR killing process\n");
               return;
             }
-            // print("killing ");
-            // printInt(p_rqs[rq].pid);
-            // enter();
+            print("killing ");
+            printInt(p_rqs[rq].pid);
+            enter();
             p_rqs[rq].state = KILLED;
             alive--;
           }
@@ -79,13 +78,13 @@ void test_processes(unsigned int argc, char *argv[]) {
 
         case 1:
           if (p_rqs[rq].state == RUNNING) {
-            if (my_block(p_rqs[rq].pid) == -1) {
+            if (sys_block_process(p_rqs[rq].pid) == -1) {
               print("test_processes: ERROR blocking process\n");
               return;
             }
-            // print("blocking ");
-            // printInt(p_rqs[rq].pid);
-            // enter();
+            print("blocking ");
+            printInt(p_rqs[rq].pid);
+            enter();
             p_rqs[rq].state = BLOCKED;
           }
           break;
@@ -95,7 +94,7 @@ void test_processes(unsigned int argc, char *argv[]) {
       // Randomly unblocks processes
       for (rq = 0; rq < max_processes; rq++)
         if (p_rqs[rq].state == BLOCKED && GetUniform(100) % 2) {
-          if (my_unblock(p_rqs[rq].pid) == -1) {
+          if (sys_unblock_process(p_rqs[rq].pid) == -1) {
             print("test_processes: ERROR unblocking process\n");
             return;
           }

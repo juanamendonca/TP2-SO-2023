@@ -1,6 +1,6 @@
 #include "pipe.h"
+#include "semaphores2.h"
 #include "strings.h"
-#include "sys_calls.h"
 #include "video.h"
 
 typedef struct {
@@ -49,7 +49,7 @@ uint64_t initPipes() {
 // Returns -1 in case of error
 uint64_t pipeOpen(char *name) {
   if (sem_wait(semPipeManager)) {
-    print("Error sem_wait in pipeOpen\n");
+    putArrayNext("Error sem_wait in pipeOpen\n", WHITE);
     return -1;
   }
   // Check if a pipe with the given name exists in our data structure
@@ -60,13 +60,13 @@ uint64_t pipeOpen(char *name) {
     id = createPipe(name);
   }
   if (id == -1) {
-    print("Error in pipeOpen, id=-1\n");
+    putArrayNext("Error in pipeOpen, id=-1\n", WHITE);
     sem_post(semPipeManager);
     return -1;
   }
   pipes[id - 1].pipe.amountProcesses++;
   if (sem_post(semPipeManager)) {
-    print("Error sem_post in pipeOpen\n");
+    putArrayNext("Error sem_post in pipeOpen\n", WHITE);
     return -1;
   }
   return id;
@@ -77,21 +77,21 @@ uint64_t pipeClose(uint64_t pipeIndex) {
     return -1;
 
   if (sem_wait(semPipeManager) == -1) {
-    print("Error sem_wait in pipeClose\n");
+    putArrayNext("Error sem_wait in pipeClose\n", WHITE);
     return -1;
   }
 
-  int closeRead = sem_close(semPipeManager);
-  int closeWrite = sem_close(semPipeManager);
+  int closeRead = sem_close(pipes[pipeIndex].pipe.semRead);
+  int closeWrite = sem_close(pipes[pipeIndex].pipe.semWrite);
 
   if (closeRead == -1 || closeWrite == -1) {
-    print("pipeClose: Error in semaphore close for the pipe\n");
+    putArrayNext("pipeClose: Error in semaphore close for the pipe\n", WHITE);
     return -1;
   }
   pipes[pipeIndex - 1].available = TRUE;
 
   if (sem_post(semPipeManager) == -1) {
-    print("Error sem_post in pipeClose\n");
+    putArrayNext("Error sem_post in pipeClose\n", WHITE);
     return -1;
   }
   return 1;
@@ -208,37 +208,37 @@ static uint64_t indexValid(uint64_t pipeIndex) {
 
 void pipe() {
   print("PIPE'S NAME  STATE  SEMAPHORES INVOLVED  BLOCKED PROCESSES\n");
-  //   int i;
-  //   for (i = 0; i < MAX_PIPES; i++) {
-  //     if (!(pipes[i].available)) {
-  //       printPipe(pipes[i].pipe);
-  //     }
-  //   }
-  //   print("\n");
+  int i;
+  for (i = 0; i < MAX_PIPES; i++) {
+    if (!(pipes[i].available)) {
+      printPipe(pipes[i].pipe);
+    }
+  }
+  print("\n");
 }
 
-// void printPipe(PipeType pipe) {
-//   print(pipe.name);
-//   print("    ");
-//   print("Active");
-//   printSemsInvolved(pipe);
-//   print(" ");
-//   printProcesses(pipe);
-//   print(" ");
-// }
+void printPipe(PipeType pipe) {
+  print(pipe.name);
+  print("    ");
+  print("Active");
+  printSemsInvolved(pipe);
+  print(" ");
+  printProcesses(pipe);
+  print(" ");
+}
 
-// void printSemsInvolved(PipeType pipe) {
-//   print(getSemName(pipe.semRead));
-//   print(", ");
-//   print(getSemName(pipe.semWrite));
-//   print(", ");
-//   print(getSemName(semPipeManager));
-// }
+void printSemsInvolved(PipeType pipe) {
+  print(getSemName(pipe.semRead));
+  print(", ");
+  print(getSemName(pipe.semWrite));
+  print(", ");
+  print(getSemName(semPipeManager));
+}
 
-// void printProcesses(PipeType pipe) {
-//   printProcessesSem(pipe.semRead);
-//   print(" ");
-//   printProcessesSem(pipe.semWrite);
-//   print(" ");
-//   printProcessesSem(semPipeManager);
-// }
+void printProcesses(PipeType pipe) {
+  printProcessesSem(pipe.semRead);
+  print(" ");
+  printProcessesSem(pipe.semWrite);
+  print(" ");
+  printProcessesSem(semPipeManager);
+}

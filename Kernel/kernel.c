@@ -4,8 +4,9 @@
 #include "memoryManager.h"
 #include "moduleLoader.h"
 #include "naiveConsole.h"
+#include "pipe.h"
 #include "scheduler.h"
-#include "semaphores.h"
+#include "semaphores2.h"
 #include "sound.h"
 #include "time.h"
 #include "video.h"
@@ -52,10 +53,11 @@ int main() {
   createMemoryManager();
   initalizeScheduler();
   start_semaphores();
+  initPipes();
 
   char *args[] = {"shell"};
-  int userlandFd[2] = {0, 1};
-  initalizeProcess(sampleCodeModuleAddress, 1, args, 1, userlandFd);
+  int ufd[2] = {0, 1};
+  initalizeProcess(sampleCodeModuleAddress, 1, args, 1, ufd);
   load_idt(); // sets the IDT before the terminal launches
   //((EntryPoint)sampleCodeModuleAddress)(); // calls sampleCodeModule main
   // address

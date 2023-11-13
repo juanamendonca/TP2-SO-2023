@@ -22,3 +22,5 @@ int sem_close(int id);
 int sem_wait(int id);
 int sem_post(int id);
 void sem();
+char *getSemName(int id);
+void printProcessesSem(int id);

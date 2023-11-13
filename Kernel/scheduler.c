@@ -41,6 +41,7 @@ int getPid();
 int nice(int pid, int priority);
 void giveUpCPU();
 void waitpid(int pid);
+pcb *getProcessWithId(int pid);
 
 void dummy(int argc, char **argv) {
   while (1) {
@@ -281,6 +282,10 @@ int initalizeProcess(void (*process)(int argc, char **argv), int argc,
     return -1;
   }
 
+  if (fd == NULL) {
+    fd = currentPcb->fd;
+  }
+
   if (initializePcb(newProcess, argc, argv, foreground, fd, stack) == -1) {
     putArrayNext(" initialize pcb is null ", WHITE);
     free(stack);
@@ -432,3 +437,5 @@ void waitpid(int pid) {
   process->waitingPid = 1;
   block(process->ppid);
 }
+
+pcb *getProcessWithId(int pid) { return getProcessP(queue, pid); }

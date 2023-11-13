@@ -4,8 +4,8 @@
 #include "strings.h"
 #include "video.h"
 
-semaphore *sems = NULL;
-semaphore *semsL = NULL;
+semaphore *sems;
+semaphore *semsL;
 int semCant = 0;
 
 int semId = 0;
@@ -27,8 +27,8 @@ void acquire(int *lock) {
 void release(int *lock) { _xchg(lock, 0); }
 
 void start_semaphores() {
-  acquire(&totalLock);
-  release(&totalLock);
+  sems = NULL;
+  semsL = NULL;
 }
 
 int sem_open(char *name, int value) {
@@ -201,5 +201,25 @@ void sem() {
     putDecNext(sem->value, WHITE);
     putArrayNext("\t", WHITE);
     sem = sem->next;
+  }
+}
+
+char *getSemName(int id) {
+  semaphore *sem = findSemId(id);
+  return sem->name;
+}
+
+void printProcessesSem(int pid) {
+  semaphore *sem = findSemId(pid);
+  if (sem == NULL) {
+    return;
+  }
+  PNode *current = sem->firstP;
+  while (current != NULL) {
+    pcb *pcb = getProcessWithId(current->pid);
+    putArrayNext(pcb->name, WHITE);
+    putTab();
+    putDecNext(pid, WHITE);
+    current = current->next;
   }
 }

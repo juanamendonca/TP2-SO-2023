@@ -1,6 +1,7 @@
 #include "functions.h"
 #include "syscall.h"
 #include "test_util.h"
+#include "user_syscalls.h"
 #include <stdint.h>
 
 #define MINOR_WAIT                                                             \
@@ -27,34 +28,34 @@ void test_prio() {
   int fd[] = {0, 0};
 
   for (i = 0; i < TOTAL_PROCESSES; i++)
-    pids[i] = my_create_process(&printWrapper, 1, argv, 0, fd);
+    pids[i] = sys_create_process(&printWrapper, 1, argv, 0, fd);
 
   bussy_wait(WAIT);
   print("\nCHANGING PRIORITIES...\n");
 
   for (i = 0; i < TOTAL_PROCESSES; i++)
-    my_nice(pids[i], prio[i]);
+    sys_nice(pids[i], prio[i]);
 
   bussy_wait(WAIT);
   print("\nBLOCKING...\n");
 
   for (i = 0; i < TOTAL_PROCESSES; i++)
-    my_block(pids[i]);
+    sys_block_process(pids[i]);
 
   print("CHANGING PRIORITIES WHILE BLOCKED...\n");
 
   for (i = 0; i < TOTAL_PROCESSES; i++)
-    my_nice(pids[i], MEDIUM);
+    sys_nice(pids[i], MEDIUM);
 
   print("UNBLOCKING...\n");
 
   for (i = 0; i < TOTAL_PROCESSES; i++)
-    my_unblock(pids[i]);
+    sys_unblock_process(pids[i]);
 
   bussy_wait(WAIT);
   print("\nKILLING...\n");
 
   for (i = 0; i < TOTAL_PROCESSES; i++)
-    my_kill(pids[i]);
+    sys_kill_process(pids[i]);
   return;
 }
