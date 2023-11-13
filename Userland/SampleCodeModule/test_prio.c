@@ -56,4 +56,9 @@ void test_prio() {
 
   for (i = 0; i < TOTAL_PROCESSES; i++)
     my_kill(pids[i]);
+
+  char buffer[400];
+  sys_get_info_processes(buffer);
+  print(buffer);
+  return;
 }

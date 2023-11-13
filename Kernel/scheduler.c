@@ -12,7 +12,7 @@
 
 #define STACK_SIZE (1024 * 4)
 #define QUANTUM 1
-#define BUFFER_SIZE_PROCESS 100
+#define BUFFER_SIZE_PROCESS 500
 
 int pid = 0;
 PriorityQueue *queue = NULL;
@@ -198,11 +198,9 @@ static void processStart(int argc, char *argv[], void *process(int, char **)) {
 void killCurrent() { killProcess(currentPcb->pid); }
 
 int killProcess(int pid) {
-  pcb *process = NULL;
+  pcb *process = getAndDeleteProcessP(queue, pid);
   if (pid == currentPcb->pid) {
     process = currentPcb;
-  } else {
-    process = getProcessP(queue, pid);
   }
   if (process == NULL) {
     return -1;
@@ -212,6 +210,8 @@ int killProcess(int pid) {
   }
   changeState(pid, KILLED);
   if (pid == currentPcb->pid) {
+    freePcb(currentPcb);
+    currentPcb = NULL;
     callTimer();
   }
   return pid;
