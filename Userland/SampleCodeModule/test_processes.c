@@ -35,7 +35,7 @@ void test_processes(unsigned int argc, char *argv[]) {
 
     // Create max_processes processes
     for (rq = 0; rq < max_processes; rq++) {
-      p_rqs[rq].pid = sys_create_process(&endless_loop, 1, argvAux, 1, NULL);
+      p_rqs[rq].pid = sys_create_process(&endless_loop, 1, argvAux, -1, NULL);
 
       if (p_rqs[rq].pid == -1) {
         print("-");

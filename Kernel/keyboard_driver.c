@@ -8,6 +8,7 @@
 #define BUFF_SIZE 256
 #define TECLA_LIMITE_SUPERIOR 90
 #define CONTROL 0x1D
+#define STDIN 0
 
 static char buff[BUFF_SIZE] = {
     0}; // Circular vector. When buff reaches max capacity older elements are
@@ -22,21 +23,26 @@ int blockedProcess = -1;
 // Circular vector. When buff reaches max capacity older elements are
 // overwritten.
 char nextElement() {
+  pcb *pcb = getCurrentPcb();
+  if (pcb->fd[0] == STDIN) {
 
-  if (cantElems == 0) {
-    blockedProcess = getPid();
-    block(blockedProcess);
+    if (cantElems == 0) {
+      blockedProcess = pcb->pid;
+      block(blockedProcess);
+    }
+
+    char c = buff[front];
+
+    cantElems--;
+    front++;
+
+    if (front == BUFF_SIZE)
+      front = 0;
+
+    return c;
+  } else {
+    // read del pipe
   }
-
-  char c = buff[front];
-
-  cantElems--;
-  front++;
-
-  if (front == BUFF_SIZE)
-    front = 0;
-
-  return c;
 }
 
 int cantElements() { return cantElems; }

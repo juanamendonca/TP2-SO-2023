@@ -67,5 +67,6 @@ void giveUpCPU();
 extern void forceTimer();
 void waitpid(int pid);
 pcb *getProcessWithId(int pid);
+pcb *getCurrentPcb();
 
 #endif

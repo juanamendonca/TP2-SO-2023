@@ -286,6 +286,10 @@ int initalizeProcess(void (*process)(int argc, char **argv), int argc,
     fd = currentPcb->fd;
   }
 
+  if (foreground == -1) {
+    foreground = currentPcb->foreground;
+  }
+
   if (initializePcb(newProcess, argc, argv, foreground, fd, stack) == -1) {
     putArrayNext(" initialize pcb is null ", WHITE);
     free(stack);
@@ -439,3 +443,5 @@ void waitpid(int pid) {
 }
 
 pcb *getProcessWithId(int pid) { return getProcessP(queue, pid); }
+
+pcb *getCurrentPcb() { return currentPcb; }

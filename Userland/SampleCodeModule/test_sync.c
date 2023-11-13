@@ -81,9 +81,9 @@ void test_sync(unsigned int argc, char *argv[]) { //{n, use_sem, 0}
 
   int i;
   for (i = 0; i < TOTAL_PAIR_PROCESSES; i++) {
-    pids[i] = sys_create_process(&my_process_inc, 4, argvDec, 0, fd);
+    pids[i] = sys_create_process(&my_process_inc, 4, argvDec, -1, fd);
     pids[i + TOTAL_PAIR_PROCESSES] =
-        sys_create_process(&my_process_inc, 4, argvInc, 0, fd);
+        sys_create_process(&my_process_inc, 4, argvInc, -1, fd);
   }
 
   for (i = 0; i < TOTAL_PAIR_PROCESSES; i++) {

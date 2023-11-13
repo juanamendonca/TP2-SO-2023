@@ -49,7 +49,7 @@ void _5_getSeconds(uint64_t seconds, uint64_t r2, uint64_t r3, uint64_t r4,
 
 void _6_newLine(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
                 uint64_t r5) {
-  putLine();
+  putArrayNext("\n", WHITE);
 }
 
 void _7_write_dec(uint64_t c, uint64_t color, uint64_t r3, uint64_t r4,

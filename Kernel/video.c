@@ -1,9 +1,12 @@
+#include "scheduler.h"
 #include "strings.h"
 #include <font.h>
 #include <video.h>
 
 #define CHAR_WIDTH 8
 #define CHAR_HEIGHT 16
+
+#define STDIOUT 0
 
 static int pointer_x = 3;
 static int pointer_y = 3;
@@ -203,13 +206,18 @@ void putLetterNext(int caracter, int color) {
 
 void putArrayNext(char *array, int color) {
   int i = 0;
-  while (array[i] != '\0') {
-    if (array[i] != '\n') {
-      putLetterNext(array[i], color);
-    } else {
-      putLine();
+  pcb *pcb = getCurrentPcb();
+  if (pcb->fd[1] == STDIOUT && pcb->foreground) {
+    while (array[i] != '\0') {
+      if (array[i] != '\n') {
+        putLetterNext(array[i], color);
+      } else {
+        putLine();
+      }
+      i++;
     }
-    i++;
+  } else {
+    // escribe en el pipe
   }
 }
 void putDecNext(int number, int color) {
