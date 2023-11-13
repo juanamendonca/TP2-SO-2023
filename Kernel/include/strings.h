@@ -1,3 +1,4 @@
+#include <stddef.h>
 #ifndef MYSTRING_H
 #define MYSTRING_H
 
@@ -9,5 +10,6 @@ int strlen(const char *str);
 
 int strcmp(char *s1, char *s2);
 
+char *strncpy(char *dest, const char *src, size_t n);
 
 #endif

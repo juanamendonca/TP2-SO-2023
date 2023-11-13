@@ -34,6 +34,10 @@ void infoProcessesP(unsigned int argc, char *argv[]) {
 }
 
 void testProcessesP(unsigned int argc, char *argv[]) {
+  if (argc != 2) {
+    print("Wrong arguments");
+    return;
+  }
   char *argv2[] = {argv[1]};
   test_processes(1, argv2);
 }

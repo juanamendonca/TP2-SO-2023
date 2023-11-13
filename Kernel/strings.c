@@ -19,13 +19,22 @@ int strlen(const char *str) {
   return length;
 }
 
-int strcmp(char *s1, char *s2)
-{
-	while (*s1 != 0 && *s2 != 0 && *s1 == *s2)
-	{
-		s1++;
-		s2++;
-	}
+int strcmp(char *s1, char *s2) {
+  while (*s1 != 0 && *s2 != 0 && *s1 == *s2) {
+    s1++;
+    s2++;
+  }
 
-	return *s1 == 0 && *s2 == 0;
+  return *s1 == 0 && *s2 == 0;
+}
+
+char *strncpy(char *dest, const char *src, size_t n) {
+  size_t i;
+  for (i = 0; i < n && src[i] != '\0'; i++) {
+    dest[i] = src[i];
+  }
+  for (; i < n; i++) {
+    dest[i] = '\0';
+  }
+  return dest;
 }

@@ -44,7 +44,6 @@ void waitpid(int pid);
 
 void dummy(int argc, char **argv) {
   while (1) {
-    putArrayNext(".", WHITE);
     _hlt();
   }
 }
@@ -284,6 +283,8 @@ int initalizeProcess(void (*process)(int argc, char **argv), int argc,
 
   if (initializePcb(newProcess, argc, argv, foreground, fd, stack) == -1) {
     putArrayNext(" initialize pcb is null ", WHITE);
+    free(stack);
+    free(newProcess);
     return -1;
   }
 
