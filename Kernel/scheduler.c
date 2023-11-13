@@ -208,9 +208,9 @@ int killProcess(int pid) {
   if (process->waitingPid > 0) {
     unblock(process->ppid);
   }
-  changeState(pid, KILLED);
+  // changeState(pid, KILLED);
+  freePcb(process);
   if (pid == currentPcb->pid) {
-    freePcb(currentPcb);
     currentPcb = NULL;
     callTimer();
   }
