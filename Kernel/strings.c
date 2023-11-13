@@ -1,4 +1,5 @@
 #include "strings.h"
+#include "video.h"
 #include <stddef.h> // Para el tipo size_t
 
 // Implementación de la función my_strcpy
@@ -20,12 +21,12 @@ int strlen(const char *str) {
 }
 
 int strcmp(char *s1, char *s2) {
-  while (*s1 != 0 && *s2 != 0 && *s1 == *s2) {
+  while (*s1 != '\0' && *s2 != '\0' && *s1 == *s2) {
     s1++;
     s2++;
   }
 
-  return *s1 == 0 && *s2 == 0;
+  return (*s1 - *s2);
 }
 
 char *strncpy(char *dest, const char *src, size_t n) {

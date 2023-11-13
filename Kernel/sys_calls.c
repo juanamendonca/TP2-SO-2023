@@ -3,7 +3,7 @@
 #include "lib.h"
 #include "memoryManager.h"
 #include "scheduler.h"
-#include "semaphores.h"
+#include "semaphores2.h"
 #include "sound.h"
 #include "time.h"
 #include "video.h"
@@ -141,22 +141,22 @@ void _22_giveup_cpu(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
 
 int _23_sem_wait(uint64_t semIndex, uint64_t r2, uint64_t r3, uint64_t r4,
                  uint64_t r5) {
-  return sem_wait(semIndex);
+  return sem_wait((int)semIndex);
 }
 
 int _24_sem_post(uint64_t semIndex, uint64_t r2, uint64_t r3, uint64_t r4,
                  uint64_t r5) {
-  return sem_post(semIndex);
+  return sem_post((int)semIndex);
 }
 
 int _25_sem_open(uint64_t name, uint64_t initValue, uint64_t r3, uint64_t r4,
                  uint64_t r5) {
-  return sem_open((char *)name, (uint64_t)initValue);
+  return sem_open((char *)name, (int)initValue);
 }
 
-int _26_sem_close(uint64_t name, uint64_t r2, uint64_t r3, uint64_t r4,
+int _26_sem_close(uint64_t id, uint64_t r2, uint64_t r3, uint64_t r4,
                   uint64_t r5) {
-  return sem_close((char *)name);
+  return sem_close((int)id);
 }
 
 void _27_waitpid(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,

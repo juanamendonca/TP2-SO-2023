@@ -87,9 +87,9 @@ outb:
 	ret
 
 _xchg:
-	mov rax, rsi
-	xchg [rdi], eax
-	ret
+  mov rax, rsi
+  xchg [rdi], eax
+  ret
 
 forceTimer:
 	int 20h

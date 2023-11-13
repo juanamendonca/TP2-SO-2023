@@ -1,226 +1,268 @@
-#include "lib.h" // Asumiendo que esta contiene _xchg y funciones relacionadas
-#include "scheduler.h"
-#include "semaphores.h"
-#include "strings.h"
-#include "sys_calls.h"
-#include "video.h"
+// #include "lib.h" // Asumiendo que esta contiene _xchg y funciones
+// relacionadas #include "scheduler.h" #include "semaphores.h" #include
+// "strings.h" #include "sys_calls.h" #include "video.h"
 
-static semaphore semSpaces[SEM_LIMIT];
-static uint64_t lock_semaphore = 0;
+// static semaphore semSpaces[SEM_LIMIT];
+// static uint64_t lock_semaphore = 0;
 
-static void enqueue(semaphore *sem, uint64_t pid);
-static uint64_t dequeue(semaphore *sem);
-void print_procceses_blocked(process *processNode);
+// static void enqueue(semaphore *sem, uint64_t pid);
+// static uint64_t dequeue(semaphore *sem);
+// void print_procceses_blocked(process *processNode);
 
-// Encuentra un semáforo por nombre
-static int find_semaphore(char *name) {
-  for (int i = 0; i < SEM_LIMIT; i++) {
-    if (semSpaces[i].name[0] != '\0' && strcmp(name, semSpaces[i].name) == 0) {
-      return i;
-    }
-  }
-  return -1;
-}
+// // Encuentra un semáforo por nombre
+// static int find_semaphore(char *name) {
+//   for (int i = 0; i < SEM_LIMIT; i++) {
+//     if (strcmp(name, semSpaces[i].name) == 0) {
+//       return i;
+//     }
+//   }
+//   return -1;
+// }
 
-// Inicializa el sistema de semáforos
-void start_semaphores() {
-  for (int i = 0; i < SEM_LIMIT; i++) {
-    semSpaces[i].name[0] = '\0'; // Indica semáforo no utilizado
-    semSpaces[i].firstProcess = NULL;
-    semSpaces[i].lastProcess = NULL;
-    semSpaces[i].lock = 0;
-    semSpaces[i].value = 0;
-    semSpaces[i].size = 0;
-    semSpaces[i].sizeList = 0;
-  }
-}
+// // Inicializa el sistema de semáforos
+// void start_semaphores() {
+//   for (int i = 0; i < SEM_LIMIT; i++) {
+//     semSpaces[i].name[0] = '\0'; // Indica semáforo no utilizado
+//     semSpaces[i].firstProcess = NULL;
+//     semSpaces[i].lastProcess = NULL;
+//     semSpaces[i].lock = 0;
+//     semSpaces[i].value = 0;
+//     semSpaces[i].size = 0;
+//     semSpaces[i].sizeList = 0;
+//   }
+// }
 
-// Abre o crea un semáforo
-uint64_t sem_open(char *name, uint64_t initValue) {
-  _xchg(&lock_semaphore, 1); // Adquiere el bloqueo global
+// // Abre o crea un semáforo
+// uint64_t sem_open(char *name, uint64_t initValue) {
+//   //_xchg(&lock_semaphore, 1); // Adquiere el bloqueo global
+//   while (_xchg(&lock_semaphore, 1) !=
+//          0) // esperando a que el lock este disponible
+//     ;
+//   int semIndex = find_semaphore(name);
+//   print(semIndex);
+//   if (semIndex == -1) {
+//     print("creando sem");
+//     // Encuentra un espacio disponible y crea el semáforo
+//     for (semIndex = 0;
+//          semIndex < SEM_LIMIT && semSpaces[semIndex].name[0] != '\0';
+//          semIndex++)
+//       ;
+//     if (semIndex == SEM_LIMIT) {
+//       _xchg(&lock_semaphore, 0); // Libera el bloqueo global
+//       return -1;                 // No hay espacio disponible
+//     }
 
-  int semIndex = find_semaphore(name);
-  if (semIndex == -1) {
-    // Encuentra un espacio disponible y crea el semáforo
-    for (semIndex = 0;
-         semIndex < SEM_LIMIT && semSpaces[semIndex].name[0] != '\0';
-         semIndex++)
-      ;
-    if (semIndex == SEM_LIMIT) {
-      _xchg(&lock_semaphore, 0); // Libera el bloqueo global
-      return -1;                 // No hay espacio disponible
-    }
+//     strcpy(semSpaces[semIndex].name, name);
+//     semSpaces[semIndex].name[NAME_LIMIT - 1] = '\0';
+//     semSpaces[semIndex].value = initValue;
+//   }
 
-    strncpy(semSpaces[semIndex].name, name, NAME_LIMIT - 1);
-    semSpaces[semIndex].name[NAME_LIMIT - 1] = '\0';
-    semSpaces[semIndex].value = initValue;
-  }
+//   _xchg(&lock_semaphore, 0); // Libera el bloqueo global
+//   return semIndex;
+// }
 
-  _xchg(&lock_semaphore, 0); // Libera el bloqueo global
-  return semIndex;
-}
+// // Cierra un semáforo
+// uint64_t sem_close(char *name) {
+//   // _xchg(&lock_semaphore, 1); // Adquiere el bloqueo global
+//   while (_xchg(&lock_semaphore, 1) !=
+//          0) // esperando a que el lock este disponible
+//     ;
+//   int semIndex = find_semaphore(name);
+//   if (semIndex == -1) {
+//     _xchg(&lock_semaphore, 0); // Libera el bloqueo global
+//     return -1;                 // Semáforo no encontrado
+//   }
 
-// Cierra un semáforo
-uint64_t sem_close(char *name) {
-  _xchg(&lock_semaphore, 1); // Adquiere el bloqueo global
+//   if (semSpaces[semIndex].sizeList > 1 ||
+//       removeFromQueue(&semSpaces[semIndex], getPid()) == 0) {
+//     semSpaces[semIndex].sizeList--;
+//     return 0;
+//   }
 
-  int semIndex = find_semaphore(name);
-  if (semIndex == -1) {
-    _xchg(&lock_semaphore, 0); // Libera el bloqueo global
-    return -1;                 // Semáforo no encontrado
-  }
+//   // Limpieza del semáforo
+//   semSpaces[semIndex].name[0] = '\0';
 
-  // Limpieza del semáforo
-  semSpaces[semIndex].name[0] = '\0';
+//   _xchg(&lock_semaphore, 0); // Libera el bloqueo global
+//   return 0;
+// }
 
-  _xchg(&lock_semaphore, 0); // Libera el bloqueo global
-  return 0;
-}
+// int removeFromQueue(semaphore *sem, int pid) {
+//   process *current = sem->firstProcess;
+//   process *prev = NULL;
 
-// Añade un proceso a la cola del semáforo
-static void enqueue(semaphore *sem, uint64_t pid) {
-  process *newProcess = malloc(sizeof(process));
-  if (newProcess == NULL) {
-    return; // Manejo de error: memoria insuficiente
-  }
-  newProcess->pid = pid;
-  newProcess->blocked = 0; // Inicializa como no bloqueado
-  newProcess->next = NULL;
+//   while (current != NULL) {
+//     if (current->pid == pid) {
+//       // El proceso con el PID especificado fue encontrado
+//       if (prev == NULL) {
+//         // El proceso está al principio de la lista
+//         sem->firstProcess = current->next;
+//         if (sem->firstProcess == NULL) {
+//           // Si la lista queda vacía, actualiza lastProcess también
+//           sem->lastProcess = NULL;
+//         }
+//       } else {
+//         // El proceso está en alguna posición intermedia o al final
+//         prev->next = current->next;
+//         if (prev->next == NULL) {
+//           // Si el proceso estaba al final, actualiza lastProcess
+//           sem->lastProcess = prev;
+//         }
+//       }
 
-  if (sem->lastProcess == NULL) {
-    sem->firstProcess = sem->lastProcess = newProcess;
-  } else {
-    sem->lastProcess->next = newProcess;
-    sem->lastProcess = newProcess;
-  }
-  sem->sizeList++;
-}
+//       // Libera la memoria del nodo eliminado
+//       free(current);
+//       return 0;
+//     }
 
-// Quita un proceso de la cola del semáforo
-static uint64_t dequeue(semaphore *sem) {
-  if (sem->firstProcess == NULL) {
-    return -1; // La cola está vacía
-  }
+//     prev = current;
+//     current = current->next;
+//   }
+//   return -1;
+// }
 
-  process *temp = sem->firstProcess;
-  uint64_t pid = temp->pid;
+// // Añade un proceso a la cola del semáforo
+// static void enqueue(semaphore *sem, uint64_t pid) {
+//   process *newProcess = malloc(sizeof(process));
+//   if (newProcess == NULL) {
+//     return; // Manejo de error: memoria insuficiente
+//   }
+//   newProcess->pid = pid;
+//   newProcess->blocked = 0; // Inicializa como no bloqueado
+//   newProcess->next = NULL;
 
-  sem->firstProcess = temp->next;
-  if (sem->firstProcess == NULL) {
-    sem->lastProcess = NULL;
-  }
+//   if (sem->firstProcess == NULL) {
+//     sem->firstProcess = sem->lastProcess = newProcess;
+//   } else {
+//     sem->lastProcess->next = newProcess;
+//     sem->lastProcess = newProcess;
+//   }
+//   sem->sizeList++;
+// }
 
-  free(temp);
-  sem->sizeList--;
+// // Quita un proceso de la cola del semáforo
+// static uint64_t dequeue(semaphore *sem) {
+//   if (sem->firstProcess == NULL) {
+//     return -1; // La cola está vacía
+//   }
 
-  return pid;
-}
-// Función auxiliar para bloquear el proceso y luego liberar el bloqueo del
-// semáforo de manera atómica
-static void block_process_and_release_lock(semaphore *sem, uint64_t pid) {
-  enqueue(sem, pid);    // Encola el proceso antes de bloquearlo
-  _xchg(&sem->lock, 0); // Libera el bloqueo del semáforo
-  block(pid);           // Bloquea el proceso
-}
+//   process *temp = sem->firstProcess;
+//   uint64_t pid = temp->pid;
 
-uint64_t sem_wait(uint64_t semIndex) {
-  if (semIndex >= SEM_LIMIT)
-    return -1;
+//   sem->firstProcess = temp->next;
+//   if (sem->firstProcess == NULL) {
+//     sem->lastProcess = NULL;
+//   }
 
-  acquire(&semSpaces[semIndex].lock); // Adquiere el bloqueo del semáforo
+//   free(temp);
+//   sem->sizeList--;
 
-  if (semSpaces[semIndex].value > 0) {
-    semSpaces[semIndex].value--;
-    release(&semSpaces[semIndex].lock); // Libera el bloqueo del semáforo
-  } else {
-    uint64_t pid = getPid();
-    block_process_and_release_lock(
-        &semSpaces[semIndex],
-        pid); // Bloquea el proceso y libera el bloqueo atómicamente
-  }
+//   return pid;
+// }
+// // Función auxiliar para bloquear el proceso y luego liberar el bloqueo del
+// // semáforo de manera atómica
+// static void block_process_and_release_lock(semaphore *sem, uint64_t pid) {
+//   enqueue(sem, pid);    // Encola el proceso antes de bloquearlo
+//   _xchg(&sem->lock, 0); // Libera el bloqueo del semáforo
+//   block(pid);           // Bloquea el proceso
+// }
 
-  return 0;
-}
+// uint64_t sem_wait(uint64_t semIndex) {
+//   if (semIndex >= SEM_LIMIT)
+//     return -1;
 
-uint64_t sem_post(uint64_t semIndex) {
-  if (semIndex >= SEM_LIMIT)
-    return -1;
+//   acquire(&semSpaces[semIndex].lock); // Adquiere el bloqueo del semáforo
 
-  acquire(&semSpaces[semIndex].lock); // Adquiere el bloqueo del semáforo
+//   if (semSpaces[semIndex].value > 0) {
+//     semSpaces[semIndex].value--;
+//     release(&semSpaces[semIndex].lock); // Libera el bloqueo del semáforo
+//   } else {
+//     uint64_t pid = getPid();
+//     block_process_and_release_lock(
+//         &semSpaces[semIndex],
+//         pid); // Bloquea el proceso y libera el bloqueo atómicamente
+//   }
 
-  if (semSpaces[semIndex].sizeList > 0) {
-    uint64_t pid = dequeue(&semSpaces[semIndex]);
-    unblock(pid);
-  } else {
-    semSpaces[semIndex].value++;
-  }
+//   return 0;
+// }
 
-  release(&semSpaces[semIndex].lock); // Libera el bloqueo del semáforo
-  return 0;
-}
+// uint64_t sem_post(uint64_t semIndex) {
+//   if (semIndex >= SEM_LIMIT)
+//     return -1;
 
-// Adquiere un bloqueo
-void acquire(uint64_t *lock) {
-  while (_xchg(lock, 1) != 0) {
-    // Loop activo hasta que el bloqueo se adquiera
-  }
-}
+//   acquire(&semSpaces[semIndex].lock); // Adquiere el bloqueo del semáforo
 
-// Libera un bloqueo
-void release(uint64_t *lock) { _xchg(lock, 0); }
+//   if (semSpaces[semIndex].sizeList > 0) {
+//     uint64_t pid = dequeue(&semSpaces[semIndex]);
+//     unblock(pid);
+//   }
+//   semSpaces[semIndex].value++;
 
-void sem() {
-  print("SEM'S NAME       STATE       BLOCKED PROCESSES\n");
-  for (int i = 0; i < SEM_LIMIT; i++) {
-    if (semSpaces[i].name[0] != '\0') { // Chequea si el semáforo está en uso
-      printSem(semSpaces[i]);
-    }
-  }
-}
+//   release(&semSpaces[semIndex].lock); // Libera el bloqueo del semáforo
+//   return 0;
+// }
 
-void printSem(semaphore sem) {
-  print(sem.name);
-  if (strlen(sem.name) > 10) {
-    putTab();
-    putTab();
-  } else {
-    putTab();
-    putTab();
-    putTab();
-    putTab();
-  }
+// // Adquiere un bloqueo
+// void acquire(uint64_t *lock) {
+//   while (_xchg(lock, 1) != 0) {
+//     // Loop activo hasta que el bloqueo se adquiera
+//   }
+// }
 
-  printInt(sem.value);
-  putTab();
-  putTab();
-  putTab();
-  print_procceses_blocked(sem.firstProcess);
-  putLine();
-}
+// // Libera un bloqueo
+// void release(uint64_t *lock) { _xchg(lock, 0); }
 
-void print_procceses_blocked(process *processNode) {
-  while (processNode != NULL) {
-    putLine();
-    printInt(processNode->pid);
-    print(" ");
-    processNode = processNode->next;
-  }
-  print("-\n");
-}
+// void sem() {
+//   print("SEM'S NAME       STATE       BLOCKED PROCESSES\n");
+//   for (int i = 0; i < SEM_LIMIT; i++) {
+//     if (semSpaces[i].name[0] != '\0') { // Chequea si el semáforo está en uso
+//       printSem(semSpaces[i]);
+//     }
+//   }
+// }
 
-char *getSemName(uint64_t semIndex) {
-  if (semIndex >= SEM_LIMIT) {
-    print("Wrong Index in getSemName\n");
-    return NULL;
-  }
-  return semSpaces[semIndex].name;
-}
-void printProcessesSem(uint64_t semIndex) {
-  //     if (semIndex >= SEM_LIMIT)
-  //     {
-  //         print("Wrong Index in printProcessesSem\n");
-  //         return;
-  //     }
-  //     semaphore sem = semSpaces[semIndex].sem;
-  //     print_procceses_blocked(sem.firstProcess);
-}
+// void printSem(semaphore sem) {
+//   print(sem.name);
+//   if (strlen(sem.name) > 10) {
+//     putTab();
+//     putTab();
+//   } else {
+//     putTab();
+//     putTab();
+//     putTab();
+//     putTab();
+//   }
+
+//   printInt(sem.value);
+//   putTab();
+//   putTab();
+//   putTab();
+//   print_procceses_blocked(sem.firstProcess);
+//   putLine();
+// }
+
+// void print_procceses_blocked(process *processNode) {
+//   while (processNode != NULL) {
+//     putLine();
+//     printInt(processNode->pid);
+//     print(" ");
+//     processNode = processNode->next;
+//   }
+//   print("-\n");
+// }
+
+// char *getSemName(uint64_t semIndex) {
+//   if (semIndex >= SEM_LIMIT) {
+//     print("Wrong Index in getSemName\n");
+//     return NULL;
+//   }
+//   return semSpaces[semIndex].name;
+// }
+// void printProcessesSem(uint64_t semIndex) {
+//   //     if (semIndex >= SEM_LIMIT)
+//   //     {
+//   //         print("Wrong Index in printProcessesSem\n");
+//   //         return;
+//   //     }
+//   //     semaphore sem = semSpaces[semIndex].sem;
+//   //     print_procceses_blocked(sem.firstProcess);
+// }

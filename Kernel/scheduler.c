@@ -22,8 +22,8 @@ pcb *currentPcb = NULL;
 void dummy(int argc, char **argv);
 void initalizeScheduler();
 int getNewPid();
-int initalizePcb(pcb *newProcess, int argc, char **argv, int foreground,
-                 int *fd, void *stack);
+int initializePcb(pcb *newProcess, int argc, char **argv, int foreground,
+                  int *fd, void *stack);
 static void processStart(int argc, char *argv[], void *function(int, char **));
 void killCurrent();
 int changeState(int pid, state state);
