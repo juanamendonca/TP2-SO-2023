@@ -9,6 +9,7 @@
 #include "time.h"
 #include "user_syscalls.h"
 #include <stdint.h>
+#include "philo.h"
 #define ESC 27
 
 void helpP(unsigned int argc, char *argv[]) {
@@ -230,4 +231,6 @@ void filterP(unsigned int argc, char *argv[]) {
   }
 }
 
-void phyloP(unsigned int argc, char *argv[]) {}
+void phyloP(unsigned int argc, char *argv[]) {
+    philosophersApp();
+}

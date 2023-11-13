@@ -59,7 +59,6 @@ int main() {
   int ufd[2] = {0, 0};
   initalizeProcess(sampleCodeModuleAddress, 1, args, 1, ufd);
   load_idt(); // sets the IDT before the terminal launches
-  //((EntryPoint)sampleCodeModuleAddress)(); // calls sampleCodeModule main
-  // address
+
   return 0;
 }
