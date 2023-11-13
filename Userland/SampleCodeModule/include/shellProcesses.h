@@ -20,6 +20,12 @@ void testProcessesP(unsigned int argc, char *argv[]);
 
 void testPrioP(unsigned int argc, char *argv[]);
 
+void memoryP(unsigned int argc, char *argv[]);
+
+void memoryTestP(unsigned int argc, char *argv[]);
+
+void semP(unsigned int argc, char *argv[]);
+
 void testSyncP(unsigned int argc, char *argv[]);
 
 void loopP(unsigned int argc, char *argv[]);

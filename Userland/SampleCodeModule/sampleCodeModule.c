@@ -1,6 +1,7 @@
 /* sampleCodeModule.c */
 #include "functions.h"
 #include "shell.h"
+#include "test_mm.h"
 #include "user_syscalls.h"
 #include <stdint.h>
 

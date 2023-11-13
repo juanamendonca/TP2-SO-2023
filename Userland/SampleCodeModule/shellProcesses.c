@@ -39,7 +39,17 @@ void testProcessesP(unsigned int argc, char *argv[]) {
 
 void testPrioP(unsigned int argc, char *argv[]) { test_prio(); }
 
-void testSyncP(unsigned int argc, char *argv[]) { test_sync(); }
+void memoryP(unsigned int argc, char *argv[]) { sys_printBitmap(); }
+
+void memoryTestP(unsigned int argc, char *argv[]) {
+  char *argv2[] = {
+      "310000"}; // faltaria pedirle este valor a traves de una syscall
+  test_mm(1, argv2);
+}
+
+void semP(unsigned int argc, char *argv[]) { sys_sem(); }
+
+void testSyncP(unsigned int argc, char *argv[]) { test_sync(argc, argv); }
 
 void loopP(unsigned int argc, char *argv[]) {}
 
