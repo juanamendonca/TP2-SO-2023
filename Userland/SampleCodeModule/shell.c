@@ -24,6 +24,7 @@ static command commandsInfo[] = {
     {&infoProcessesP, "PS", ": to get all the processes info"},
     {&testProcessesP, "TEST-PROCESSES", "to test the scheduler"},
     {&testPrioP, "TEST-PRIO", "to test the scheduler priorities"},
+    {&testSyncP, "TEST-SYNC", "to test semaphores"},
     {&loopP, "LOOP", "prints process pid every 2 seconds"},
     {&killP, "KILL", "kills the process with given pid"},
     {&niceP, "NICE", "changes the process given the pid and new priority"},
@@ -68,8 +69,8 @@ void entry(char *buffer, char **args) {
     enter();
     return;
   }
-  sys_write_dec(pipe, WHITE);
-  sys_write_dec(argc, WHITE);
+  // sys_write_dec(pipe, WHITE);
+  // sys_write_dec(argc, WHITE);
   if (pipe == (argc - 1)) {
     print("Pipe does not have destination function");
     enter();

@@ -39,6 +39,8 @@ void testProcessesP(unsigned int argc, char *argv[]) {
 
 void testPrioP(unsigned int argc, char *argv[]) { test_prio(); }
 
+void testSyncP(unsigned int argc, char *argv[]) { test_sync(); }
+
 void loopP(unsigned int argc, char *argv[]) {}
 
 void killP(unsigned int argc, char *argv[]) {}

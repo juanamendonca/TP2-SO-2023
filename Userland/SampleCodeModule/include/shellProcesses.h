@@ -20,6 +20,8 @@ void testProcessesP(unsigned int argc, char *argv[]);
 
 void testPrioP(unsigned int argc, char *argv[]);
 
+void testSyncP(unsigned int argc, char *argv[]);
+
 void loopP(unsigned int argc, char *argv[]);
 
 void killP(unsigned int argc, char *argv[]);

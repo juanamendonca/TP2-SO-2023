@@ -413,7 +413,7 @@ void giveUpCPU() {
     return;
   }
   currentPcb->quantum = QUANTUM * currentPcb->quantum;
-  enqueueP(queue, currentPcb, currentPcb->priority);
+  // enqueueP(queue, currentPcb, currentPcb->priority);
   callTimer();
 }
 
