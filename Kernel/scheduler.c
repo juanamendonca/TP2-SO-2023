@@ -44,7 +44,7 @@ void waitpid(int pid);
 
 void dummy(int argc, char **argv) {
   while (1) {
-    // putArrayNext("dummy ", WHITE);
+    putArrayNext(".", WHITE);
     _hlt();
   }
 }
@@ -198,6 +198,9 @@ static void processStart(int argc, char *argv[], void *process(int, char **)) {
 void killCurrent() { killProcess(currentPcb->pid); }
 
 int killProcess(int pid) {
+  if (pid == 0 || pid == 1) {
+    return -1;
+  }
   pcb *process = getAndDeleteProcessP(queue, pid);
   if (pid == currentPcb->pid) {
     process = currentPcb;

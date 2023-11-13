@@ -1,7 +1,6 @@
+#include "strings.h"
 #include <font.h>
 #include <video.h>
-#include "strings.h"
-
 
 #define CHAR_WIDTH 8
 #define CHAR_HEIGHT 16
@@ -288,34 +287,28 @@ void printHexa(uint64_t value) {
   }
 }
 
-
-uint64_t sWrite(char *buffer, int size, int color)
-{
-    while (size-- && *buffer != 0)
-    {
-        putLetterNext(*buffer,color);
-        buffer++;
-    }
-    return size == 0;
+uint64_t sWrite(char *buffer, int size, int color) {
+  while (size-- && *buffer != 0) {
+    putLetterNext(*buffer, color);
+    buffer++;
+  }
+  return size == 0;
 }
 
-void print(char *string)
-{
-    sWrite(string, strlen(string), WHITE);
-}
+void print(char *string) { sWrite(string, strlen(string), WHITE); }
 
-void printInt(int num)
-{
-    char buffer[40];
-    uintToBase(num, buffer, 10);
-    print(buffer);
+void printInt(int num) {
+  char buffer[40];
+  uintToBase(num, buffer, 10);
+  print(buffer);
 }
 
 void putTab() {
   // Definir el ancho deseado para el tabulador (en este caso, 4 espacios)
   int tabWidth = 4;
 
-  // Calcular cuántos espacios faltan para llegar al próximo múltiplo de tabWidth
+  // Calcular cuántos espacios faltan para llegar al próximo múltiplo de
+  // tabWidth
   int spacesToNextTab = tabWidth - (pointer_x % tabWidth);
 
   // Mover el cursor hacia adelante por la cantidad calculada de espacios

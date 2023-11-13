@@ -9,6 +9,7 @@
 #include "time.h"
 #include "user_syscalls.h"
 #include <stdint.h>
+#define ESC 27
 
 void helpP(unsigned int argc, char *argv[]) { help(); }
 
@@ -51,20 +52,104 @@ void semP(unsigned int argc, char *argv[]) { sys_sem(); }
 
 void testSyncP(unsigned int argc, char *argv[]) { test_sync(argc, argv); }
 
-void loopP(unsigned int argc, char *argv[]) {}
+void loopP(unsigned int argc, char *argv[]) {
+  int pid = sys_get_pid();
+  while (1) {
+    sys_sleep(5);
+    printInt(pid);
+  }
+}
 
-void killP(unsigned int argc, char *argv[]) {}
+void killP(unsigned int argc, char *argv[]) {
+  if (argc != 2) {
+    print("Wrong arguments");
+    return;
+  }
+  sys_kill_process(atoi2(argv[1]));
+}
 
-void niceP(unsigned int argc, char *argv[]) {}
+void niceP(unsigned int argc, char *argv[]) {
+  if (argc != 3) {
+    print("Wrong arguments");
+    return;
+  }
+  int prio = atoi2(argv[2]);
+  if (prio < 1 || prio > 4) {
+    print("Wrong priority, between 1 and 4.");
+    return;
+  }
+  if (sys_nice(atoi2(argv[1]), prio) == -1) {
+    print("No process with that pid");
+  }
+}
 
-void blockP(unsigned int argc, char *argv[]) {}
+void blockP(unsigned int argc, char *argv[]) {
+  if (argc != 2) {
+    print("Wrong arguments");
+    return;
+  }
+  if (sys_block_process(atoi2(argv[1])) == -1) {
+    print("No process with that pid");
+  }
+}
 
-void unblockP(unsigned int argc, char *argv[]) {}
+void unblockP(unsigned int argc, char *argv[]) {
+  if (argc != 2) {
+    print("Wrong arguments");
+    return;
+  }
+  if (sys_unblock_process(atoi2(argv[1])) == -1) {
+    print("No process with that pid");
+  }
+}
 
-void catP(unsigned int argc, char *argv[]) {}
+void catP(unsigned int argc, char *argv[]) {
+  if (argc != 1) {
+    print("Wrong arguments");
+  }
+  char c[2];
+  c[1] = '\0';
+  while ((c[0] = getChar()) != ESC) {
+    print(c);
+  }
+  print('\0');
+}
 
-void wcP(unsigned int argc, char *argv[]) {}
+void wcP(unsigned int argc, char *argv[]) {
+  if (argc != 1) {
+    print("Wrong arguments");
+  }
+  int count = 0;
+  char c[2];
+  c[1] = '\0';
+  while ((c[0] = getChar()) != -1) {
+    if (c[0] == '\n') {
+      count++;
+    }
+  }
+  printInt(count);
+  if (count == 1) {
+    print(" line");
+  } else {
+    print(" lines");
+  }
+  return;
+}
 
-void filterP(unsigned int argc, char *argv[]) {}
+void filterP(unsigned int argc, char *argv[]) {
+  if (argc != 1) {
+    print("Wrong arguments");
+  }
+  char c[2];
+  c[1] = '\0';
+  while ((c[0] = getChar()) != -1) {
+    if (c[0] == 'a' || c[0] == 'e' || c[0] == 'i' || c[0] == 'o' ||
+        c[0] == 'u' || c[0] == 'A' || c[0] == 'E' || c[0] == 'I' ||
+        c[0] == 'O' || c[0] == 'U') {
+    } else {
+      print(c);
+    }
+  }
+}
 
 void phyloP(unsigned int argc, char *argv[]) {}

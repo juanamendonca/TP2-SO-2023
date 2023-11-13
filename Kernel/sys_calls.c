@@ -93,8 +93,8 @@ void _13_save_registers(uint64_t registers, uint64_t isSaved, uint64_t r3,
   }
 }
 
-void* _14_alloc(uint64_t size, uint64_t r2, uint64_t r3, uint64_t r4,
-               uint64_t r5) {
+void *_14_alloc(uint64_t size, uint64_t r2, uint64_t r3, uint64_t r4,
+                uint64_t r5) {
   return malloc(size);
 }
 
@@ -119,9 +119,9 @@ void _18_get_info_processes(uint64_t buffer, uint64_t r2, uint64_t r3,
   processesInfo((char *)buffer);
 }
 
-void _19_nice(uint64_t pid, uint64_t priority, uint64_t r3, uint64_t r4,
-              uint64_t r5) {
-  nice((int)pid, (int)priority);
+int _19_nice(uint64_t pid, uint64_t priority, uint64_t r3, uint64_t r4,
+             uint64_t r5) {
+  return nice((int)pid, (int)priority);
 }
 
 int _20_block_process(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,
@@ -140,22 +140,22 @@ void _22_giveup_cpu(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
 }
 
 int _23_sem_wait(uint64_t semIndex, uint64_t r2, uint64_t r3, uint64_t r4,
-                  uint64_t r5) {
+                 uint64_t r5) {
   return sem_wait(semIndex);
 }
 
 int _24_sem_post(uint64_t semIndex, uint64_t r2, uint64_t r3, uint64_t r4,
-                  uint64_t r5) {
+                 uint64_t r5) {
   return sem_post(semIndex);
 }
 
 int _25_sem_open(uint64_t name, uint64_t initValue, uint64_t r3, uint64_t r4,
-                  uint64_t r5) {
+                 uint64_t r5) {
   return sem_open((char *)name, (uint64_t)initValue);
 }
 
 int _26_sem_close(uint64_t name, uint64_t r2, uint64_t r3, uint64_t r4,
-                   uint64_t r5) {
+                  uint64_t r5) {
   return sem_close((char *)name);
 }
 
@@ -166,53 +166,50 @@ void _27_waitpid(uint64_t pid, uint64_t r2, uint64_t r3, uint64_t r4,
 
 void _29_free(uint64_t memory, uint64_t r2, uint64_t r3, uint64_t r4,
               uint64_t r5) {
-    void *ptr = (void *)(uintptr_t)memory;
-    free(ptr);
+  void *ptr = (void *)(uintptr_t)memory;
+  free(ptr);
 }
 
-void _28_sem_(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
-                    uint64_t r5) {
+void _28_sem_(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4, uint64_t r5) {
   sem();
 }
 
 void _30_printBitmap(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
-              uint64_t r5) {
-    printBitmap();
+                     uint64_t r5) {
+  printBitmap();
 }
 
-static syscall syscalls[] = {
-    (syscall)_0_empty,
-    (syscall)_1_write,
-    (syscall)_2_read,
-    (syscall)_3_getHours,
-    (syscall)_4_getMinutes,
-    (syscall)_5_getSeconds,
-    (syscall)_6_newLine,
-    (syscall)_7_write_dec,
-    (syscall)_8_beep,
-    (syscall)_9_get_ticks,
-    (syscall)_10_put_pixel,
-    (syscall)_11_get_screen_width,
-    (syscall)_12_clean_buffer,
-    (syscall)_13_save_registers,
-    (syscall)_14_alloc,
-    (syscall)_15_create_process,
-    (syscall)_16_kill_process,
-    (syscall)_17_get_pid,
-    (syscall)_18_get_info_processes,
-    (syscall)_19_nice,
-    (syscall)_20_block_process,
-    (syscall)_21_unblock_process,
-    (syscall)_22_giveup_cpu,
-    (syscall)_23_sem_wait,
-    (syscall)_24_sem_post,
-    (syscall)_25_sem_open,
-    (syscall)_26_sem_close,
-    (syscall)_27_waitpid,
-    (syscall)_28_sem_,
-    (syscall) _29_free,
-    (syscall) _30_printBitmap
-};
+static syscall syscalls[] = {(syscall)_0_empty,
+                             (syscall)_1_write,
+                             (syscall)_2_read,
+                             (syscall)_3_getHours,
+                             (syscall)_4_getMinutes,
+                             (syscall)_5_getSeconds,
+                             (syscall)_6_newLine,
+                             (syscall)_7_write_dec,
+                             (syscall)_8_beep,
+                             (syscall)_9_get_ticks,
+                             (syscall)_10_put_pixel,
+                             (syscall)_11_get_screen_width,
+                             (syscall)_12_clean_buffer,
+                             (syscall)_13_save_registers,
+                             (syscall)_14_alloc,
+                             (syscall)_15_create_process,
+                             (syscall)_16_kill_process,
+                             (syscall)_17_get_pid,
+                             (syscall)_18_get_info_processes,
+                             (syscall)_19_nice,
+                             (syscall)_20_block_process,
+                             (syscall)_21_unblock_process,
+                             (syscall)_22_giveup_cpu,
+                             (syscall)_23_sem_wait,
+                             (syscall)_24_sem_post,
+                             (syscall)_25_sem_open,
+                             (syscall)_26_sem_close,
+                             (syscall)_27_waitpid,
+                             (syscall)_28_sem_,
+                             (syscall)_29_free,
+                             (syscall)_30_printBitmap};
 
 int64_t sysDispatcher(uint64_t syscallNumber, uint64_t r1, uint64_t r2,
                       uint64_t r3, uint64_t r4, uint64_t r5) {

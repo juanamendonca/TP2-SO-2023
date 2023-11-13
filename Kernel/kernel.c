@@ -53,7 +53,7 @@ int main() {
   initalizeScheduler();
   start_semaphores();
 
-  char *args[] = {"userland"};
+  char *args[] = {"shell"};
   int userlandFd[2] = {0, 1};
   initalizeProcess(sampleCodeModuleAddress, 1, args, 1, userlandFd);
   load_idt(); // sets the IDT before the terminal launches

@@ -51,8 +51,9 @@ void sys_registers(uint64_t *registers, bool *isSaved) {
   sys_int_80((uint64_t)13, (uint64_t)registers, (uint64_t)isSaved, 0, 0, 0);
 }
 
-void* sys_alloc(int size) {
-  return (void*) (uintptr_t) sys_int_80((uint64_t)14, (uint64_t)size, 0, 0, 0, 0);
+void *sys_alloc(int size) {
+  return (void *)(uintptr_t)sys_int_80((uint64_t)14, (uint64_t)size, 0, 0, 0,
+                                       0);
 }
 
 int sys_create_process(void (*process)(unsigned int argc, char **argv),
@@ -71,8 +72,8 @@ void sys_get_info_processes(char *buffer) {
   sys_int_80((uint64_t)18, (uint64_t)buffer, 0, 0, 0, 0);
 }
 
-void sys_nice(int pid, int priority) {
-  sys_int_80((uint64_t)19, (uint64_t)pid, (uint64_t)priority, 0, 0, 0);
+int sys_nice(int pid, int priority) {
+  return sys_int_80((uint64_t)19, (uint64_t)pid, (uint64_t)priority, 0, 0, 0);
 }
 
 int sys_block_process(int pid) {
@@ -85,35 +86,31 @@ int sys_unblock_process(int pid) {
 
 void sys_giveup_cpu() { sys_int_80((uint64_t)22, 0, 0, 0, 0, 0); }
 
-
-int sys_semWait(int id){
-    return sys_int_80((uint64_t)23, (uint64_t)id, 0, 0, 0, 0);
+int sys_semWait(int id) {
+  return sys_int_80((uint64_t)23, (uint64_t)id, 0, 0, 0, 0);
 }
 
-int sys_semPost(int id){
-   return sys_int_80((uint64_t)24, (uint64_t)id, 0, 0, 0, 0);
+int sys_semPost(int id) {
+  return sys_int_80((uint64_t)24, (uint64_t)id, 0, 0, 0, 0);
 }
 
-int sys_semClose(char * name){
-    return sys_int_80((uint64_t)26, (uint64_t)name, 0, 0, 0, 0);
+int sys_semClose(char *name) {
+  return sys_int_80((uint64_t)26, (uint64_t)name, 0, 0, 0, 0);
 }
 
-int sys_semOpen(char *id, int initialValue){
-    return sys_int_80((uint64_t)25, (uint64_t)id, (uint64_t)initialValue, 0, 0, 0);
+int sys_semOpen(char *id, int initialValue) {
+  return sys_int_80((uint64_t)25, (uint64_t)id, (uint64_t)initialValue, 0, 0,
+                    0);
 }
 
-void sys_sem(){
-    sys_int_80((uint64_t)28,0,0, 0, 0, 0);
-}
+void sys_sem() { sys_int_80((uint64_t)28, 0, 0, 0, 0, 0); }
 
 void sys_waitpid(int pid) {
   sys_int_80((uint64_t)27, (uint64_t)pid, 0, 0, 0, 0);
 }
 
-void sys_free (void* memory){
-    sys_int_80((uint64_t)29, (uint64_t)memory, 0, 0, 0, 0);
+void sys_free(void *memory) {
+  sys_int_80((uint64_t)29, (uint64_t)memory, 0, 0, 0, 0);
 }
 
-void sys_printBitmap(){
-    sys_int_80((uint64_t)30, 0, 0, 0, 0, 0);
-}
+void sys_printBitmap() { sys_int_80((uint64_t)30, 0, 0, 0, 0, 0); }

@@ -7,7 +7,7 @@
 
 char buffer[BUFFER_SIZE];
 
-void shell(unsigned int argc, char *argv[]) {
+void shell() {
   sys_write("Welcome!", PURPLE);
   enter();
   // help();
@@ -20,10 +20,11 @@ void shell(unsigned int argc, char *argv[]) {
 }
 
 int main() {
-  char *argv[] = {"shell"};
-  int fd[] = {0, 0};
-  int shellPid = sys_create_process(&shell, 1, argv, 1, fd);
-  sys_waitpid(shellPid);
+  // char *argv[] = {"shell"};
+  // int fd[] = {0, 0};
+  // int shellPid = sys_create_process(&shell, 1, argv, 1, fd);
+  // sys_waitpid(shellPid);
+  shell();
   print("back in userland");
   return 0;
 }
