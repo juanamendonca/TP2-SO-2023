@@ -99,14 +99,11 @@ int sem_close(int id) {
     return -1;
   }
   acquire(&totalLock);
+  ;
   if (sem->cantP == 1) {
     free(sem->firstP);
     deleteFromQueueS(sem->id);
     semCant--;
-    if (semCant == 0) {
-      sems = NULL;
-      semsL = NULL;
-    }
   } else {
     sem->cantP--;
   }
@@ -155,6 +152,7 @@ int sem_wait(int id) {
   if (sem->value > 0) {
     sem->value--;
     release(&(sem->lock));
+    return 0;
   } else {
     PNode *node = malloc(sizeof(PNode));
     node->pid = getPid();
@@ -178,11 +176,6 @@ int sem_post(int id) {
     return -1;
   }
   acquire(&(sem->lock));
-  sem->value++;
-  if (sem->firstP == NULL) {
-    release(&(sem->lock));
-    return 0;
-  }
   int unblocked = -1;
   while (unblocked == -1 && sem->firstP != NULL) {
     unblocked = unblock(sem->firstP->pid);
@@ -190,7 +183,12 @@ int sem_post(int id) {
     sem->firstP = node->next;
     free(node);
     sem->sizeP--;
+    if (unblocked != -1) {
+      release(&(sem->lock));
+      return 0;
+    }
   }
+  sem->value++;
   release(&(sem->lock));
   return 0;
 }

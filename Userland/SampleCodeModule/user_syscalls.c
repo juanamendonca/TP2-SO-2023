@@ -94,8 +94,8 @@ int sys_semPost(int id) {
   return sys_int_80((uint64_t)24, (uint64_t)id, 0, 0, 0, 0);
 }
 
-int sys_semClose(char *name) {
-  return sys_int_80((uint64_t)26, (uint64_t)name, 0, 0, 0, 0);
+int sys_semClose(int id) {
+  return sys_int_80((uint64_t)26, (uint64_t)id, 0, 0, 0, 0);
 }
 
 int sys_semOpen(char *id, int initialValue) {

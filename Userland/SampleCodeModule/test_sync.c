@@ -7,12 +7,11 @@
 #define SEM_ID "test_sync_sem"
 #define TOTAL_PAIR_PROCESSES 4
 
-char *buffer1;
-
 int64_t global; // shared memory
 
 void slowInc(int64_t *p, int64_t inc) {
   uint64_t aux = *p;
+  print(".");
   my_yield(); // This makes the race condition highly probable
   aux += inc;
   *p = aux;
@@ -53,7 +52,7 @@ void my_process_inc(unsigned int argc, char *argv[]) {
   }
 
   if (use_sem) {
-    sys_semClose(SEM_ID);
+    sys_semClose(sharedSem);
   }
 
   return;
@@ -72,8 +71,6 @@ void test_sync(unsigned int argc, char *argv[]) { //{n, use_sem, 0}
     print("arg0 no es > 0");
     return;
   }
-
-  buffer1 = sys_alloc(400);
 
   char *argvDec[] = {"dec_process", argv[1], "-1", argv[2]};
   char *argvInc[] = {"inc_process", argv[1], "1", argv[2]};
@@ -94,7 +91,7 @@ void test_sync(unsigned int argc, char *argv[]) { //{n, use_sem, 0}
     sys_waitpid(pids[i + TOTAL_PAIR_PROCESSES]);
   }
 
-  print("Final value: ");
+  print("\nFinal value: ");
   printInt(global);
 
   return;

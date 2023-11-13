@@ -52,7 +52,7 @@ int sys_semPost(int id);
 
 int sys_semWait(int id);
 
-int sys_semClose(char *name);
+int sys_semClose(int id);
 
 int sys_semOpen(char *id, int initialValue);
 
