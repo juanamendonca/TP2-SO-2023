@@ -16,13 +16,15 @@ void *memEnd;
 
 // Initialize the bitmap and heap.
 unsigned char bitmap[BITMAP_SIZE];
-void* heap = (void*) 0x0000000000050000;
 char first = 1;
 
-void createMemoryManager(){
+
+
+void createMemoryManager(void * heap){
     for (int i = 0; i < BITMAP_SIZE; i++) {
         bitmap[i] = 0;
     }
+    memStart    = heap;
     nextAddress = heap;
 }
 
@@ -59,7 +61,7 @@ void *malloc(const size_t size) {
 
 
                     //calculo el address en funcion de la posicion del bitmap
-                    return (void*)((uint64_t)heap + (firstBlockIndex * BLOCK_SIZE));
+                    return (void*)((uint64_t)memStart + (firstBlockIndex * BLOCK_SIZE));
                 }
             } else {
                 // Si no alcanzan los bloques libres resetear
@@ -69,12 +71,13 @@ void *malloc(const size_t size) {
         }
     }
 
+    putArrayNext("No hay mas memoria loco\n", WHITE);
     return NULL;
 }
 
 void free(void *memory) {
     //Busco la ubicacion del bloque en el bitmap
-    int firstBlockIndex = ((uint64_t)memory - (uint64_t)heap) / BLOCK_SIZE;
+    int firstBlockIndex = ((uint64_t)memory - (uint64_t)memStart) / BLOCK_SIZE;
 
 
     int i;
@@ -94,32 +97,6 @@ void free(void *memory) {
   return;
 }
 
-//void printBitmap(){
-//    putArrayNext("Bitmap:\n", WHITE);
-//    for (int it_block = 0; it_block <  BITMAP_SIZE ; it_block++) {
-//        putArrayNext("BYTE ", WHITE);
-//        putDecNext(it_block, WHITE);
-//        putArrayNext(": ", WHITE);
-//
-//        for (int it_bit = 0; it_bit < BLOCK_PER_BYTE * 2; it_bit += 2) {
-//            int state = (bitmap[it_block] >> it_bit) & 0x03;
-//            switch (state) {
-//                case 0:
-//                    putArrayNext("FREE ", WHITE);
-//                    break;
-//                case 1:
-//                    putArrayNext("USED ", WHITE);
-//                    break;
-//                case 2:
-//                    putArrayNext("FIRST ", GREEN);
-//                    break;
-//                default:
-//                    putArrayNext("UNKNOWN ", WHITE);
-//            }
-//        }
-//        putArrayNext("\n", WHITE);
-//    }
-//}
 
 void printBitmap() {
     int freeBlocks = 0;
