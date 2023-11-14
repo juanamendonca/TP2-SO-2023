@@ -54,6 +54,16 @@ void cleanBuffer() {
   rear = 0;
 }
 
+void writeEOF() {
+  pcb *pcb = getCurrentPcb();
+  if (pcb->fd[0] == STDIN) {
+    buff[rear++] = '\0';
+    cantElems++;
+  } else {
+    writeChar(pcb->fd[0], '\0');
+  }
+}
+
 void keyHandler(uint64_t scancode) {
   char tecla = scancode;
 
@@ -64,11 +74,11 @@ void keyHandler(uint64_t scancode) {
 
     // left ctrl pressed
     if (scancode == 0x1D) {
-        ctrl = 1;
+      ctrl = 1;
     }
     // left ctrl not pressed
     if (scancode == 0x9D) {
-        ctrl = 0;
+      ctrl = 0;
     }
 
     if (tecla == CONTROL) {
@@ -83,11 +93,10 @@ void keyHandler(uint64_t scancode) {
       front = 0;
 
     if (ctrl && scancode == 32) {
-        killCurrent();
+      killCurrent();
     } else if (ctrl && scancode == 46) {
-      buff[rear++] = '\0';
-      cantElems++;
-    } else {
+      writeEOF();
+    } else if (keyBoardTable[(int)tecla] != 0) {
       buff[rear++] = keyBoardTable[(int)tecla];
       cantElems++;
     }

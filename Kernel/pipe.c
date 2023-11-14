@@ -101,10 +101,11 @@ uint64_t writePipe(uint64_t pipeIndex, char *string) {
   if (!indexValid(pipeIndex))
     return -1;
 
-  while (*string != 0) {
+  while (*string != '\0') {
     if ((writeChar(pipeIndex, *string++)) == -1)
       return -1;
   }
+
   return 0;
 }
 
@@ -185,7 +186,6 @@ static uint64_t createPipe(char *name) {
     }
     newPipe->semRead = semRead;
     newPipe->semWrite = semWrite;
-
   }
   return pos + 1;
 }

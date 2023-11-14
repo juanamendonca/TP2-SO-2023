@@ -1,6 +1,7 @@
 #include "exceptionTester.h"
 #include "functions.h"
 #include "getInforegs.h"
+#include "philo.h"
 #include "pong.h"
 #include "shell.h"
 #include "test_mm.h"
@@ -9,7 +10,7 @@
 #include "time.h"
 #include "user_syscalls.h"
 #include <stdint.h>
-#include "philo.h"
+
 #define ESC 27
 
 void helpP(unsigned int argc, char *argv[]) {
@@ -106,7 +107,7 @@ void memoryP(unsigned int argc, char *argv[]) {
 }
 
 void memoryTestP(unsigned int argc, char *argv[]) {
-   if (argc != 1) {
+  if (argc != 1) {
     print("Wrong arguments");
     return;
   }
@@ -191,25 +192,25 @@ void catP(unsigned int argc, char *argv[]) {
     print("Wrong arguments");
     return;
   }
+  sys_get_clean_buffer();
 
-    char c[2];
-    c[1] = '\0'; // Corrected array index and assigned '\0' to the second element
-    while ((c[0] = getChar()) != '\0') {
-        print(c);
-    }
-
+  char c[2];
+  c[1] = '\0'; // Corrected array index and assigned '\0' to the second element
+  while ((c[0] = getChar()) != '\0') {
+    print(c);
+  }
+  print("terminanado cat");
 }
 
 void wcP(unsigned int argc, char *argv[]) {
   if (argc != 1) {
     print("Wrong arguments");
     return;
-
   }
   int count = 0;
   char c[2];
   c[1] = '\0';
-  while ((c[0] = getChar()) != -1) {
+  while ((c[0] = getChar()) != '\0') {
     if (c[0] == '\n') {
       count++;
     }
@@ -226,26 +227,27 @@ void wcP(unsigned int argc, char *argv[]) {
 void filterP(unsigned int argc, char *argv[]) {
   if (argc != 1) {
     print("Wrong arguments");
-        return;
+    return;
   }
   char c[2];
   c[1] = '\0';
-  while ((c[0] = getChar()) != '\0') {
+  sys_read(c);
+  while (c[0] != '\0') {
     if (c[0] == 'a' || c[0] == 'e' || c[0] == 'i' || c[0] == 'o' ||
         c[0] == 'u' || c[0] == 'A' || c[0] == 'E' || c[0] == 'I' ||
         c[0] == 'O' || c[0] == 'U') {
     } else {
       print(c);
     }
+    sys_read(c);
   }
 }
 
 void phyloP(unsigned int argc, char *argv[]) {
-     if (argc != 1) {
+  if (argc != 1) {
     print("Wrong arguments");
     return;
   }
 
-    philosophersApp();
-    
+  philosophersApp();
 }

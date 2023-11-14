@@ -43,6 +43,7 @@ int parseArgs(char *argString, char **args);
 int findPipe(char **args, int argc);
 int getCommand(char *name);
 void runCommand(char **args, int argc, int fd[], int com, int cont);
+int runCommandPipes(int c1, int c2, char **argv, int argc, int pipe);
 void help();
 
 void help() {
@@ -90,20 +91,13 @@ void entry(char *buffer, char **args) {
       enter();
       return;
     }
-    int pipeId = sys_pipe_open("/");
-    int fd1[] = {0, pipeId};
-    int fd2[] = {pipeId, 0};
-    int fore = 1;
-    if (strcmp(args[argc - 1], "B") == 0) {
-      argc--;
-      fore = 0;
+    if (runCommandPipes(c1, c2, args, argc, pipe) == -1) {
+      print("Error in creating pipe");
     }
-    runCommand(args, pipe, fd1, c1, 0);
-    runCommand(&args[pipe + 1], argc - pipe - 1, fd2, c2, fore);
 
   } else {
     int fore = 1;
-    
+
     if (strcmp(args[argc - 1], "B") == 0) {
       argc--;
       fore = 0;
@@ -163,20 +157,34 @@ int findPipe(char **args, int argc) {
   return pipe;
 }
 
-int pipePid;
-
-
 void runCommand(char **args, int argc, int fd[], int com, int fore) {
   int pid = sys_create_process(commandsInfo[com].process, argc, args, fore, fd);
   if (fore) {
     sys_waitpid(pid);
   }
+}
 
-  if (fd[1] != 0) {
-    pipePid = pid;
+int runCommandPipes(int c1, int c2, char **argv, int argc, int pipe) {
+  int pipeId = sys_pipe_open("/");
+  int fd1[] = {0, pipeId};
+  int fd2[] = {pipeId, 0};
+  int pid1 = sys_create_process(commandsInfo[c1].process, pipe, argv, 1, fd1);
+  // runCommand(args, pipe, fd1, c1, 1);
+  if (pid1 == -1) {
+    sys_pipe_close(pipeId);
+    return -1;
   }
-  if (fd[0] != 0 && fore == 1) {
-    sys_pipe_close(fd[0]);
-    sys_kill_process(pipePid);
+  int pid2 = sys_create_process(commandsInfo[c2].process, argc - pipe - 1,
+                                &argv[pipe + 1], 1, fd2);
+  // runCommand(&args[pipe + 1], argc - pipe - 1, fd2, c2, fore);
+  if (pid2 == -1) {
+    sys_kill_process(pid1);
+    sys_pipe_close(pipeId);
+    return -1;
   }
+
+  sys_waitpid(pid1);
+  sys_waitpid(pid2);
+  sys_pipe_close(pipeId);
+  return 0;
 }
