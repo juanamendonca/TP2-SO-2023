@@ -116,17 +116,17 @@ void sys_free(void *memory) {
 void sys_printBitmap() { sys_int_80((uint64_t)30, 0, 0, 0, 0, 0); }
 
 int sys_pipe_open(char *name) {
-  sys_int_80((uint64_t)31, (uint64_t)name, 0, 0, 0, 0);
+  return sys_int_80((uint64_t)31, (uint64_t)name, 0, 0, 0, 0);
 }
 
 int sys_pipe_close(int pipe) {
-  sys_int_80((uint64_t)32, (uint64_t)pipe, 0, 0, 0, 0);
+  return sys_int_80((uint64_t)32, (uint64_t)pipe, 0, 0, 0, 0);
 }
 
 char sys_pipe_read(int id) {
-  sys_int_80((uint64_t)33, (uint64_t)id, 0, 0, 0, 0);
+  return sys_int_80((uint64_t)33, (uint64_t)id, 0, 0, 0, 0);
 }
 
 int sys_pipe_write(int id, char *info) {
-  sys_int_80((uint64_t)34, (uint64_t)id, (uint64_t)info, 0, 0, 0);
+  return sys_int_80((uint64_t)34, (uint64_t)id, (uint64_t)info, 0, 0, 0);
 }

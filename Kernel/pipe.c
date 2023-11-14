@@ -172,19 +172,20 @@ static uint64_t createPipe(char *name) {
     char nameR[MAX_NAME];
     memcpy(nameR, name, len);
     nameR[len] = 'R';
-    nameR[len + 1] = 0;
-    uint64_t semRead = sem_open(nameR, 0);
+    int semRead = sem_open(nameR, 0);
+    nameR[len + 1] = '\0';
     char nameW[MAX_NAME];
     memcpy(nameW, name, len);
     nameW[len] = 'W';
-    nameW[len + 1] = 0;
-    uint64_t semWrite = sem_open(nameW, BUFFER_SIZE);
+    nameW[len + 1] = '\0';
+    int semWrite = sem_open(nameW, BUFFER_SIZE);
     if (semRead == -1 || semWrite == -1) {
       print("pipeOpen: Error in pipe's semaphores\n");
       return -1;
     }
     newPipe->semRead = semRead;
     newPipe->semWrite = semWrite;
+
   }
   return pos + 1;
 }

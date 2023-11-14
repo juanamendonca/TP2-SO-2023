@@ -99,7 +99,8 @@ void entry(char *buffer, char **args) {
       fore = 0;
     }
     runCommand(args, pipe, fd1, c1, 0);
-    runCommand(&args[pipe + 1], argc - pipe, c2, fore);
+    runCommand(&args[pipe + 1], argc - pipe - 1, fd2, c2, fore);
+
   } else {
     int fore = 1;
     if (strcmp(args[argc - 1], "B") == 0) {
@@ -161,15 +162,20 @@ int findPipe(char **args, int argc) {
   return pipe;
 }
 
+int pipePid;
+
+
 void runCommand(char **args, int argc, int fd[], int com, int fore) {
   int pid = sys_create_process(commandsInfo[com].process, argc, args, fore, fd);
   if (fore) {
     sys_waitpid(pid);
   }
+
+  if (fd[1] != 0) {
+    pipePid = pid;
+  }
   if (fd[0] != 0) {
     sys_pipe_close(fd[0]);
-  }
-  if (fd[1] != 0) {
-    sys_pipe_close(fd[1]);
+    sys_kill_process(pipePid);
   }
 }

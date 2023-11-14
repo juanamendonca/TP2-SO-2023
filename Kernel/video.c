@@ -219,7 +219,7 @@ void putArrayNext(char *array, int color) {
       i++;
     }
   } else {
-    writePipe(fd[1], array);
+    writePipe(pcb->fd[1], array);
   }
 }
 void putDecNext(int number, int color) {

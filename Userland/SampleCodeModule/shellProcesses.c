@@ -106,6 +106,10 @@ void memoryP(unsigned int argc, char *argv[]) {
 }
 
 void memoryTestP(unsigned int argc, char *argv[]) {
+   if (argc != 1) {
+    print("Wrong arguments");
+    return;
+  }
   char *argv2[] = {
       "310000"}; // faltaria pedirle este valor a traves de una syscall
   test_mm(1, argv2);
@@ -185,6 +189,7 @@ void unblockP(unsigned int argc, char *argv[]) {
 void catP(unsigned int argc, char *argv[]) {
   if (argc != 1) {
     print("Wrong arguments");
+    return;
   }
   char c[2];
   c[1] = '\0';
@@ -197,6 +202,8 @@ void catP(unsigned int argc, char *argv[]) {
 void wcP(unsigned int argc, char *argv[]) {
   if (argc != 1) {
     print("Wrong arguments");
+    return;
+
   }
   int count = 0;
   char c[2];
@@ -218,10 +225,11 @@ void wcP(unsigned int argc, char *argv[]) {
 void filterP(unsigned int argc, char *argv[]) {
   if (argc != 1) {
     print("Wrong arguments");
+        return;
   }
   char c[2];
   c[1] = '\0';
-  while ((c[0] = getChar()) != -1) {
+  while ((c[0] = getChar()) != '\0') {
     if (c[0] == 'a' || c[0] == 'e' || c[0] == 'i' || c[0] == 'o' ||
         c[0] == 'u' || c[0] == 'A' || c[0] == 'E' || c[0] == 'I' ||
         c[0] == 'O' || c[0] == 'U') {
@@ -232,5 +240,11 @@ void filterP(unsigned int argc, char *argv[]) {
 }
 
 void phyloP(unsigned int argc, char *argv[]) {
+     if (argc != 1) {
+    print("Wrong arguments");
+    return;
+  }
+
     philosophersApp();
+    
 }
