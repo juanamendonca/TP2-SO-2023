@@ -103,6 +103,7 @@ void entry(char *buffer, char **args) {
 
   } else {
     int fore = 1;
+    
     if (strcmp(args[argc - 1], "B") == 0) {
       argc--;
       fore = 0;
@@ -174,7 +175,7 @@ void runCommand(char **args, int argc, int fd[], int com, int fore) {
   if (fd[1] != 0) {
     pipePid = pid;
   }
-  if (fd[0] != 0) {
+  if (fd[0] != 0 && fore == 1) {
     sys_pipe_close(fd[0]);
     sys_kill_process(pipePid);
   }
