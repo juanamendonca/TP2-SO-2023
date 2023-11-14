@@ -6,7 +6,6 @@
 #include "video.h"
 #include <stdbool.h>
 
-
 #define BUFF_SIZE 256
 #define TECLA_LIMITE_SUPERIOR 90
 #define CONTROL 0x1D
@@ -84,9 +83,10 @@ void keyHandler(uint64_t scancode) {
       front = 0;
 
     if (ctrl && scancode == 32) {
-      killCurrent();
-
-
+        killCurrent();
+    } else if (ctrl && scancode == 46) {
+      buff[rear++] = '\0';
+      cantElems++;
     } else {
       buff[rear++] = keyBoardTable[(int)tecla];
       cantElems++;
