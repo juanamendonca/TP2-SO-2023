@@ -18,6 +18,7 @@ int pid = 0;
 PriorityQueue *queue = NULL;
 pcb *dummyPcb = NULL;
 pcb *currentPcb = NULL;
+pcb *firstForegroundPcb = NULL;
 
 void dummy(int argc, char **argv);
 void initalizeScheduler();
@@ -445,3 +446,21 @@ void waitpid(int pid) {
 pcb *getProcessWithId(int pid) { return getProcessP(queue, pid); }
 
 pcb *getCurrentPcb() { return currentPcb; }
+
+void killCurrentForeground(){
+    pcb *process = getAndDeleteFirstProcessP(queue);
+
+    if (process == NULL) {
+        return;
+    }
+    process = currentPcb;
+
+    if (process->waitingPid > 0) {
+        unblock(process->ppid);
+    }
+    // changeState(pid, KILLED);
+    freePcb(process);
+    currentPcb = NULL;
+    callTimer();
+    return;
+}

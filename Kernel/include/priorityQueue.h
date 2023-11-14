@@ -21,5 +21,6 @@ void startIteratorP(PriorityQueue *queue);
 int hasNextP(PriorityQueue *queue);
 pcb *nextP(PriorityQueue *queue);
 pcb *getAndDeleteProcessP(PriorityQueue *queue, int pid);
+pcb *getAndDeleteFirstProcessP(PriorityQueue *queue);
 
 #endif

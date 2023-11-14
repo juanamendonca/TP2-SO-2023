@@ -99,8 +99,7 @@ int sys_semClose(int id) {
 }
 
 int sys_semOpen(char *id, int initialValue) {
-  return sys_int_80((uint64_t)25, (uint64_t)id, (uint64_t)initialValue, 0, 0,
-                    0);
+  return sys_int_80((uint64_t)25, (uint64_t)id, (uint64_t)initialValue, 0, 0,0);
 }
 
 void sys_sem() { sys_int_80((uint64_t)28, 0, 0, 0, 0, 0); }
