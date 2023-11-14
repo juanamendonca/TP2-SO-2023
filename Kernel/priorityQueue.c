@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "video.h"
 
 PriorityQueue *createPriorityQueue() {
   PriorityQueue *queue = (PriorityQueue *)malloc(sizeof(PriorityQueue));
@@ -157,20 +158,24 @@ pcb *nextP(PriorityQueue *queue) {
 pcb *getAndDeleteProcessP(PriorityQueue *queue, int pid) {
   pcb *process = getAndDeleteProcess(queue->q1, pid);
   if (process != NULL) {
-    return process; // Si se encuentra el proceso en q1, se devuelve
+
+      return process; // Si se encuentra el proceso en q1, se devuelve
   }
 
   process = getAndDeleteProcess(queue->q2, pid);
   if (process != NULL) {
+
     return process; // Si se encuentra el proceso en q2, se devuelve
   }
 
   process = getAndDeleteProcess(queue->q3, pid);
   if (process != NULL) {
+
     return process; // Si se encuentra el proceso en q3, se devuelve
   }
 
   process = getAndDeleteProcess(queue->q4, pid);
+
   return process; // Si se encuentra el proceso en q4 o no se encuentra en
                   // ninguna cola, se devuelve
 }
@@ -178,20 +183,24 @@ pcb *getAndDeleteProcessP(PriorityQueue *queue, int pid) {
 pcb *getAndDeleteFirstProcessP(PriorityQueue *queue) {
     pcb *process = getAndDeleteFirstProcess(queue->q1);
     if (process != NULL) {
+        putArrayNext(" 1: ",WHITE);
         return process; // Si se encuentra el proceso en q1, se devuelve
     }
 
     process = getAndDeleteFirstProcess(queue->q2);
     if (process != NULL) {
+        putArrayNext(" 2: ",WHITE);
         return process; // Si se encuentra el proceso en q2, se devuelve
     }
 
     process = getAndDeleteFirstProcess(queue->q3);
     if (process != NULL) {
+        putArrayNext(" 3: ",WHITE);
         return process; // Si se encuentra el proceso en q3, se devuelve
     }
 
     process = getAndDeleteFirstProcess(queue->q4);
+    putArrayNext(" 4: ",WHITE);
     return process; // Si se encuentra el proceso en q4 o no se encuentra en
     // ninguna cola, se devuelve
 }

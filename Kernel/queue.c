@@ -194,7 +194,7 @@ pcb *getAndDeleteFirstProcess(Queue *queue) {
     Node *prev = NULL;
 
     while (current != NULL) {
-        if (current->data->foreground != 0 && current->data->pid > 1) {
+        if (current->data->foreground && current->data->pid > 1) {
             if (prev == NULL) {
                 // Si el proceso a eliminar es el primer elemento de la cola
                 queue->front = current->next;
@@ -203,6 +203,7 @@ pcb *getAndDeleteFirstProcess(Queue *queue) {
                 }
             } else {
                 // Si el proceso a eliminar está en una posición distinta al principio
+
                 prev->next = current->next;
                 if (prev->next == NULL) {
                     queue->rear = prev;
@@ -218,6 +219,7 @@ pcb *getAndDeleteFirstProcess(Queue *queue) {
 
         current = current->next;
     }
+
 
     return NULL; // No se encontró un proceso con el PID especificado
 }
