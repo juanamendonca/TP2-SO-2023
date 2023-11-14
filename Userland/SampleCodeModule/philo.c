@@ -117,8 +117,5 @@ void philosophersApp() {
 
   for (int i = 0; i < N; i++) {
     sys_waitpid(philos[i].pid);
-    print("termino");
-    printInt(N);
   }
-  print("terminaron");
 }

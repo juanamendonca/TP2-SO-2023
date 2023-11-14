@@ -18,7 +18,7 @@ static char buff[BUFF_SIZE] = {
 static int front = 0; // Position of the first element
 static int rear = 0;  // Position of last added element
 static int cantElems = 0;
-static int shift = 0;
+static int ctrl = 0;
 bool savedRegs = false;
 int blockedProcess = -1;
 
@@ -62,18 +62,19 @@ void keyHandler(uint64_t scancode) {
     if (cantElems == BUFF_SIZE) {
       return;
     }
+
+    // left ctrl pressed
+    if (scancode == 0x1D) {
+        ctrl = 1;
+    }
+    // left ctrl not pressed
+    if (scancode == 0x9D) {
+        ctrl = 0;
+    }
+
     if (tecla == CONTROL) {
       savedRegs = true;
       return;
-    }
-
-    // shift pressed
-    if (scancode == 0x2A || scancode == 0x36) {
-      shift = 1;
-    }
-    // shift not pressed
-    if (scancode == 0xAA || scancode == 0xB6) {
-      shift = 0;
     }
 
     // Both ifs are necessary to maintain buffer circularity
@@ -82,8 +83,10 @@ void keyHandler(uint64_t scancode) {
     if (front == BUFF_SIZE)
       front = 0;
 
-    if (shift && scancode == 32) {
-      clearScreen();
+    if (ctrl && scancode == 32) {
+      killCurrent();
+
+
     } else {
       buff[rear++] = keyBoardTable[(int)tecla];
       cantElems++;

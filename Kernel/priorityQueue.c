@@ -174,3 +174,24 @@ pcb *getAndDeleteProcessP(PriorityQueue *queue, int pid) {
   return process; // Si se encuentra el proceso en q4 o no se encuentra en
                   // ninguna cola, se devuelve
 }
+
+pcb *getAndDeleteFirstProcessP(PriorityQueue *queue) {
+    pcb *process = getAndDeleteFirstProcess(queue->q1);
+    if (process != NULL) {
+        return process; // Si se encuentra el proceso en q1, se devuelve
+    }
+
+    process = getAndDeleteFirstProcess(queue->q2);
+    if (process != NULL) {
+        return process; // Si se encuentra el proceso en q2, se devuelve
+    }
+
+    process = getAndDeleteFirstProcess(queue->q3);
+    if (process != NULL) {
+        return process; // Si se encuentra el proceso en q3, se devuelve
+    }
+
+    process = getAndDeleteFirstProcess(queue->q4);
+    return process; // Si se encuentra el proceso en q4 o no se encuentra en
+    // ninguna cola, se devuelve
+}
