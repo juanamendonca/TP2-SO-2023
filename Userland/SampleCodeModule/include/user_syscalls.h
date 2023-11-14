@@ -63,3 +63,11 @@ void sys_free(void *memory);
 void sys_printBitmap();
 
 void sys_sem();
+
+int sys_pipe_open(char *name);
+
+int sys_pipe_close(int pipe);
+
+char sys_pipe_read(int id);
+
+int sys_pipe_write(int id, char *info);

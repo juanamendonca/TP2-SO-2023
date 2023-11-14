@@ -1,9 +1,11 @@
 #include "keyboard_driver.h"
 #include "lib.h"
 #include "naiveConsole.h"
+#include "pipe.h"
 #include "scheduler.h"
 #include "video.h"
 #include <stdbool.h>
+
 
 #define BUFF_SIZE 256
 #define TECLA_LIMITE_SUPERIOR 90
@@ -41,7 +43,7 @@ char nextElement() {
 
     return c;
   } else {
-    // read del pipe
+    return readPipe(pcb->fd[0]);
   }
 }
 

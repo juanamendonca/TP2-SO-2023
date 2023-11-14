@@ -1,7 +1,9 @@
+#include "pipe.h"
 #include "scheduler.h"
 #include "strings.h"
 #include <font.h>
 #include <video.h>
+
 
 #define CHAR_WIDTH 8
 #define CHAR_HEIGHT 16
@@ -217,7 +219,7 @@ void putArrayNext(char *array, int color) {
       i++;
     }
   } else {
-    // escribe en el pipe
+    writePipe(fd[1], array);
   }
 }
 void putDecNext(int number, int color) {

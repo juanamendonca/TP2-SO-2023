@@ -2,6 +2,7 @@
 #include "keyboard_driver.h"
 #include "lib.h"
 #include "memoryManager.h"
+#include "pipe.h"
 #include "scheduler.h"
 #include "semaphores2.h"
 #include "sound.h"
@@ -179,6 +180,26 @@ void _30_printBitmap(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
   printBitmap();
 }
 
+int _31_pipe_open(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
+                  uint64_t r5) {
+  return pipeOpen((char *)r1);
+}
+
+int _32_pipe_close(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
+                   uint64_t r5) {
+  return pipeClose((uint64_t)r1);
+}
+
+char _33_pipe_read(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
+                   uint64_t r5) {
+  return readPipe((uint64_t)r1);
+}
+
+int _34_pipe_write(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
+                   uint64_t r5) {
+  return writePipe((uint64_t)r1, (char *)r2);
+}
+
 static syscall syscalls[] = {(syscall)_0_empty,
                              (syscall)_1_write,
                              (syscall)_2_read,
@@ -209,7 +230,11 @@ static syscall syscalls[] = {(syscall)_0_empty,
                              (syscall)_27_waitpid,
                              (syscall)_28_sem_,
                              (syscall)_29_free,
-                             (syscall)_30_printBitmap};
+                             (syscall)_30_printBitmap,
+                             (syscall)_31_pipe_open,
+                             (syscall)_32_pipe_close,
+                             (syscall)_33_pipe_read,
+                             (syscall)_34_pipe_write};
 
 int64_t sysDispatcher(uint64_t syscallNumber, uint64_t r1, uint64_t r2,
                       uint64_t r3, uint64_t r4, uint64_t r5) {

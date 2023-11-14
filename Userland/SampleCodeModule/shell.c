@@ -90,6 +90,16 @@ void entry(char *buffer, char **args) {
       enter();
       return;
     }
+    int pipeId = sys_pipe_open("/");
+    int fd1[] = {0, pipeId};
+    int fd2[] = {pipeId, 0};
+    int fore = 1;
+    if (strcmp(args[argc - 1], "B") == 0) {
+      argc--;
+      fore = 0;
+    }
+    runCommand(args, pipe, fd1, c1, 0);
+    runCommand(&args[pipe + 1], argc - pipe, c2, fore);
   } else {
     int fore = 1;
     if (strcmp(args[argc - 1], "B") == 0) {
@@ -155,5 +165,11 @@ void runCommand(char **args, int argc, int fd[], int com, int fore) {
   int pid = sys_create_process(commandsInfo[com].process, argc, args, fore, fd);
   if (fore) {
     sys_waitpid(pid);
+  }
+  if (fd[0] != 0) {
+    sys_pipe_close(fd[0]);
+  }
+  if (fd[1] != 0) {
+    sys_pipe_close(fd[1]);
   }
 }

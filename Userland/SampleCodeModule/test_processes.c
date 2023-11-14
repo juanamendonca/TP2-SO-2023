@@ -42,7 +42,7 @@ void test_processes(unsigned int argc, char *argv[]) {
         print("test_processes: ERROR creating process\n");
         return;
       } else {
-        print("creating ");
+        // print("creating ");
         printInt(p_rqs[rq].pid);
         enter();
         p_rqs[rq].state = RUNNING;
@@ -68,7 +68,7 @@ void test_processes(unsigned int argc, char *argv[]) {
               print("test_processes: ERROR killing process\n");
               return;
             }
-            print("killing ");
+            // print("killing ");
             printInt(p_rqs[rq].pid);
             enter();
             p_rqs[rq].state = KILLED;
@@ -82,7 +82,7 @@ void test_processes(unsigned int argc, char *argv[]) {
               print("test_processes: ERROR blocking process\n");
               return;
             }
-            print("blocking ");
+            // print("blocking ");
             printInt(p_rqs[rq].pid);
             enter();
             p_rqs[rq].state = BLOCKED;
