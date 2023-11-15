@@ -7,7 +7,7 @@ void *nextAddress;
 void *memStart;
 void *memEnd;
 
-#define HEAP_SIZE 320 * 1024 // 320 KiB  320 * 1024
+#define HEAP_SIZE 320 * 1024// 320 KiB  320 * 1024
 #define BLOCK_SIZE 4
 
 // Calculate the number of bytes needed for the bitmap.
@@ -71,7 +71,7 @@ void *malloc(const size_t size) {
         }
     }
 
-    putArrayNext("No hay mas memoria loco\n", WHITE);
+
     return NULL;
 }
 

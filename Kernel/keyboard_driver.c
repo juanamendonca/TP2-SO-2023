@@ -85,9 +85,9 @@ void keyHandler(uint64_t scancode) {
     if (front == BUFF_SIZE)
       front = 0;
 
-    if (scancode == 0x2A) { // left shift
+    if (scancode == 0x01) { // escape
       writeEOF();
-    } else if (scancode == 0x36) { // right shift
+    } else if (scancode == 0x2A) { // left shift
       killCurrentForeground();
     } else if (keyBoardTable[(int)tecla] != 0) {
       buff[rear++] = keyBoardTable[(int)tecla];

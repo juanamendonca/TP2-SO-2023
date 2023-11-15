@@ -22,21 +22,21 @@ static command commandsInfo[] = {
     {&divisionTesterP, "ZERO", ": to trigger divide by zero exception"},
     {&invalidOpTesterP, "INVALIDOP", "to trigger invalid operation exception "},
     {&infoProcessesP, "PS", ": to get all the processes info"},
-    {&testProcessesP, "TEST-PROCESSES", "to test the scheduler"},
+    {&testProcessesP, "TEST-PROCESSES $1", "to test the scheduler, $1: qty of procceses to create"},
     {&testPrioP, "TEST-PRIO", "to test the scheduler priorities"},
     {&memoryP, "MEMORY", "to print the current usage of memory"},
     {&memoryTestP, "TEST-MEMORY", "to test the memory manager"},
     {&semP, "SEM", "to get all sempahores info"},
-    {&testSyncP, "TEST-SYNC", "to test semaphores"},
-    {&loopP, "LOOP", "prints process pid every 2 seconds"},
-    {&killP, "KILL", "kills the process with given pid"},
-    {&niceP, "NICE", "changes the process given the pid and new priority"},
+    {&testSyncP, "TEST-SYNC $1 $2", "to test semaphores, $1: qty of processes to create, $2: 1 with sem | 0 without"},
+    {&loopP, "LOOP", "prints process periodically"},
+    {&killP, "KILL $1", "kills the process with given pid, $1 pid to kill"},
+    {&niceP, "NICE $1 $2", "changes the process given the pid and new priority, $1: pid, $2: priority 1-4"},
     {&blockP, "BLOCK", "blocks the process"},
     {&unblockP, "UNBLOCK", "unblocks the process"},
     {&catP, "CAT", "prints stdin"},
     {&wcP, "WC", "counts the lines o the input"},
     {&filterP, "FILTER", "filters vowels of the input"},
-    {&phyloP, "PHYLO", "shows the philosopher problem"}};
+    {&phyloP, "PHYLO", "shows the philosopher problem with only 5 philosophers"}};
 
 void entry(char *buffer, char **args);
 int parseArgs(char *argString, char **args);
@@ -47,7 +47,8 @@ int runCommandPipes(int c1, int c2, char **argv, int argc, int pipe);
 void help();
 
 void help() {
-  print("The available commands are:");
+  print("The available commands are:\n");
+  print("Press Left Shift send EOF\nPress Right Shift to kill all foreground processes");
   enter();
   int numCommands = sizeof(commandsInfo) / sizeof(commandsInfo[0]);
   for (int i = 0; i < numCommands; i++) {
