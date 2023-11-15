@@ -1,3 +1,4 @@
+
 #define ________ 0x00
 #define _______X 0x01
 #define ______X_ 0x02
@@ -255,4 +256,4 @@
 #define XXXXXXX_ 0xFE
 #define XXXXXXXX 0xFF
 
-unsigned char * charMap(int c);
+unsigned char *charMap(int c);

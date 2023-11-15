@@ -12,3 +12,4 @@ divzerotester:
 opcodetester:
     db 0xFF, 0xFF         ;test invalid opcode
     ret
+    

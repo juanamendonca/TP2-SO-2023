@@ -73,3 +73,5 @@ char sys_pipe_read(int id);
 int sys_pipe_write(int id, char *info);
 
 void sys_put_char(char c, int color);
+
+void sys_pipe();

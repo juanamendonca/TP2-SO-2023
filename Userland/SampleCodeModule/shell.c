@@ -12,31 +12,42 @@
 #include <stdint.h>
 
 static command commandsInfo[] = {
-    {&helpP, "HELP", "to get the information on the available commands"},
-    {&getTimeP, "TIME", "to get the current time"},
-    {&clearP, "CLEAR", "to clear the terminal"},
+    {&helpP, "HELP", "HELP",
+     "to get the information on the available commands"},
+    {&getTimeP, "TIME", "TIME", "to get the current time"},
+    {&clearP, "CLEAR", "CLEAR", "to clear the terminal"},
     //{&pongP, "PONG", "to play game"},
-    {&getRegInfoP, "REGISTERS", "to print register status"},
-    {&regsTesterP, "REGISTER-TESTER",
+    {&getRegInfoP, "REGISTERS", "REGISTERS", "to print register status"},
+    {&regsTesterP, "REGISTER-TESTER", "REGISTER-TESTER",
      "to check the correct loading of registers "},
-    {&divisionTesterP, "ZERO", "to trigger divide by zero exception"},
-    {&invalidOpTesterP, "INVALIDOP", "to trigger invalid operation exception "},
-    {&infoProcessesP, "PS", "to get all the processes info"},
-    {&testProcessesP, "TEST-PROCESSES $1", "to test the scheduler, $1: qty of procceses to create"},
-    {&testPrioP, "TEST-PRIO", "to test the scheduler priorities"},
-    {&memoryP, "MEMORY", "to print the current usage of memory"},
-    {&memoryTestP, "TEST-MEMORY", "to test the memory manager"},
-    {&semP, "SEM", "to get all sempahores info"},
-    {&testSyncP, "TEST-SYNC $1 $2", "to test semaphores, $1: qty of processes to create, $2: 1 with sem | 0 without"},
-    {&loopP, "LOOP", "prints process periodically"},
-    {&killP, "KILL $1", "kills the process with given pid, $1 pid to kill"},
-    {&niceP, "NICE $1 $2", "changes the process given the pid and new priority, $1: pid, $2: priority 1-4"},
-    {&blockP, "BLOCK", "blocks the process"},
-    {&unblockP, "UNBLOCK", "unblocks the process"},
-    {&catP, "CAT", "prints stdin"},
-    {&wcP, "WC", "counts the lines o the input"},
-    {&filterP, "FILTER", "filters vowels of the input"},
-    {&phyloP, "PHYLO", "shows the philosopher problem with only 5 philosophers"}};
+    {&divisionTesterP, "ZERO", "ZERO", "to trigger divide by zero exception"},
+    {&invalidOpTesterP, "INVALIDOP", "INVALIDOP",
+     "to trigger invalid operation exception "},
+    {&infoProcessesP, "PS", "PS", "to get all the processes info"},
+    {&testProcessesP, "TEST-PROCESSES", "TEST-PROCESSES $1",
+     "to test the scheduler, $1: qty of procceses to create"},
+    {&testPrioP, "TEST-PRIO", "TEST-PRIO", "to test the scheduler priorities"},
+    {&memoryP, "MEMORY", "MEMORY", "to print the current usage of memory"},
+    {&memoryTestP, "TEST-MEMORY", "TEST-MEMORY", "to test the memory manager"},
+    {&semP, "SEM", "SEM", "to get all sempahores info"},
+    {&testSyncP, "TEST-SYNC", "TEST-SYNC $1 $2",
+     "to test semaphores, $1: qty of processes to "
+     "create, $2: 1 with sem | 0 "
+     "without"},
+    {&loopP, "LOOP", "LOOP", "prints process periodically"},
+    {&killP, "KILL", "KILL $1",
+     "kills the process with given pid, $1 pid to kill"},
+    {&niceP, "NICE", "NICE $1 $2",
+     "changes the process given the pid and new priority, $1: pid, $2: "
+     "priority 1-4"},
+    {&blockP, "BLOCK", "BLOCK", "blocks the process"},
+    {&unblockP, "UNBLOCK", "UNBLOCK", "unblocks the process"},
+    {&catP, "CAT", "CAT", "prints stdin"},
+    {&wcP, "WC", "WC", "counts the lines o the input"},
+    {&filterP, "FILTER", "FILTER", "filters vowels of the input"},
+    {&phyloP, "PHILO", "PHILO",
+     "shows the philosopher problem with only 5 philosophers"},
+};
 
 void entry(char *buffer, char **args);
 int parseArgs(char *argString, char **args);
@@ -48,14 +59,17 @@ void help();
 
 void help() {
   print("The available commands are:\n");
-  print("Press ESC send EOF\nPress Right Shift to kill all foreground processes\n");
-  print("To execute the command in the background, append 'B' to the end of the command line.\n");
-  print("To use a pipe, separate the commands with a slash, like 'command1 / command2'\n");
+  print("Press ESC send EOF\nPress left Shift to kill all foreground "
+        "processes\n");
+  print("To execute the command in the background, append 'B' to the end of "
+        "the command line.\n");
+  print("To use a pipe, separate the commands with a slash, like 'command1 / "
+        "command2'\n");
 
   enter();
   int numCommands = sizeof(commandsInfo) / sizeof(commandsInfo[0]);
   for (int i = 0; i < numCommands; i++) {
-    sys_write(commandsInfo[i].name, GREEN);
+    sys_write(commandsInfo[i].nameHelp, GREEN);
     print(": ");
     print(commandsInfo[i].description);
     enter();
@@ -127,7 +141,7 @@ int parseArgs(char *argString, char **args) {
 
   for (int i = 0; argString[i] != '\0'; i++) {
     if (argString[i] != ' ' && argStart == -1) {
-      // Starts a new argument 
+      // Starts a new argument
       argStart = i;
     }
     if ((argString[i] == ' ' || argString[i + 1] == '\0') && argStart != -1) {

@@ -72,27 +72,30 @@ pcb *dequeueP(PriorityQueue *queue) {
 pcb *dequeuePReady(PriorityQueue *queue) {
   pcb *data = dequeueReady(queue->q1);
   if (data != NULL) {
-    return data; // If a proccess is found in q1 in a READY STATE then is returned
+    return data; // If a proccess is found in q1 in a READY STATE then is
+                 // returned
   }
 
   data = dequeueReady(queue->q2);
   if (data != NULL) {
-    return data; // If a proccess is found in q2 in a READY STATE then is returned
+    return data; // If a proccess is found in q2 in a READY STATE then is
+                 // returned
   }
 
   data = dequeueReady(queue->q3);
   if (data != NULL) {
-    return data; // If a proccess is found in q3 in a READY STATE then is returned
+    return data; // If a proccess is found in q3 in a READY STATE then is
+                 // returned
   }
 
   data = dequeueReady(queue->q4);
   if (data != NULL) {
-    return data; // If a proccess is found in q4 in a READY STATE then is returned
+    return data; // If a proccess is found in q4 in a READY STATE then is
+                 // returned
   }
 
   return NULL; // NULL is returned if no proccess is found
 }
-
 
 pcb *getProcessP(PriorityQueue *queue, int pid) {
   pcb *process = getProcess(queue->q1, pid);
@@ -102,7 +105,7 @@ pcb *getProcessP(PriorityQueue *queue, int pid) {
 
   process = getProcess(queue->q2, pid);
   if (process != NULL) {
-    return process; //If a proccess is found in q2 then is returned
+    return process; // If a proccess is found in q2 then is returned
   }
 
   process = getProcess(queue->q3, pid);
@@ -112,7 +115,6 @@ pcb *getProcessP(PriorityQueue *queue, int pid) {
 
   process = getProcess(queue->q4, pid);
   return process; // A process is returned in q4 or NULL if nothing is found.
-
 }
 
 void startIteratorP(PriorityQueue *queue) {

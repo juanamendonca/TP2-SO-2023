@@ -7,4 +7,4 @@
 
 void philosophersApp();
 
-#endif //TP2_SO_2023_2_PHYLO_H
+#endif // TP2_SO_2023_2_PHYLO_H

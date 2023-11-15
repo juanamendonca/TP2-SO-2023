@@ -55,7 +55,6 @@ void initalizeScheduler() {
   if (queue == NULL) {
     return;
   }
-
   char *argv[] = {"dummy"};
   int fd[] = {0, 0};
   initalizeProcess((void *)&dummy, 1, argv, 1, fd);
@@ -286,7 +285,7 @@ void freePcb(pcb *process) {
   }
 
   // Frees the memory allocated for the process arguments
-  
+
   if (process->argv != NULL) {
     for (int i = 0; i < process->argc; i++) {
       free(process->argv[i]);

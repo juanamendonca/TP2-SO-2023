@@ -4,6 +4,7 @@
 typedef struct {
   void (*process)(unsigned int argc, char **argv);
   char *name;
+  char *nameHelp;
   char *description;
 } command;
 

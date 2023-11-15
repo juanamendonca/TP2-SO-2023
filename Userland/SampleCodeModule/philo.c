@@ -84,7 +84,6 @@ int addPhilo(int index) {
     print("ERROR opening sem in addPhil\n");
     return 1;
   }
-
   philos[index].state = THINKING;
 
   char *argv[] = {"philosopher", ""};
@@ -102,6 +101,7 @@ int addPhilo(int index) {
 
 void philosophersApp() {
   print("Bienvenido a los Filosofos comensales\n");
+  char buffer[400];
 
   if ((semMain = sys_semOpen(SEM_MAIN, 1)) == -1) {
     print("ERROR opening main sem\n");
@@ -115,7 +115,13 @@ void philosophersApp() {
     }
   }
 
+  sys_get_info_processes(buffer);
+  print(buffer);
+
   for (int i = 0; i < N; i++) {
     sys_waitpid(philos[i].pid);
   }
+
+  sys_get_info_processes(buffer);
+  print(buffer);
 }

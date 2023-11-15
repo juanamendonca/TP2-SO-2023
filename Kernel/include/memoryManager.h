@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 
-void createMemoryManager(void * heap);
+void createMemoryManager(void *heap);
 
 void *malloc(const size_t size);
 

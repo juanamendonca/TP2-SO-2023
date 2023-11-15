@@ -3,7 +3,6 @@
 #include <interrupts.h>
 #include <stdint.h>
 
-
 #pragma pack(push) /* Aligns */
 #pragma pack(1)    /* Aligns structures to 1 byte */
 

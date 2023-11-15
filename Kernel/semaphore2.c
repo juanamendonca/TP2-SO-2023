@@ -198,8 +198,11 @@ void sem() {
   while (sem != NULL) {
     putArrayNext(sem->name, WHITE);
     putArrayNext("\t", WHITE);
+    putDecNext(sem->id, WHITE);
+    putArrayNext("\t", WHITE);
     putDecNext(sem->value, WHITE);
     putArrayNext("\t", WHITE);
+    putArrayNext("\n", WHITE);
     sem = sem->next;
   }
 }

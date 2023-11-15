@@ -16,11 +16,19 @@ typedef struct semaphore {
 } semaphore;
 
 extern uint64_t _xchg(int *lock, int value);
+
 void start_semaphores();
+
 int sem_open(char *name, int value);
+
 int sem_close(int id);
+
 int sem_wait(int id);
+
 int sem_post(int id);
+
 void sem();
+
 char *getSemName(int id);
+
 void printProcessesSem(int id);

@@ -58,7 +58,8 @@ void my_process_inc(unsigned int argc, char *argv[]) {
   return;
 }
 
-// The parameters to be received are arg[1] = number of increments, arg[2] = 0 or 1 if a semaphore is used or not
+// The parameters to be received are arg[1] = number of increments, arg[2] = 0
+// or 1 if a semaphore is used or not
 
 void test_sync(unsigned int argc, char *argv[]) { //{n, use_sem, 0}
   int pids[2 * TOTAL_PAIR_PROCESSES];

@@ -11,14 +11,16 @@ Queue *createQueue() {
   if (!queue) {
     return NULL;
   }
-  queue->front = queue->rear = queue->iterator = NULL; // Initialize the iterator
+  queue->front = queue->rear = queue->iterator =
+      NULL; // Initialize the iterator
   return queue;
 }
 
 // Function to check if the Queue is empty
 int isEmpty(Queue *queue) { return queue->front == NULL; }
 
-// Function to check if there is at least one process in READY state in the Queue
+// Function to check if there is at least one process in READY state in the
+// Queue
 int isEmptyReady(Queue *queue) {
   Node *current = queue->front;
 

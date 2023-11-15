@@ -10,7 +10,7 @@ char buffer[BUFFER_SIZE];
 void shell() {
   sys_write("Welcome!", PURPLE);
   enter();
-  // help();
+  help();
   char *args[MAX_ARGS];
 
   while (1) {
@@ -20,10 +20,6 @@ void shell() {
 }
 
 int main() {
-  // char *argv[] = {"shell"};
-  // int fd[] = {0, 0};
-  // int shellPid = sys_create_process(&shell, 1, argv, 1, fd);
-  // sys_waitpid(shellPid);
   shell();
   print("back in userland");
   return 0;

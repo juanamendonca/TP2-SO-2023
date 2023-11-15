@@ -45,3 +45,5 @@ void wcP(unsigned int argc, char *argv[]);
 void filterP(unsigned int argc, char *argv[]);
 
 void phyloP(unsigned int argc, char *argv[]);
+
+void pipeP(unsigned int argc, char *argv[]);

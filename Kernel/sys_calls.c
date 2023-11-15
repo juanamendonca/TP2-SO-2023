@@ -206,6 +206,10 @@ void _35_put_char(uint64_t c, uint64_t color, uint64_t r3, uint64_t r4,
   putChar((char)c, (int)color);
 }
 
+void _36_pipe(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4, uint64_t r5) {
+  pipe();
+}
+
 static syscall syscalls[] = {(syscall)_0_empty,
                              (syscall)_1_write,
                              (syscall)_2_read,
@@ -241,7 +245,8 @@ static syscall syscalls[] = {(syscall)_0_empty,
                              (syscall)_32_pipe_close,
                              (syscall)_33_pipe_read,
                              (syscall)_34_pipe_write,
-                             (syscall)_35_put_char};
+                             (syscall)_35_put_char,
+                             (syscall)_36_pipe};
 
 int64_t sysDispatcher(uint64_t syscallNumber, uint64_t r1, uint64_t r2,
                       uint64_t r3, uint64_t r4, uint64_t r5) {

@@ -134,3 +134,5 @@ int sys_pipe_write(int id, char *info) {
 void sys_put_char(char c, int color) {
   sys_int_80((uint64_t)35, (uint64_t)c, (uint64_t)color, 0, 0, 0);
 }
+
+void sys_pipe() { sys_int_80((uint64_t)36, 0, 0, 0, 0, 0); }
