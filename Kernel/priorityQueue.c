@@ -176,11 +176,8 @@ pcb *getAndDeleteProcessP(PriorityQueue *queue, int pid) {
 }
 
 void deletedForegroundProcessesP(PriorityQueue *queue) {
-    putArrayNext("from prio\n",WHITE);
   deletedForegroundProcesses(queue->q1);
-    putArrayNext("from prio\n",WHITE);
   deletedForegroundProcesses(queue->q2);
-    putArrayNext("from prio\n",WHITE);
   deletedForegroundProcesses(queue->q3);
   deletedForegroundProcesses(queue->q4);
 }

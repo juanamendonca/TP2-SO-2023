@@ -200,7 +200,7 @@ void catP(unsigned int argc, char *argv[]) {
     print(c);
   }
   print(c);
-  print("terminanado cat");
+  print("\nending cat...");
 }
 
 void wcP(unsigned int argc, char *argv[]) {

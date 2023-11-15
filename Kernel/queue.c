@@ -188,7 +188,6 @@ void deletedForegroundProcesses(Queue *queue) {
   Node *next = NULL;
 
   while (current != NULL) {
-      putArrayNext("from queue WHILE\n",WHITE);
     if (current->data->foreground && current->data->pid > 1) {
       if (prev == NULL) {
         // Si el proceso a eliminar es el primer elemento de la cola
@@ -214,5 +213,4 @@ void deletedForegroundProcesses(Queue *queue) {
 
     current = next;
   }
-    putArrayNext("OUTSIDE queue WHILE\n",WHITE);
 }

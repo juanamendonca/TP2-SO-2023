@@ -11,13 +11,11 @@
 #define CONTROL 0x1D
 #define STDIN 0
 
-static char buff[BUFF_SIZE] = {
-    0}; // Circular vector. When buff reaches max capacity older elements are
-        // overwritten. Keyboard buffer
+static char buff[BUFF_SIZE] = {0}; // Circular vector. When buff reaches max capacity older elements are
+                                   // overwritten. Keyboard buffer
 static int front = 0; // Position of the first element
 static int rear = 0;  // Position of last added element
 static int cantElems = 0;
-static int ctrl = 0;
 bool savedRegs = false;
 int blockedProcess = -1;
 
@@ -72,14 +70,6 @@ void keyHandler(uint64_t scancode) {
       return;
     }
 
-    // left ctrl pressed
-    if (scancode == 0x1D) {
-      ctrl = 1;
-    }
-    // left ctrl not pressed
-    if (scancode == 0x9D) {
-      ctrl = 0;
-    }
 
     if (tecla == CONTROL) {
       savedRegs = true;
@@ -92,13 +82,10 @@ void keyHandler(uint64_t scancode) {
     if (front == BUFF_SIZE)
       front = 0;
 
-    if ( scancode == 32) {
+    if ( scancode == 0x2A) {        //left shift
         writeEOF();
-//        killCurrentForeground();
-    } else if (scancode == 0x1D) {
-
-//      buff[rear++] = '\0';
-//      cantElems++;
+    } else if (scancode == 0x36) {  //right shift
+        killCurrentForeground();
     } else if (keyBoardTable[(int)tecla] != 0) {
       buff[rear++] = keyBoardTable[(int)tecla];
       cantElems++;
