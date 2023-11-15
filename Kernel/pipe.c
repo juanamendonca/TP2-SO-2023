@@ -37,7 +37,7 @@ void printProcesses(PipeType pipe);
 // Returns -1 in case of error and 0 otherwise.
 uint64_t initPipes() {
   if ((semPipeManager = sem_open(pipeName, 1)) == -1) {
-    putArrayNext("Error in initPipes", 0xFFFFFF);
+    printError("Error in initPipes");
     return -1;
   }
   for (int i = 0; i < MAX_PIPES; i++) {
@@ -49,7 +49,7 @@ uint64_t initPipes() {
 // Returns -1 in case of error
 uint64_t pipeOpen(char *name) {
   if (sem_wait(semPipeManager)) {
-    putArrayNext("Error sem_wait in pipeOpen\n", WHITE);
+    printError("Error sem_wait in pipeOpen\n");
     return -1;
   }
   // Check if a pipe with the given name exists in our data structure
@@ -60,13 +60,13 @@ uint64_t pipeOpen(char *name) {
     id = createPipe(name);
   }
   if (id == -1) {
-    putArrayNext("Error in pipeOpen, id=-1\n", WHITE);
+    printError("Error in pipeOpen, id=-1\n");
     sem_post(semPipeManager);
     return -1;
   }
   pipes[id - 1].pipe.amountProcesses++;
   if (sem_post(semPipeManager)) {
-    putArrayNext("Error sem_post in pipeOpen\n", WHITE);
+    printError("Error sem_post in pipeOpen\n");
     return -1;
   }
   return id;
@@ -77,7 +77,7 @@ uint64_t pipeClose(uint64_t pipeIndex) {
     return -1;
 
   if (sem_wait(semPipeManager) == -1) {
-    putArrayNext("Error sem_wait in pipeClose\n", WHITE);
+    printError("Error sem_wait in pipeClose\n");
     return -1;
   }
 
@@ -85,13 +85,13 @@ uint64_t pipeClose(uint64_t pipeIndex) {
   int closeWrite = sem_close(pipes[pipeIndex - 1].pipe.semWrite);
 
   if (closeRead == -1 || closeWrite == -1) {
-    putArrayNext("pipeClose: Error in semaphore close for the pipe\n", WHITE);
+    printError("pipeClose: Error in semaphore close for the pipe\n");
     return -1;
   }
   pipes[pipeIndex - 1].available = TRUE;
 
   if (sem_post(semPipeManager) == -1) {
-    putArrayNext("Error sem_post in pipeClose\n", WHITE);
+    printError("Error sem_post in pipeClose\n");
     return -1;
   }
   return 0;
@@ -117,13 +117,13 @@ uint64_t writeChar(uint64_t pipeIndex, char c) {
 
   PipeType *pipe = &pipes[pipeIndex - 1].pipe;
   if (sem_wait(pipe->semWrite) == -1) {
-    print("Error in sem_wait in writeChar\n");
+    printError("Error in sem_wait in writeChar\n");
     return -1;
   }
   pipe->buffer[pipe->wIndex % BUFFER_SIZE] = c;
   pipe->wIndex++;
   if (sem_post(pipe->semRead) == -1) {
-    print("Error in sem_post in writeChar\n");
+    printError("Error in sem_post in writeChar\n");
     return -1;
   }
   return 0;
@@ -135,13 +135,13 @@ char readPipe(uint64_t pipeIndex) {
 
   PipeType *pipe = &pipes[pipeIndex - 1].pipe;
   if (sem_wait(pipe->semRead) == -1) {
-    print("Error in sem_wait in readPipe\n");
+    printError("Error in sem_wait in readPipe\n");
     return -1;
   }
   char c = pipe->buffer[pipe->rIndex % BUFFER_SIZE];
   pipe->rIndex++;
   if (sem_post(pipe->semWrite) == -1) {
-    print("Error in sem_post in readPipe\n");
+    printError("Error in sem_post in readPipe\n");
     return -1;
   }
   return c;
@@ -162,7 +162,7 @@ static uint64_t findPipe(char *name) {
 static uint64_t createPipe(char *name) {
   int len = strlen(name);
   if (len <= 0 || len >= MAX_NAME - 1) {
-    print("createPipe: Name is too long\n");
+    printError("createPipe: Name is too long\n");
     return -1;
   }
   uint64_t pos;
@@ -183,7 +183,7 @@ static uint64_t createPipe(char *name) {
     nameW[len + 1] = '\0';
     int semWrite = sem_open(nameW, BUFFER_SIZE);
     if (semRead == -1 || semWrite == -1) {
-      print("pipeOpen: Error in pipe's semaphores\n");
+      printError("pipeOpen: Error in pipe's semaphores\n");
       return -1;
     }
     newPipe->semRead = semRead;

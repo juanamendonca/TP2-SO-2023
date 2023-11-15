@@ -28,3 +28,4 @@ void print(char *string);
 void printInt(int num);
 void putTab();
 void putChar(char c, int color);
+void printError(char *array);

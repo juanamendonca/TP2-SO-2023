@@ -406,7 +406,7 @@ pcb *getCurrentPcb() { return currentPcb; }
 void killCurrentForeground() {
   deletedForegroundProcessesP(queue);
 
-  if (currentPcb->foreground) {
+  if (currentPcb->foreground && currentPcb->pid != dummyPcb->pid) {
     killCurrent();
   }
   return;

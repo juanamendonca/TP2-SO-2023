@@ -207,13 +207,26 @@ void putLetterNext(int caracter, int color) {
 
 void putChar(char c, int color) {
   pcb *pcb = getCurrentPcb();
-  if (pcb->foreground) {
+  if (pcb->fd[1] == STDIOUT && pcb->foreground) {
     if (c != '\0' && c != '\n') {
       putLetterNext(c, color);
     } else if (c == '\n') {
       putLine();
     }
+  } else {
     writeChar(pcb->fd[1], c);
+  }
+}
+
+void printError(char *array) {
+  int i = 0;
+  while (array[i] != '\0') {
+    if (array[i] != '\n') {
+      putLetterNext(array[i], WHITE);
+    } else {
+      putLine();
+    }
+    i++;
   }
 }
 
@@ -246,14 +259,14 @@ void putLine() {
   pointer_x = 3;
 }
 
-void printError(char *string) {
-  int i = 0;
-  while (string[i] != '\0') {
-    putLetterNext(string[i], RED);
-    i++;
-  }
-  putLetterNext('\n', WHITE);
-}
+// void printError(char *string) {
+//   int i = 0;
+//   while (string[i] != '\0') {
+//     putLetterNext(string[i], RED);
+//     i++;
+//   }
+//   putLetterNext('\n', WHITE);
+// }
 
 // Converts an unsigned integer number to a character string representation in
 // the specified base.
