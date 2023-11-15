@@ -128,13 +128,6 @@ pcb *front(Queue *queue) {
   return queue->front->data;
 }
 
-void destroyQueue(Queue *queue) {
-  while (!isEmpty(queue)) {
-    dequeue(queue);
-  }
-  free(queue);
-}
-
 pcb *getProcess(Queue *queue, int pid) {
   Node *current = queue->front;
   while (current != NULL) {
@@ -189,37 +182,32 @@ pcb *getAndDeleteProcess(Queue *queue, int pid) {
   return NULL; // No se encontró un proceso con el PID especificado
 }
 
-pcb *getAndDeleteFirstProcess(Queue *queue) {
-    Node *current = queue->front;
-    Node *prev = NULL;
+void deletedForegroundProcesses(Queue *queue) {
+  Node *current = queue->front;
+  Node *prev = NULL;
 
-    while (current != NULL) {
-        if (current->data->foreground && current->data->pid > 1) {
-            if (prev == NULL) {
-                // Si el proceso a eliminar es el primer elemento de la cola
-                queue->front = current->next;
-                if (queue->front == NULL) {
-                    queue->rear = NULL;
-                }
-            } else {
-                // Si el proceso a eliminar está en una posición distinta al principio
-
-                prev->next = current->next;
-                if (prev->next == NULL) {
-                    queue->rear = prev;
-                }
-            }
-
-            pcb *data = current->data;
-            free(current);
-            return data;
-        } else {
-            prev = current;
+  while (current != NULL) {
+    if (current->data->foreground && current->data->pid > 1) {
+      if (prev == NULL) {
+        // Si el proceso a eliminar es el primer elemento de la cola
+        queue->front = current->next;
+        if (queue->front == NULL) {
+          queue->rear = NULL;
         }
+      } else {
+        // Si el proceso a eliminar está en una posición distinta al principio
 
-        current = current->next;
+        prev->next = current->next;
+        if (prev->next == NULL) {
+          queue->rear = prev;
+        }
+      }
+      freePcb(current->data);
+      free(current);
+    } else {
+      prev = current;
     }
 
-
-    return NULL; // No se encontró un proceso con el PID especificado
+    current = current->next;
+  }
 }

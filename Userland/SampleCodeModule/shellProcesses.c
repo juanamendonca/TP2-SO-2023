@@ -192,13 +192,14 @@ void catP(unsigned int argc, char *argv[]) {
     print("Wrong arguments");
     return;
   }
-  sys_get_clean_buffer();
+  // sys_get_clean_buffer();
 
   char c[2];
   c[1] = '\0'; // Corrected array index and assigned '\0' to the second element
   while ((c[0] = getChar()) != '\0') {
     print(c);
   }
+  print(c);
   print("terminanado cat");
 }
 

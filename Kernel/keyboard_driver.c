@@ -95,7 +95,9 @@ void keyHandler(uint64_t scancode) {
     if (ctrl && scancode == 32) {
       killCurrent();
     } else if (ctrl && scancode == 46) {
-      writeEOF();
+      // writeEOF();
+      buff[rear++] = '\0';
+      cantElems++;
     } else if (keyBoardTable[(int)tecla] != 0) {
       buff[rear++] = keyBoardTable[(int)tecla];
       cantElems++;

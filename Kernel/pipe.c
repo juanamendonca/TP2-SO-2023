@@ -81,8 +81,8 @@ uint64_t pipeClose(uint64_t pipeIndex) {
     return -1;
   }
 
-  int closeRead = sem_close(pipes[pipeIndex].pipe.semRead);
-  int closeWrite = sem_close(pipes[pipeIndex].pipe.semWrite);
+  int closeRead = sem_close(pipes[pipeIndex - 1].pipe.semRead);
+  int closeWrite = sem_close(pipes[pipeIndex - 1].pipe.semWrite);
 
   if (closeRead == -1 || closeWrite == -1) {
     putArrayNext("pipeClose: Error in semaphore close for the pipe\n", WHITE);
@@ -94,7 +94,7 @@ uint64_t pipeClose(uint64_t pipeIndex) {
     putArrayNext("Error sem_post in pipeClose\n", WHITE);
     return -1;
   }
-  return 1;
+  return 0;
 }
 
 uint64_t writePipe(uint64_t pipeIndex, char *string) {
@@ -124,7 +124,7 @@ uint64_t writeChar(uint64_t pipeIndex, char c) {
     print("Error in sem_post in writeChar\n");
     return -1;
   }
-  return 1;
+  return 0;
 }
 
 char readPipe(uint64_t pipeIndex) {
@@ -173,8 +173,8 @@ static uint64_t createPipe(char *name) {
     char nameR[MAX_NAME];
     memcpy(nameR, name, len);
     nameR[len] = 'R';
-    int semRead = sem_open(nameR, 0);
     nameR[len + 1] = '\0';
+    int semRead = sem_open(nameR, 0);
     char nameW[MAX_NAME];
     memcpy(nameW, name, len);
     nameW[len] = 'W';

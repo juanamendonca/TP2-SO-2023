@@ -447,20 +447,12 @@ pcb *getProcessWithId(int pid) { return getProcessP(queue, pid); }
 
 pcb *getCurrentPcb() { return currentPcb; }
 
-void killCurrentForeground(){
-    pcb *process = getAndDeleteFirstProcessP(queue);
+void killCurrentForeground() {
+  deletedForegroundProcessesP(queue);
 
-    if (process == NULL) {
-        return;
-    }
-    process = currentPcb;
-
-    if (process->waitingPid > 0) {
-        unblock(process->ppid);
-    }
-    // changeState(pid, KILLED);
-    freePcb(process);
-    currentPcb = NULL;
+  if (currentPcb->foreground) {
+    killCurrent();
     callTimer();
-    return;
+  }
+  return;
 }

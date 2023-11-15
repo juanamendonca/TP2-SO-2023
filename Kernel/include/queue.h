@@ -28,5 +28,6 @@ int hasNext(Queue *queue);
 pcb *next(Queue *queue);
 pcb *getAndDeleteProcess(Queue *queue, int pid);
 pcb *getAndDeleteFirstProcess(Queue *queue);
+void deletedForegroundProcesses(Queue *queue);
 
 #endif
