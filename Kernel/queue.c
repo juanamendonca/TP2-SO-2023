@@ -204,6 +204,9 @@ void deletedForegroundProcesses(Queue *queue) {
         }
       }
       next = current->next;
+      if (current->data->waitingPid > 0) {
+        unblock(current->data->ppid);
+      }
       freePcb(current->data);
       free(current);
     } else {

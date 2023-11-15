@@ -75,6 +75,7 @@ void *scheduler(void *rsp) {
     }
   } else if (currentPcb->pid == dummyPcb->pid) {
     if (isEmptyPReady(queue)) {
+      dummyPcb->rsp = rsp;
       return rsp;
     } else {
       dummyPcb->rsp = rsp;
@@ -406,7 +407,7 @@ pcb *getCurrentPcb() { return currentPcb; }
 void killCurrentForeground() {
   deletedForegroundProcessesP(queue);
 
-  if (currentPcb->foreground && currentPcb->pid != dummyPcb->pid) {
+  if (currentPcb->foreground) {
     killCurrent();
   }
   return;
