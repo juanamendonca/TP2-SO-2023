@@ -15,12 +15,11 @@ int isEmptyPReady(PriorityQueue *queue);
 void enqueueP(PriorityQueue *queue, pcb *data, int priority);
 pcb *dequeueP(PriorityQueue *queue);
 pcb *dequeuePReady(PriorityQueue *queue);
-void destroyP(PriorityQueue *queue);
 pcb *getProcessP(PriorityQueue *queue, int pid);
 void startIteratorP(PriorityQueue *queue);
 int hasNextP(PriorityQueue *queue);
 pcb *nextP(PriorityQueue *queue);
 pcb *getAndDeleteProcessP(PriorityQueue *queue, int pid);
-void deletedForegroundProcessesP(queue);
+void deletedForegroundProcessesP(PriorityQueue *queue);
 
 #endif

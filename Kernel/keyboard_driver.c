@@ -92,12 +92,13 @@ void keyHandler(uint64_t scancode) {
     if (front == BUFF_SIZE)
       front = 0;
 
-    if (ctrl && scancode == 32) {
-      killCurrent();
-    } else if (ctrl && scancode == 46) {
-      // writeEOF();
-      buff[rear++] = '\0';
-      cantElems++;
+    if ( scancode == 32) {
+        writeEOF();
+//        killCurrentForeground();
+    } else if (scancode == 0x1D) {
+
+//      buff[rear++] = '\0';
+//      cantElems++;
     } else if (keyBoardTable[(int)tecla] != 0) {
       buff[rear++] = keyBoardTable[(int)tecla];
       cantElems++;

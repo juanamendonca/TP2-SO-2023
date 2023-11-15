@@ -185,8 +185,10 @@ pcb *getAndDeleteProcess(Queue *queue, int pid) {
 void deletedForegroundProcesses(Queue *queue) {
   Node *current = queue->front;
   Node *prev = NULL;
+  Node *next = NULL;
 
   while (current != NULL) {
+      putArrayNext("from queue WHILE\n",WHITE);
     if (current->data->foreground && current->data->pid > 1) {
       if (prev == NULL) {
         // Si el proceso a eliminar es el primer elemento de la cola
@@ -202,12 +204,15 @@ void deletedForegroundProcesses(Queue *queue) {
           queue->rear = prev;
         }
       }
+      next = current->next;
       freePcb(current->data);
       free(current);
     } else {
+      next = current->next;
       prev = current;
     }
 
-    current = current->next;
+    current = next;
   }
+    putArrayNext("OUTSIDE queue WHILE\n",WHITE);
 }

@@ -452,7 +452,6 @@ void killCurrentForeground() {
 
   if (currentPcb->foreground) {
     killCurrent();
-    callTimer();
   }
   return;
 }

@@ -98,13 +98,6 @@ pcb *dequeuePReady(PriorityQueue *queue) {
                // NULL
 }
 
-void destroyP(PriorityQueue *queue) {
-  destroyQueue(queue->q1);
-  destroyQueue(queue->q2);
-  destroyQueue(queue->q3);
-  destroyQueue(queue->q4);
-  free(queue);
-}
 
 pcb *getProcessP(PriorityQueue *queue, int pid) {
   pcb *process = getProcess(queue->q1, pid);
@@ -125,6 +118,8 @@ pcb *getProcessP(PriorityQueue *queue, int pid) {
   process = getProcess(queue->q4, pid);
   return process; // Si se encuentra el proceso en q4 o no se encuentra en
                   // ninguna cola, se devuelve
+
+
 }
 
 void startIteratorP(PriorityQueue *queue) {
@@ -181,8 +176,11 @@ pcb *getAndDeleteProcessP(PriorityQueue *queue, int pid) {
 }
 
 void deletedForegroundProcessesP(PriorityQueue *queue) {
+    putArrayNext("from prio\n",WHITE);
   deletedForegroundProcesses(queue->q1);
+    putArrayNext("from prio\n",WHITE);
   deletedForegroundProcesses(queue->q2);
+    putArrayNext("from prio\n",WHITE);
   deletedForegroundProcesses(queue->q3);
   deletedForegroundProcesses(queue->q4);
 }

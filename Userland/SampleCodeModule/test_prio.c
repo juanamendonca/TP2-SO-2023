@@ -3,6 +3,7 @@
 #include "test_util.h"
 #include "user_syscalls.h"
 #include <stdint.h>
+#include <stddef.h>
 
 #define MINOR_WAIT                                                             \
   1000000 // TODO: Change this value to prevent a process from flooding the
@@ -25,10 +26,10 @@ void test_prio() {
   int64_t pids[TOTAL_PROCESSES];
   char *argv[] = {"endless_loop_print"};
   uint64_t i;
-  int fd[] = {0, 0};
+
 
   for (i = 0; i < TOTAL_PROCESSES; i++)
-    pids[i] = sys_create_process(&printWrapper, 1, argv, -1, fd);
+    pids[i] = sys_create_process(&printWrapper, 1, argv, -1, NULL);
 
   bussy_wait(WAIT);
   print("\nCHANGING PRIORITIES...\n");
