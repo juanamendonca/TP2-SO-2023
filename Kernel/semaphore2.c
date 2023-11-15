@@ -117,22 +117,22 @@ int deleteFromQueueS(int id) {
   while (current != NULL) {
     if (current->id == id) {
       if (prev == NULL) {
-        // El proceso está al principio de la lista
+        // The process is at the beginning of the list
         sems = current->next;
         if (sems == NULL) {
-          // Si la lista queda vacía, actualiza lastProcess también
+          // If the list becomes empty, update lastProcess as well
           semsL = NULL;
         }
       } else {
-        // El proceso está en alguna posición intermedia o al final
+        // The process is in an intermediate position or at the end
         prev->next = current->next;
         if (prev->next == NULL) {
-          // Si el proceso estaba al final, actualiza lastProcess
+          // If the process was at the end, update lastProcess
           semsL = prev;
         }
       }
 
-      // Libera la memoria del nodo eliminado
+      // Free the memory of the deleted node
       free(current);
       return 0;
     }

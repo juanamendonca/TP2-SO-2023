@@ -134,7 +134,7 @@ int initializePcb(pcb *newProcess, int argc, char **argv, int foreground,
     arguments[i] = malloc(sizeof(char) * (strlen(argv[i]) + 1));
     if (arguments[i] == NULL) {
       i--;
-      // Libero los que guarde hasta ahora
+      // free the ones we save up to now
       while (i >= 0) {
         free(arguments[i]);
         i -= 1;
@@ -285,7 +285,8 @@ void freePcb(pcb *process) {
     return;
   }
 
-  // Libera la memoria asignada para los argumentos del proceso
+  // Frees the memory allocated for the process arguments
+  
   if (process->argv != NULL) {
     for (int i = 0; i < process->argc; i++) {
       free(process->argv[i]);

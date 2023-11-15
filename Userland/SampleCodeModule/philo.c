@@ -67,11 +67,11 @@ void phyloProcess(unsigned int argc, char **argv) {
   int index = argc - 1;
   while (1) {
     sys_sleep(1);
-    // Busca chopsticks ya que tiene hambre.
+    // search chopsticks, is hungry
     takeChopstick(index);
 
     sys_sleep(1);
-    // Termino de comer, deja sus chopsticks.
+    // Finish eating, left their chopsticks.
     putChopstick(index);
   }
 }

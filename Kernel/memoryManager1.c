@@ -30,7 +30,7 @@ void createMemoryManager(void * heap){
 
 void *malloc(const size_t size) {
 
-    size_t blocksQty = (size + BLOCK_SIZE - 1) / BLOCK_SIZE; // Cant de bloques a asignar
+    size_t blocksQty = (size + BLOCK_SIZE - 1) / BLOCK_SIZE; // Blocks quantity to assign
 
     int contiguousFreeBlocks = 0;
     int firstBlockIndex = -1;
@@ -38,9 +38,9 @@ void *malloc(const size_t size) {
     for (int it_block = 0; it_block < BITMAP_SIZE; it_block++) {
         for (int it_bit = 0; it_bit < BLOCK_PER_BYTE; it_bit++) {
 
-            int state = (bitmap[it_block] >> (it_bit * 2)) & 0x03; //busco un bloque libre 00
+            int state = (bitmap[it_block] >> (it_bit * 2)) & 0x03; // Search for a free block
 
-            //Busca blocksQty cantidad de bloques libres que son los q voy a asignar
+            //Search blocksQty blocks quantity (free ones) that will be assigned
             if (state == 0) {
                 if (contiguousFreeBlocks == 0) {
                     firstBlockIndex = (it_block * BLOCK_PER_BYTE) + it_bit;
@@ -48,7 +48,7 @@ void *malloc(const size_t size) {
                 contiguousFreeBlocks++;
 
                 if (contiguousFreeBlocks == blocksQty) {
-                    //Marco los bloques como FIRST USED USED... desde el primer bloque libre
+                    //Mark block as FIRST USED USED... from the first free block
                     for (int i = firstBlockIndex; i < firstBlockIndex + blocksQty; i++) {
                         int byteIndex = i / BLOCK_PER_BYTE;
                         int bitOffset = (i % BLOCK_PER_BYTE) * 2;
@@ -60,11 +60,11 @@ void *malloc(const size_t size) {
                     }
 
 
-                    //calculo el address en funcion de la posicion del bitmap
+                    //Calculates the address in function of bitmap position
                     return (void*)((uint64_t)memStart + (firstBlockIndex * BLOCK_SIZE));
                 }
             } else {
-                // Si no alcanzan los bloques libres resetear
+                // If there is not enough free block, then reset
                 contiguousFreeBlocks = 0;
                 firstBlockIndex = -1;
             }
@@ -76,13 +76,13 @@ void *malloc(const size_t size) {
 }
 
 void free(void *memory) {
-    //Busco la ubicacion del bloque en el bitmap
+    //Search for the block location in the bitmap 
     int firstBlockIndex = ((uint64_t)memory - (uint64_t)memStart) / BLOCK_SIZE;
 
 
     int i;
 
-    //Iteramos hasta encontrar el siguiente FIRST
+    //Iterate up to find the next FIRST
     for (i = firstBlockIndex; i < BITMAP_SIZE * BLOCK_PER_BYTE; i++) {
         int byteIndex = i / BLOCK_PER_BYTE;
         int bitOffset = (i % BLOCK_PER_BYTE) * 2;
@@ -92,7 +92,7 @@ void free(void *memory) {
             break;
         }
 
-        bitmap[byteIndex] &= ~(0x03 << bitOffset); // seteo en 00 los bits a medida q hago el ciclo
+        bitmap[byteIndex] &= ~(0x03 << bitOffset); 
     }
   return;
 }

@@ -16,8 +16,8 @@ void getRegInfo() {
     else{
         print("-- REGISTER VALUES --\n");
         enter();
-        char *registersO[] = {"RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "R8 ", "R9 " , "R10", "R11", "R12", "R13", "R14", "R15"};
-        for (int i = 0; i < 15; i++) {
+        char *registersO[] = {"RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "R8 ", "R9 " , "R10", "R11", "R12", "R13", "R14", "R15","RSP"};
+        for (int i = 0; i < 16; i++) {
         print(registersO[i]);
         print(": 0x");
         printHexa(registers[i]);
@@ -60,6 +60,8 @@ void regsTester(){
 	print("R14:E");
 	enter();
 	print("R15:F");
+	enter();
+	print("RSP:An hexa number");
 	enter();
 	print("Press 'CTRL' now");
 	enter();

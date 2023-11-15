@@ -1,8 +1,8 @@
 #include "strings.h"
 #include "video.h"
-#include <stddef.h> // Para el tipo size_t
+#include <stddef.h> // For type size_t
 
-// Implementación de la función my_strcpy
+// Function strcpy implementation
 void strcpy(char *dest, const char *src) {
   while ((*dest = *src) != '\0') {
     dest++;
@@ -10,7 +10,7 @@ void strcpy(char *dest, const char *src) {
   }
 }
 
-// Implementación de la función my_strlen
+// Function strlen implementation
 int strlen(const char *str) {
   int length = 0;
   while (*str != '\0') {

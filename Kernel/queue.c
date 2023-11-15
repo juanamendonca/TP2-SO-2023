@@ -5,30 +5,34 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// Function to create a new Queue
 Queue *createQueue() {
   Queue *queue = (Queue *)malloc(sizeof(Queue));
   if (!queue) {
     return NULL;
   }
-  queue->front = queue->rear = queue->iterator = NULL; // Inicializa el iterador
+  queue->front = queue->rear = queue->iterator = NULL; // Initialize the iterator
   return queue;
 }
 
+// Function to check if the Queue is empty
 int isEmpty(Queue *queue) { return queue->front == NULL; }
 
+// Function to check if there is at least one process in READY state in the Queue
 int isEmptyReady(Queue *queue) {
   Node *current = queue->front;
 
   while (current != NULL) {
     if (current->data->state == READY) {
-      return 0; // Se encontró al menos un proceso en estado READY
+      return 0; // Found at least one process in READY state
     }
     current = current->next;
   }
 
-  return 1; // No se encontraron procesos en estado READY
+  return 1; // No processes in READY state found
 }
 
+// Function to add a process to the Queue
 void enqueue(Queue *queue, pcb *data) {
   Node *newNode = (Node *)malloc(sizeof(Node));
   if (!newNode) {
@@ -46,6 +50,7 @@ void enqueue(Queue *queue, pcb *data) {
   queue->rear = newNode;
 }
 
+// Function to remove and return the first process from the Queue
 pcb *dequeue(Queue *queue) {
   if (isEmpty(queue)) {
     return NULL;
@@ -65,6 +70,7 @@ pcb *dequeue(Queue *queue) {
   return data;
 }
 
+// Function to dequeue and return the first process in READY state
 pcb *dequeueReady(Queue *queue) {
   if (isEmpty(queue)) {
     return NULL;
@@ -76,15 +82,15 @@ pcb *dequeueReady(Queue *queue) {
   while (current != NULL) {
     if (current->data->state == READY) {
 
-      // Se encontró un PCB en estado READY, devolverlo y eliminarlo
+      // Found a PCB in READY state, return and remove it
       if (prev == NULL) {
-        // Si el primer elemento de la cola está en estado READY
+        // If the first element of the queue is in READY state
         queue->front = current->next;
         if (queue->front == NULL) {
           queue->rear = NULL;
         }
       } else {
-        // Si el PCB en estado READY está en una posición distinta al principio
+        // If the PCB in READY state is not at the beginning
         prev->next = current->next;
         if (prev->next == NULL) {
           queue->rear = prev;
@@ -95,15 +101,15 @@ pcb *dequeueReady(Queue *queue) {
       free(current);
       return data;
     } else if (current->data->state == KILLED) {
-      // Se encontró un PCB en estado KILLED, eliminarlo
+      // Found a PCB in KILLED state, remove it
       if (prev == NULL) {
-        // Si el primer elemento de la cola está en estado KILLED
+        // If the first element of the queue is in KILLED state
         queue->front = current->next;
         if (queue->front == NULL) {
           queue->rear = NULL;
         }
       } else {
-        // Si el PCB en estado KILLED está en una posición distinta al principio
+        // If the PCB in KILLED state is not at the beginning
         prev->next = current->next;
         if (prev->next == NULL) {
           queue->rear = prev;
@@ -118,9 +124,10 @@ pcb *dequeueReady(Queue *queue) {
     current = current->next;
   }
 
-  return NULL; // No se encontró un PCB en estado READY
+  return NULL; // No PCB in READY state found
 }
 
+// Function to get the first process in the Queue
 pcb *front(Queue *queue) {
   if (isEmpty(queue)) {
     return NULL;
@@ -128,6 +135,7 @@ pcb *front(Queue *queue) {
   return queue->front->data;
 }
 
+// Function to find a process by its PID
 pcb *getProcess(Queue *queue, int pid) {
   Node *current = queue->front;
   while (current != NULL) {
@@ -139,16 +147,20 @@ pcb *getProcess(Queue *queue, int pid) {
   return NULL;
 }
 
+// Function to initialize the Queue iterator
 void startIterator(Queue *queue) { queue->iterator = queue->front; }
 
+// Function to check if there is a next element in the Queue during iteration
 int hasNext(Queue *queue) { return queue->iterator != NULL; }
 
+// Function to return the next element in the Queue during iteration
 pcb *next(Queue *queue) {
   pcb *toReturn = queue->iterator->data;
   queue->iterator = queue->iterator->next;
   return toReturn;
 }
 
+// Function to find and delete a process by its PID
 pcb *getAndDeleteProcess(Queue *queue, int pid) {
   Node *current = queue->front;
   Node *prev = NULL;
@@ -156,13 +168,13 @@ pcb *getAndDeleteProcess(Queue *queue, int pid) {
   while (current != NULL) {
     if (current->data->pid == pid) {
       if (prev == NULL) {
-        // Si el proceso a eliminar es el primer elemento de la cola
+        // If the process to delete is the first element of the queue
         queue->front = current->next;
         if (queue->front == NULL) {
           queue->rear = NULL;
         }
       } else {
-        // Si el proceso a eliminar está en una posición distinta al principio
+        // If the process to delete is not at the beginning
         prev->next = current->next;
         if (prev->next == NULL) {
           queue->rear = prev;
@@ -179,9 +191,10 @@ pcb *getAndDeleteProcess(Queue *queue, int pid) {
     current = current->next;
   }
 
-  return NULL; // No se encontró un proceso con el PID especificado
+  return NULL; // No process found with the specified PID
 }
 
+// Function to delete all foreground processes with a PID greater than 1
 void deletedForegroundProcesses(Queue *queue) {
   Node *current = queue->front;
   Node *prev = NULL;
@@ -190,14 +203,13 @@ void deletedForegroundProcesses(Queue *queue) {
   while (current != NULL) {
     if (current->data->foreground && current->data->pid > 1) {
       if (prev == NULL) {
-        // Si el proceso a eliminar es el primer elemento de la cola
+        // If the process to delete is the first element of the queue
         queue->front = current->next;
         if (queue->front == NULL) {
           queue->rear = NULL;
         }
       } else {
-        // Si el proceso a eliminar está en una posición distinta al principio
-
+        // If the process to delete is not at the beginning
         prev->next = current->next;
         if (prev->next == NULL) {
           queue->rear = prev;

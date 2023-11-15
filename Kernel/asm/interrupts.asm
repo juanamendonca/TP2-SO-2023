@@ -241,6 +241,10 @@ _irq01Handler:
 	mov [regs+13*8], r14
 	mov [regs+14*8], r15
 
+	add rsp, 8
+	mov [regs + 16*8], rsp ; Valore previo rsp.
+	sub rsp, 8
+
 	mov rax, [rsp+14*8]
 	mov [regs], rax ;RAX
 

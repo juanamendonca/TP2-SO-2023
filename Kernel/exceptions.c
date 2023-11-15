@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include "video.h"
 
-#define REGISTERS_QTY 16
+#define REGISTERS_QTY 17
 
 extern const uint64_t regs[18];
 void zeroException();
@@ -23,7 +23,7 @@ void exceptionDispatcher(void * excepCode){
 
 	printError("--REGISTERS AT TIME OF EXCEPTION--");
 	putLine();
-	char * registers[REGISTERS_QTY] = {"RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "R8 ", "R9 ", "R10", "R11", "R12", "R13", "R14", "R15","RIP"};
+	char * registers[REGISTERS_QTY] = {"RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "R8 ", "R9 ", "R10", "R11", "R12", "R13", "R14", "R15","RIP","RSP"};
 	for(int i = 0; i < REGISTERS_QTY; i++){
         int j = 0;
 		while(registers[i][j] != 0){
@@ -51,5 +51,4 @@ void invalidOpException(){
 	printError("ERROR: INVALID OPERATION CODE");
 	putLine();
 }
-
 

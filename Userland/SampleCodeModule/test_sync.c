@@ -58,17 +58,17 @@ void my_process_inc(unsigned int argc, char *argv[]) {
   return;
 }
 
-// Los parametros a recibir son arg[1] = # de inc, arg[2] = 0 o 1 si se usa
-// semaforo o no
+// The parameters to be received are arg[1] = number of increments, arg[2] = 0 or 1 if a semaphore is used or not
+
 void test_sync(unsigned int argc, char *argv[]) { //{n, use_sem, 0}
   int pids[2 * TOTAL_PAIR_PROCESSES];
 
   if (argc != 3) {
-    print("# de args equivocados.");
+    print("#  args wrong.");
     return;
   }
   if ((satoi(argv[1])) <= 0) {
-    print("arg0 no es > 0");
+    print("arg0 is not > 0");
     return;
   }
 

@@ -2,10 +2,10 @@
 #ifndef MYSTRING_H
 #define MYSTRING_H
 
-// Función para copiar una cadena de origen en una cadena de destino
+// Function to copy an array from a source to a dest
 void strcpy(char *dest, const char *src);
 
-// Función para calcular la longitud de una cadena
+// Calculates array lenght
 int strlen(const char *str);
 
 int strcmp(char *s1, char *s2);

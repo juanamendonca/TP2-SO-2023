@@ -14,14 +14,14 @@
 static command commandsInfo[] = {
     {&helpP, "HELP", "to get the information on the available commands"},
     {&getTimeP, "TIME", "to get the current time"},
-    {&clearP, "CLEAR", ": to clear the terminal"},
+    {&clearP, "CLEAR", "to clear the terminal"},
     //{&pongP, "PONG", "to play game"},
     {&getRegInfoP, "REGISTERS", "to print register status"},
     {&regsTesterP, "REGISTER-TESTER",
      "to check the correct loading of registers "},
-    {&divisionTesterP, "ZERO", ": to trigger divide by zero exception"},
+    {&divisionTesterP, "ZERO", "to trigger divide by zero exception"},
     {&invalidOpTesterP, "INVALIDOP", "to trigger invalid operation exception "},
-    {&infoProcessesP, "PS", ": to get all the processes info"},
+    {&infoProcessesP, "PS", "to get all the processes info"},
     {&testProcessesP, "TEST-PROCESSES $1", "to test the scheduler, $1: qty of procceses to create"},
     {&testPrioP, "TEST-PRIO", "to test the scheduler priorities"},
     {&memoryP, "MEMORY", "to print the current usage of memory"},
@@ -48,7 +48,10 @@ void help();
 
 void help() {
   print("The available commands are:\n");
-  print("Press Left Shift send EOF\nPress Right Shift to kill all foreground processes");
+  print("Press ESC send EOF\nPress Right Shift to kill all foreground processes\n");
+  print("To execute the command in the background, append 'B' to the end of the command line.\n");
+  print("To use a pipe, separate the commands with a slash, like 'command1 / command2'\n");
+
   enter();
   int numCommands = sizeof(commandsInfo) / sizeof(commandsInfo[0]);
   for (int i = 0; i < numCommands; i++) {
@@ -124,11 +127,11 @@ int parseArgs(char *argString, char **args) {
 
   for (int i = 0; argString[i] != '\0'; i++) {
     if (argString[i] != ' ' && argStart == -1) {
-      // Comienza un nuevo argumento
+      // Starts a new argument 
       argStart = i;
     }
     if ((argString[i] == ' ' || argString[i + 1] == '\0') && argStart != -1) {
-      // Termina el argumento actual
+      // Stops the current argument
       if (argString[i] == ' ') {
         argString[i] = '\0';
       }

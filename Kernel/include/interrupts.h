@@ -33,7 +33,7 @@ void picMasterMask(uint8_t mask);
 
 void picSlaveMask(uint8_t mask);
 
-// Termina la ejecución de la cpu.
+// Kill CPU execution.
 void haltcpu(void);
 
 void callTimer(void);

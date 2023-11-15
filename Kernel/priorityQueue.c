@@ -52,73 +52,66 @@ void enqueueP(PriorityQueue *queue, pcb *data, int priority) {
 pcb *dequeueP(PriorityQueue *queue) {
   pcb *data = dequeue(queue->q1);
   if (data != NULL) {
-    return data; // Si se encuentra un proceso en q1, se devuelve
+    return data; // If a proccess is found in q1 then is returned
   }
 
   data = dequeue(queue->q2);
   if (data != NULL) {
-    return data; // Si se encuentra un proceso en q2, se devuelve
+    return data; // If a proccess is found in q2 then is returned
   }
 
   data = dequeue(queue->q3);
   if (data != NULL) {
-    return data; // Si se encuentra un proceso en q3, se devuelve
+    return data; // If a proccess is found in q3 then is returned
   }
 
   data = dequeue(queue->q4);
-  return data; // Se devuelva el proceso en q4 o NULL si no se encuentra ninguno
+  return data; // A process is returned in q4 or NULL if nothing is found.
 }
 
 pcb *dequeuePReady(PriorityQueue *queue) {
   pcb *data = dequeueReady(queue->q1);
   if (data != NULL) {
-    return data; // Si se encuentra un proceso en q1 en estado READY, se
-                 // devuelve
+    return data; // If a proccess is found in q1 in a READY STATE then is returned
   }
 
   data = dequeueReady(queue->q2);
   if (data != NULL) {
-    return data; // Si se encuentra un proceso en q2 en estado READY, se
-                 // devuelve
+    return data; // If a proccess is found in q2 in a READY STATE then is returned
   }
 
   data = dequeueReady(queue->q3);
   if (data != NULL) {
-    return data; // Si se encuentra un proceso en q3 en estado READY, se
-                 // devuelve
+    return data; // If a proccess is found in q3 in a READY STATE then is returned
   }
 
   data = dequeueReady(queue->q4);
   if (data != NULL) {
-    return data; // Si se encuentra un proceso en q4 en estado READY, se
-                 // devuelve
+    return data; // If a proccess is found in q4 in a READY STATE then is returned
   }
 
-  return NULL; // Si no se encuentra ningún proceso en estado READY, se devuelve
-               // NULL
+  return NULL; // NULL is returned if no proccess is found
 }
 
 
 pcb *getProcessP(PriorityQueue *queue, int pid) {
   pcb *process = getProcess(queue->q1, pid);
   if (process != NULL) {
-    return process; // Si se encuentra el proceso en q1, se devuelve
+    return process; // If a proccess is found in q1 then is returned
   }
 
   process = getProcess(queue->q2, pid);
   if (process != NULL) {
-    return process; // Si se encuentra el proceso en q2, se devuelve
+    return process; //If a proccess is found in q2 then is returned
   }
 
   process = getProcess(queue->q3, pid);
   if (process != NULL) {
-    return process; // Si se encuentra el proceso en q3, se devuelve
+    return process; // If a proccess is found in q3 then is returned
   }
 
   process = getProcess(queue->q4, pid);
-  return process; // Si se encuentra el proceso en q4 o no se encuentra en
-                  // ninguna cola, se devuelve
-
+  return process; // A process is returned in q4 or NULL if nothing is found.
 
 }
 
@@ -154,25 +147,24 @@ pcb *getAndDeleteProcessP(PriorityQueue *queue, int pid) {
   pcb *process = getAndDeleteProcess(queue->q1, pid);
   if (process != NULL) {
 
-    return process; // Si se encuentra el proceso en q1, se devuelve
+    return process; // If a proccess is found in q1 then is returned
   }
 
   process = getAndDeleteProcess(queue->q2, pid);
   if (process != NULL) {
 
-    return process; // Si se encuentra el proceso en q2, se devuelve
+    return process; // If a proccess is found in q2 then is returned
   }
 
   process = getAndDeleteProcess(queue->q3, pid);
   if (process != NULL) {
 
-    return process; // Si se encuentra el proceso en q3, se devuelve
+    return process; // If a proccess is found in q3 then is returned
   }
 
   process = getAndDeleteProcess(queue->q4, pid);
 
-  return process; // Si se encuentra el proceso en q4 o no se encuentra en
-                  // ninguna cola, se devuelve
+  return process; // If a proccess is found in q4 then is returned
 }
 
 void deletedForegroundProcessesP(PriorityQueue *queue) {
