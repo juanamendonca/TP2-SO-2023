@@ -183,8 +183,8 @@ int runCommandPipes(int c1, int c2, char **argv, int argc, int pipe) {
     return -1;
   }
 
+  sys_waitpid(pid1);
   sys_waitpid(pid2);
-  sys_kill_process(pid1);
   sys_pipe_close(pipeId);
   return 0;
 }

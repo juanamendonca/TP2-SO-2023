@@ -11,8 +11,9 @@
 #define CONTROL 0x1D
 #define STDIN 0
 
-static char buff[BUFF_SIZE] = {0}; // Circular vector. When buff reaches max capacity older elements are
-                                   // overwritten. Keyboard buffer
+static char buff[BUFF_SIZE] = {
+    0}; // Circular vector. When buff reaches max capacity older elements are
+        // overwritten. Keyboard buffer
 static int front = 0; // Position of the first element
 static int rear = 0;  // Position of last added element
 static int cantElems = 0;
@@ -53,13 +54,16 @@ void cleanBuffer() {
 }
 
 void writeEOF() {
-  pcb *pcb = getCurrentPcb();
-  if (pcb->fd[0] == STDIN) {
-    buff[rear++] = '\0';
-    cantElems++;
-  } else {
-    writeChar(pcb->fd[0], '\0');
-  }
+  // pcb *pcb = getCurrentPcb();
+  // putArrayNext(pcb->name, WHITE);
+  // if (pcb->fd[0] == STDIN) {
+  //   buff[rear++] = '\0';
+  //   cantElems++;
+  // } else {
+  //   writeChar(pcb->fd[0], '\0');
+  // }
+  buff[rear++] = '\0';
+  cantElems++;
 }
 
 void keyHandler(uint64_t scancode) {
@@ -69,7 +73,6 @@ void keyHandler(uint64_t scancode) {
     if (cantElems == BUFF_SIZE) {
       return;
     }
-
 
     if (tecla == CONTROL) {
       savedRegs = true;
@@ -82,10 +85,10 @@ void keyHandler(uint64_t scancode) {
     if (front == BUFF_SIZE)
       front = 0;
 
-    if ( scancode == 0x2A) {        //left shift
-        writeEOF();
-    } else if (scancode == 0x36) {  //right shift
-        killCurrentForeground();
+    if (scancode == 0x2A) { // left shift
+      writeEOF();
+    } else if (scancode == 0x36) { // right shift
+      killCurrentForeground();
     } else if (keyBoardTable[(int)tecla] != 0) {
       buff[rear++] = keyBoardTable[(int)tecla];
       cantElems++;

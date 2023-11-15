@@ -106,6 +106,8 @@ uint64_t writePipe(uint64_t pipeIndex, char *string) {
       return -1;
   }
 
+  writeChar(pipeIndex, '\0');
+
   return 0;
 }
 

@@ -99,7 +99,8 @@ int sys_semClose(int id) {
 }
 
 int sys_semOpen(char *id, int initialValue) {
-  return sys_int_80((uint64_t)25, (uint64_t)id, (uint64_t)initialValue, 0, 0,0);
+  return sys_int_80((uint64_t)25, (uint64_t)id, (uint64_t)initialValue, 0, 0,
+                    0);
 }
 
 void sys_sem() { sys_int_80((uint64_t)28, 0, 0, 0, 0, 0); }
@@ -128,4 +129,8 @@ char sys_pipe_read(int id) {
 
 int sys_pipe_write(int id, char *info) {
   return sys_int_80((uint64_t)34, (uint64_t)id, (uint64_t)info, 0, 0, 0);
+}
+
+void sys_put_char(char c, int color) {
+  sys_int_80((uint64_t)35, (uint64_t)c, (uint64_t)color, 0, 0, 0);
 }

@@ -57,6 +57,7 @@ void _7_write_dec(uint64_t c, uint64_t color, uint64_t r3, uint64_t r4,
                   uint64_t r5) {
   putDecNext((int)c, color);
 }
+
 void _8_beep(uint64_t frequency, uint64_t time, uint64_t r3, uint64_t r4,
              uint64_t r5) {
   beep((int)frequency, (int)time);
@@ -200,6 +201,11 @@ int _34_pipe_write(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
   return writePipe((uint64_t)r1, (char *)r2);
 }
 
+void _35_put_char(uint64_t c, uint64_t color, uint64_t r3, uint64_t r4,
+                  uint64_t r5) {
+  putChar((char)c, (int)color);
+}
+
 static syscall syscalls[] = {(syscall)_0_empty,
                              (syscall)_1_write,
                              (syscall)_2_read,
@@ -234,7 +240,8 @@ static syscall syscalls[] = {(syscall)_0_empty,
                              (syscall)_31_pipe_open,
                              (syscall)_32_pipe_close,
                              (syscall)_33_pipe_read,
-                             (syscall)_34_pipe_write};
+                             (syscall)_34_pipe_write,
+                             (syscall)_35_put_char};
 
 int64_t sysDispatcher(uint64_t syscallNumber, uint64_t r1, uint64_t r2,
                       uint64_t r3, uint64_t r4, uint64_t r5) {

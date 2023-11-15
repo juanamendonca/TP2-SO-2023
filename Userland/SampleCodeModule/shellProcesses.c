@@ -139,7 +139,7 @@ void loopP(unsigned int argc, char *argv[]) {
   }
   int pid = sys_get_pid();
   while (1) {
-    sys_sleep(5);
+    sys_sleep(2);
     printInt(pid);
   }
 }
@@ -197,10 +197,9 @@ void catP(unsigned int argc, char *argv[]) {
   char c[2];
   c[1] = '\0'; // Corrected array index and assigned '\0' to the second element
   while ((c[0] = getChar()) != '\0') {
-    print(c);
+    sys_put_char(c[0], WHITE);
   }
-  print(c);
-  print("\nending cat...");
+  sys_put_char(c[0], WHITE);
 }
 
 void wcP(unsigned int argc, char *argv[]) {
@@ -238,10 +237,11 @@ void filterP(unsigned int argc, char *argv[]) {
         c[0] == 'u' || c[0] == 'A' || c[0] == 'E' || c[0] == 'I' ||
         c[0] == 'O' || c[0] == 'U') {
     } else {
-      print(c);
+      sys_put_char(c[0], WHITE);
     }
     sys_read(c);
   }
+  sys_put_char(c[0], WHITE);
 }
 
 void phyloP(unsigned int argc, char *argv[]) {

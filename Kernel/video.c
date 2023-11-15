@@ -4,7 +4,6 @@
 #include <font.h>
 #include <video.h>
 
-
 #define CHAR_WIDTH 8
 #define CHAR_HEIGHT 16
 
@@ -204,6 +203,18 @@ void putLetterNext(int caracter, int color) {
     }
   }
   pointer_x = pointer_x + CHAR_WIDTH;
+}
+
+void putChar(char c, int color) {
+  pcb *pcb = getCurrentPcb();
+  if (pcb->foreground) {
+    if (c != '\0' && c != '\n') {
+      putLetterNext(c, color);
+    } else if (c == '\n') {
+      putLine();
+    }
+    writeChar(pcb->fd[1], c);
+  }
 }
 
 void putArrayNext(char *array, int color) {

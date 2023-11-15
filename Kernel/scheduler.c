@@ -50,38 +50,6 @@ void dummy(int argc, char **argv) {
   }
 }
 
-void hola(int argc, char **argv) {
-  int i = 0;
-  while (1) {
-    putArrayNext(" ", WHITE);
-    i++;
-  }
-}
-
-void chau(int argc, char **argv) { putArrayNext("chau", WHITE); }
-
-void process1(int argc, char **argv) {
-  putLine();
-  putArrayNext("proceso 1", WHITE);
-  putLine();
-  while (1) {
-    putArrayNext(".", WHITE);
-  }
-}
-
-void process2(int argc, char **argv) {
-  putLine();
-  putArrayNext("proceso 2", WHITE);
-  putLine();
-  char *buffer = malloc(500);
-  processesInfo(buffer);
-  putArrayNext("info ya se hizo", WHITE);
-  if (*buffer == '\0') {
-    putArrayNext("buffer esta vacio", WHITE);
-  }
-  putArrayNext(buffer, WHITE);
-}
-
 void initalizeScheduler() {
   queue = createPriorityQueue();
   if (queue == NULL) {
@@ -92,18 +60,6 @@ void initalizeScheduler() {
   int fd[] = {0, 0};
   initalizeProcess((void *)&dummy, 1, argv, 1, fd);
   dummyPcb = dequeueP(queue);
-
-  // char *argv2[] = {"hola"};
-  // initalizeProcess((void *)&hola, 1, argv2, 1, fd);
-
-  // char *argv3[] = {"chau"};
-  // initalizeProcess((void *)&chau, 1, argv3, 1, fd);
-
-  // char *argv4[] = {"process1"};
-  // initalizeProcess((void *)&process1, 1, argv4, 1, fd);
-
-  // char *argv5[] = {"process2"};
-  // initalizeProcess((void *)&process2, 1, argv5, 1, fd);
 }
 
 void *scheduler(void *rsp) {
@@ -119,9 +75,9 @@ void *scheduler(void *rsp) {
     }
   } else if (currentPcb->pid == dummyPcb->pid) {
     if (isEmptyPReady(queue)) {
-      dummyPcb->rsp = rsp;
       return rsp;
     } else {
+      dummyPcb->rsp = rsp;
       currentPcb = dequeuePReady(queue);
     }
   } else {

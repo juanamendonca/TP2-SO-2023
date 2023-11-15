@@ -27,4 +27,4 @@ uint64_t sWrite(char *buffer, int size, int color);
 void print(char *string);
 void printInt(int num);
 void putTab();
-
+void putChar(char c, int color);

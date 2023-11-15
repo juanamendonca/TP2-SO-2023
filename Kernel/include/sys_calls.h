@@ -67,6 +67,8 @@ char _33_pipe_read(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
                    uint64_t r5);
 int _34_pipe_write(uint64_t r1, uint64_t r2, uint64_t r3, uint64_t r4,
                    uint64_t r5);
+void _35_put_char(uint64_t c, uint64_t color, uint64_t r3, uint64_t r4,
+                  uint64_t r5);
 
 int64_t sysDispatcher(uint64_t syscallNumber, uint64_t r1, uint64_t r2,
                       uint64_t r3, uint64_t r4, uint64_t r5);
