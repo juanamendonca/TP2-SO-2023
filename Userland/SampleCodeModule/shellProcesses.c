@@ -111,8 +111,7 @@ void memoryTestP(unsigned int argc, char *argv[]) {
     print("Wrong arguments");
     return;
   }
-  char *argv2[] = {
-      "310000"}; // faltaria pedirle este valor a traves de una syscall
+  char *argv2[] = {"310000"};
   test_mm(1, argv2);
 }
 
